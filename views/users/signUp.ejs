@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>RegistrationForm_v1 by Colorlib</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		<!-- <link rel="stylesheet" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css"> -->
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href="/stylesheets/login/style.css">
+	</head>
+	<body>
+
+		<div class="wrapper" style="background-image: url('/images/signup/bg-registration-form-1.jpg');">
+			<div class="inner">
+				<div class="image-holder">
+					<img src="images/signup/registration-form-1.jpg" alt="">
+				</div>
+				<form action="/signup" id="signupForm" method="post" onsubmit="return validateForm()">
+					<h3>Signup Form</h3>
+					<div class="form-group">
+						<input type="text" placeholder="First Name" name="fname" id="firstName" class="form-control" oninput="validateFirstName()">
+						<span id="firstNameError" class="error"></span>
+						<input type="text" placeholder="Last Name" name="lname" id="lastName" class="form-control" oninput="validateLastName()">
+						<span id="lastNameError" class="error"></span>
+					</div>
+					<div class="form-wrapper">
+						<input type="text" placeholder="Email Address" name="email" id="email" class="form-control" oninput="validateEmail()">
+						<span id="emailError" class="error"></span>
+						<i class="zmdi zmdi-email"></i>
+					</div>
+                    <div class="form-wrapper">
+						<input type="number" placeholder="Phone Number" name="phone" id="phone" class="form-control" oninput="validatePhone()">
+						<span id="phoneError" class="error"></span>
+						<i class="zmdi zmdi-email"></i>
+					</div>
+					<div class="form-wrapper">
+						<select name="gender" id="" class="form-control" required>
+							<option value="" disabled selected>Gender</option>
+							<option value="male">Male</option>
+							<option value="femal">Female</option>
+							<option value="other">Other</option>
+						</select>
+						<i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+					</div>
+					<div class="form-wrapper">
+						<input type="password" placeholder="Password" name="password" id="password" class="form-control" oninput="validatePassword()">
+						<span id="passwordError" class="error"></span>
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<div class="form-wrapper">
+						<input type="password" placeholder="Confirm Password" id="confirmPassword" class="form-control" oninput="validateConfirmPassword()">
+						<span id="confirmPasswordError" class="error"></span>
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+					<button>Register
+						<i class="zmdi zmdi-arrow-right"></i>
+					</button>
+                    <div style="margin-top: 8%;">
+                        <h5>Already have an account?<a href="">LogIn</a></h5>
+						<i class="zmdi zmdi-lock"></i>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script src="/javascripts/users/signup.js"></script>
+		
+	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
