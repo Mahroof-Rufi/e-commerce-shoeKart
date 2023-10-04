@@ -31,6 +31,10 @@ const userSchema = mongoose.Schema({
     isVerified:{
         type:Boolean,
         require:true
+    },
+    status:{
+        type:Boolean,
+        require:true
     }
 });
 

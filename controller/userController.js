@@ -45,7 +45,8 @@ const insertUser = async(req,res) => {
             phone:req.body.phone,
             gender:req.body.gender,
             password:hashedPass,
-            isVerified:false
+            isVerified:false,
+            status:true
         })
         const userMail = req.body.email
 
@@ -155,6 +156,41 @@ const validateLogin = async (req,res) => {
     }
 }
 
+const listUsers = async (req,res) => {
+    try {
+        const users = await User.find();
+        res.render('users',{users});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const block = async (req, res) => {
+    try {
+        const check = await User.findOne({ _id: req.query.id }); // Use req.query.id
+        console.log(req.query.id); // Log the ID to check
+        console.log(check);
+        check.status = false;
+        const userData = await check.save();
+        res.redirect('/admin/users');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const unblock = async (req,res) => {
+    try {
+        const check = await User.findOne({ _id: req.query.id }); // Use req.query.id
+        console.log(req.query.id); // Log the ID to check
+        console.log(check);
+        check.status = true;
+        const userData = await check.save();
+        res.redirect('/admin/users');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // export modules
 module.exports = {
     loadLogin,
@@ -163,5 +199,8 @@ module.exports = {
     insertUser,
     checkUser,
     validateLogin,
-    confirmOtp
+    confirmOtp,
+    listUsers,
+    block,
+    unblock
 }

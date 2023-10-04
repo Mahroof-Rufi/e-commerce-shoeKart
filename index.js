@@ -10,7 +10,11 @@ const app = express();
 
 // for user routes
 const userRoute = require("./routes/userRoute");
-app.use('/',userRoute);
+const adminRoute = require("./routes/adminRoute");
+
+app.use('/', userRoute);
+app.use('/admin', adminRoute);
+
 
 
 // set the port
