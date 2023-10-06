@@ -24,8 +24,8 @@ user_route.get('/signup_page',userController.loadSignup);
 user_route.post('/signup',userController.insertUser);
 user_route.get('/home',userController.loadHome);
 user_route.get('/confirm_otp',userController.confirmOtp);
-// user_route.get('/block',userController.block);
-// user_route.get('/unblock',userController.unblock);
+user_route.get('/product',userController.loadProduct);
+user_route.get('/logout',userController.logOut);
 
 // export modules
 module.exports = user_route;

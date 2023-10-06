@@ -34,7 +34,6 @@ const editCategory = async (req,res) => {
         const category = await Category.findOne({_id:req.query.id});
         if (!category) {
             console.log(`Category not found for ID`);
-            // Handle this case, perhaps by rendering an error page
         } else {
             console.log(category); // Check the category object in the console
             res.render('categoryEdit', { category });

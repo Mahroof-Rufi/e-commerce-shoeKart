@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connect Plus</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/admin/vendor/select2/select2.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/admin/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/admin/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <%- include('./partials/_navbar.ejs') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <%- include('./partials/_sidebar.ejs') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                        <h4 class="card-title">Edit Product</h4>
+                        <form action="/admin/edit_product" method="POST" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <label for="exampleInputName1">Product name</label>
+                            <input type="text" value="<%= product.name %>" name="name" class="form-control" id="exampleInputName1" placeholder="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">Product category</label>
+                            <input type="text" value="<%= product.category %>" name="category" class="form-control" id="exampleInputEmail3" placeholder="category">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword4">Stock count</label>
+                            <input type="number" value="<%= product.stock %>" name="stock" class="form-control" id="exampleInputPassword4" placeholder="stock">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword4">Product price</label>
+                            <input type="number" value="<%= product.price %>" name="price" class="form-control" id="exampleInputPassword4" placeholder="price">
+                        </div>
+                          <h4 class="card-title">Choose product images</h4>
+                          <div style="display: flex;">
+                            <!-- Input fields for images -->
+                            <div class="col-lg-3 col-md-6 rounded-image-preview">
+                              <label for="image1" class="image-label">Image 1</label>
+                              <div class="rounded-image-preview">
+                                <img id="imagePreview1" src="/products/croped/<%= product.images.image1 %>" alt="Preview" />
+                              </div>
+                              <input name="image1" type="file" accept="image/*" id="image1" class="imageInput" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 rounded-image-preview">
+                              <label for="image2" class="image-label">Image 2</label>
+                              <div class="rounded-image-preview">
+                                <img id="imagePreview2" src="/products/croped/<%= product.images.image2 %>" alt="Preview" />
+                              </div>
+                              <input name="image2" type="file" accept="image/*" id="image2" class="imageInput" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 rounded-image-preview">
+                              <label for="image3" class="image-label">Image 3</label>
+                              <div class="rounded-image-preview">
+                                <img id="imagePreview3" src="/products/croped/<%= product.images.image3 %>" alt="Preview" />
+                              </div>
+                              <input name="image3" type="file" accept="image/*" id="image3" class="imageInput" />
+                            </div>
+                            <div class="col-lg-3 col-md-6 rounded-image-preview">
+                              <label for="image4" class="image-label">Image 4</label>
+                              <div class="rounded-image-preview">
+                                <img id="imagePreview4" src="/products/croped/<%= product.images.image4 %>" alt="Preview" />
+                              </div>
+                              <input name="image4" type="file" accept="image/*" id="image4" class="imageInput" />
+                            </div>
+                            
+                          </div>
+                          <br>
+                          <div class="form-group">
+                            <label for="exampleTextarea1">Description</label>
+                            <textarea class="form-control" aria-valuetext="<%= product.description %>" name="description" id="exampleTextarea1" rows="7"></textarea>
+                          </div>
+                          <input type="hidden" name="id"  value="<%= product._id %>">
+                          <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                          <button class="btn btn-light">Cancel</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('./partials/_footer.ejs') %>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/admin/vendor/select2/select2.min.js"></script>
+    <script src="/admin/assets/js/typeahead.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/admin/assets/js/off-canvas.js"></script>
+    <script src="/admin/assets/js/hoverable-collapse.js"></script>
+    <script src="/admin/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="/admin/assets/js/file-upload.js"></script>
+    <script src="/admin/assets/js/typeahead.js"></script>
+    <script src="/admin/assets/js/select2.js"></script>
+    <!-- End custom js for this page -->
+  </body>
+</html>

@@ -35,8 +35,8 @@
                 <div class="card">
                   <div class="card-body">
                     <div>
-                    <h2 style="float: left;" class="card-title">Categories</h2>
-                    <button style="float: right;" type="button" class="btn btn-dark btn-fw">Add</button>
+                    <h2 style="float: left;" class="card-title">Products</h2>
+                    <a href="/admin/add_product"><button style="float: right;" type="button" class="btn btn-dark btn-fw">Add</button></a>
                     </div>
                     <table class="table table-striped">
                       <thead>
@@ -47,38 +47,25 @@
                           <th> Category </th>
                           <th> Stock </th>
                           <th> Price </th>
-                          <th> Status </th>
                           <th> Actions </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>
-                            1:
-                          </td>
-                          <td>
-                            Adidas Sneaker
-                          </td>
-                          <td>
-                            <img src="/admin/assets/images/faces-clipart/pic-1.png" alt="image" />
-                          </td>
-                          <td>
-                            Men's Sneakers
-                          </td>
-                          <td>
-                            103
-                          </td>
-                          <td>
-                            2399
-                          </td>
-                          <td>
-                            Active
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-primary">Edit</button>
-                            <button type="button" class="btn btn-danger">Delete</button>
-                          </td>
+                        <% for (let i = 0; i < products.length; i++) { %>
+                          <% const product = products[i]; %>
+                          <tr>
+                            <td><%= i+1 %></td>
+                            <td><%= product.name %></td>
+                            <td><img src="/products/images/<%= product.images.image1 %>" alt="<%= product.name %>" ></td>
+                            <td><%= product.category %></td>
+                            <td><%= product.stock %></td>
+                            <td><%= product.price %></td>
+                            <td>
+                              <a href="/admin/edit_product?id=<%= product._id %>"><button type="button" class="btn btn-primary">Edit</button></a>
+                              <a href="/admin/delete_product?id=<%= product._id %>"><button type="button" class="btn btn-danger">Delete</button></a>
+                            </td>
                         </tr>
+                        <% } %> 
                       </tbody>
                     </table>
                   </div>

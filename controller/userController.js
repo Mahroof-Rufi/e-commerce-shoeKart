@@ -1,5 +1,6 @@
 // require modules
 const User = require("../model/usersModel");
+const Products = require("../model/productsModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer")
 
@@ -25,7 +26,12 @@ const loadSignup = async (req,res) => {
 // load homepage
 const loadHome = async (req,res) => {
     try {
-        res.render("home")
+        if(req.cookies.isLoggedIn){
+            const products = await Products.find();
+            res.render("home",{products});
+        }else{
+            res.redirect('/login_page');
+        }
     } catch (error) {
         console.log(error);
     }
@@ -143,9 +149,12 @@ const validateLogin = async (req,res) => {
                 res.render('logIn',{passMessage:"user not verified"});
             } else if(!isValid) {
                 res.render('logIn',{passMessage:"invalid password"});
+            }else if(check.status === false){
+                res.render('logIn',{passMessage:"your account has been blocked by admin"})
             } else {
                 res.cookie('isLoggedIn', true, { maxAge: 24 * 60 * 60 * 1000 });
-                res.render("home");
+                const products = await Products.find();
+                res.render("home",{products});
             }
         }else{
             console.log('mail is invalid');
@@ -191,6 +200,25 @@ const unblock = async (req,res) => {
     }
 }
 
+const loadProduct = async (req,res) => {
+    try {
+        const product = await Products.findOne({_id:req.query.id});
+        console.log(product);
+        res.render('productDetails',{product});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const logOut = async (req,res) => {
+    try {
+        res.clearCookie("isLoggedIn");
+        res.redirect('login_page');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // export modules
 module.exports = {
     loadLogin,
@@ -202,5 +230,7 @@ module.exports = {
     confirmOtp,
     listUsers,
     block,
-    unblock
+    unblock,
+    loadProduct,
+    logOut
 }
