@@ -17,7 +17,7 @@
         <i class="bx bxs-check-shield"></i>
       </header>
       <h4>Enter OTP Code</h4>
-      <form action="/confirm_otp" method="get">
+      <form action="/confirm_otp" method="post">
         <div class="input-field">
           <input type="number" name="dig1" />
           <input type="number" name="dig2" disabled />
@@ -25,9 +25,11 @@
           <input type="number" name="dig4" disabled />
           <input type="number" name="dig5" disabled />
           <input type="number" name="dig6" disabled />
-          <input type="hidden" name="usermail" value="<%= userMail %>">
+          <input type="hidden" id="usermail" name="usermail" value="<%= userMail %>">
         </div>
-        <button>Verify OTP</button>
+        <p>Timer: <span id="timer">2:00</span></p>
+        <button type="submit" id="verifyButton">Verify OTP</button>
+        <button type="button" id="resendButton" class="active">resend otp</button>
       </form>
     </div>
   </body>

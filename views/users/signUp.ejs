@@ -29,6 +29,9 @@
 					<div class="form-wrapper">
 						<input type="text" placeholder="Email Address" name="email" id="email" class="form-control" oninput="validateEmail()">
 						<span id="emailError" class="error"></span>
+						<% if (typeof errorMessage !== 'undefined') { %>
+							<span style="color: red;"><%= errorMessage %></span>
+						<% } %>
 						<i class="zmdi zmdi-email"></i>
 					</div>
                     <div class="form-wrapper">
@@ -59,7 +62,7 @@
 						<i class="zmdi zmdi-arrow-right"></i>
 					</button>
                     <div style="margin-top: 8%;">
-                        <h5>Already have an account?<a href="">LogIn</a></h5>
+                        <h5>Already have an account?<a href="/login">LogIn</a></h5>
 						<i class="zmdi zmdi-lock"></i>
 					</div>
 				</form>
@@ -67,5 +70,5 @@
 		</div>
 		<script src="/javascripts/users/signup.js"></script>
 		
-	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+	</body>
 </html>

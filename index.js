@@ -7,6 +7,8 @@ mongoose.connect("mongodb://127.0.0.1:27017/e_commerce")
 // require express
 const express = require("express");
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 
 // for user routes
 const userRoute = require("./routes/userRoute");
@@ -18,4 +20,4 @@ app.use('/admin', adminRoute);
 
 
 // set the port
-app.listen(3000,() => console.log("Server Started Successfully"))
+app.listen(process.env.PORT,() => console.log("Server Started Successfully"))

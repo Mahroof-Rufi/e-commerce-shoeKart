@@ -43,6 +43,12 @@ form .input-field {
   flex-direction: row;
   column-gap: 10px;
 }
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
 .input-field input {
   height: 45px;
   width: 42px;
@@ -61,7 +67,7 @@ form .input-field {
 }
 form button {
   margin-top: 25px;
-  width: 100%;
+  width: calc(50% - 5px); /* Adjusted width to account for spacing */
   color: #fff;
   font-size: 1rem;
   border: none;
@@ -71,7 +77,19 @@ form button {
   pointer-events: none;
   background: #6e93f7;
   transition: all 0.2s ease;
+  margin-left: 160px;
 }
+#resendButton {
+  margin-top: 25px;
+  width: calc(50% - -5px); /* Adjusted width to account for spacing */
+  color: #0e4bf1;
+  font-size: 1rem;
+  text-align: center;
+  color: #fff;
+  margin-top: -42px;
+  margin-left: -165px;
+}
+
 form button.active {
   background: #4070f4;
   pointer-events: auto;
