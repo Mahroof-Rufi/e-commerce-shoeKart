@@ -48,21 +48,39 @@
                       </thead>
                       <tbody>
                         <% users.forEach((user,inx) => { %>
-                          <tr>
-                            <td><%= user.fname %></td>
-                            <td><%= user.lname %></td>
-                            <td><% if (user.status === true) { %>
-                              Active
-                            <% } else { %>
-                              Blocked
-                            <% } %></td>
-                            <td><%= user.phone %></td>
-                            <td><%= user.email %></td>
-                            <td>
-                              <a href="/admin/user_unblock?id=<%= user._id %>"><button type="button" class="btn btn-success">Unblock</button></a>
-                              <a href="/admin/user_block?id=<%= user._id %>"><button type="button" class="btn btn-danger">Block</button></a>
-                          </td>
-                          </tr>
+                          <% if (user.status === false) { %>
+                            <form action="/admin/user_action" method="post">
+                              <tr>
+                                <td><%= user.fname %></td>
+                                <td><%= user.lname %></td>
+                                <td><% if (user.status === true) { %>
+                                  Active
+                                <% } else { %>
+                                  Blocked
+                                <% } %></td>
+                                <td><%= user.phone %></td>
+                                <td><%= user.email %></td>
+                                <input type="hidden" value="<%= user._id %>" name="id">
+                                <td><button type="submit" class="btn btn-success">Unblock</button></td>
+                              </tr>
+                            </form>
+                          <% } else { %>
+                            <form action="/admin/user_action" method="post">
+                              <tr>
+                                <td><%= user.fname %></td>
+                                <td><%= user.lname %></td>
+                                <td><% if (user.status === true) { %>
+                                  Active
+                                <% } else { %>
+                                  Blocked
+                                <% } %></td>
+                                <td><%= user.phone %></td>
+                                <td><%= user.email %></td>
+                                <input type="hidden" value="<%= user._id %>" name="id">
+                                <td><button type="submit" class="btn btn-danger">Block</button></td>
+                              </tr>
+                            </form>
+                          <% } %>
                         <% }); %>
                       </tbody>
                     </table>

@@ -37,20 +37,25 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Add new Category</h4>
-                    <form class="forms-sample" action="/admin/add_new" method="post">
+                    <form class="forms-sample" action="/admin/add_category" method="post">
                       <div class="form-group">
-                        <label for="exampleInputUsername1">Categoy name</label>
-                        <input type="hidden" name="id">
-                        <input type="text" name="name" class="form-control" id="exampleInputUsername1" placeholder="Categoy name">
+                        <label for="exampleInputUsername1">Category name</label>
+                        <input type="text" name="name" class="form-control" id="exampleInputUsername1" placeholder="Category name">
+                        <% if (typeof message !== 'undefined') { %>
+                          <pclass="label-checkbox100" for="ckb1" style="color: red;"><%= message %></p>
+                        <% } %>
                       </div>
-                      <button type="submit" class="btn btn-primary mr-2">Add</button>
-                      <a href="/admin/category"><button class="btn btn-light">Cancel</button></a>
+                      <div class="button-group">
+                        <button type="submit" class="btn btn-primary mr-2">Add</button>
+                        <button type="button" class="btn btn-light" onclick="window.location.href='/admin/category'">Cancel</button>
+                      </div>
                     </form>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
           <%- include('./partials/_footer.ejs') %>

@@ -37,46 +37,45 @@
                     <div>
                     <h2 style="float: left;" class="card-title">Categories</h2>
                     <a href="/admin/add_category"><button style="float: right;" type="button" class="btn btn-dark btn-fw">Add</button></a>
-                    </div>
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th> No: </th>
-                          <th> Category name </th>
-                          <th> Status </th>
-                          <th> Actions </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% for (let i = 0; i < categories.length; i++) { %>
+                    <div>
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th> No: </th>
+                            <th> Category name </th>
+                            <th> Status </th>
+                            <th> Actions </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% for (let i = 0; i < categories.length; i++) { %>
                             <% const category = categories[i]; %>
                             <tr>
                               <td><%= i+1 %></td>
                               <td><%= category.name %></td>
-                              <td><% if (category.status === true) { %>
-                                Available
-                              <% } else { %>
-                                Unavailable
-                              <% } %></td>
                               <td>
-                                <a href="/admin/edit?id=<%= category._id %>">
-                                  <button type="button" class="btn btn-primary">Edit</button>
-                                </a>
-                                <a href="/admin/category_block?id=<%= category._id %>">
-                                  <button type="button" class="btn btn-warning">Block</button>
-                                </a>
-                                <a href="/admin/category_unblock?id=<%= category._id %>">
-                                    <button type="button" class="btn btn-success">Unblock</button>
-                                </a>
-                                <a href="/admin/category_delete?id=<%= category._id %>">
-                                  <button type="button" class="btn btn-danger">Delete</button>
-                              </a>
+                                <% if (category.status === true) { %>
+                                  Available
+                                <% } else { %>
+                                  Unavailable
+                                <% } %>
+                              </td>
+                              <td>
+                                <form class="action-form" action="/admin/edit" method="post">
+                                  <input type="hidden" value="<%= category._id %>" name="id">
+                                  <button type="submit" class="btn btn-primary">Edit</button>
+                                </form>
+                                <form class="action-form" action="/admin/delete" method="post">
+                                  <input type="hidden" value="<%= category._id %>" name="id">
+                                  <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
                               </td>
                             </tr>
                           <% } %>                          
-                      </tbody>
-                    </table>
-                  </div>
+                        </tbody>
+                      </table>
+                    </div>
+                    
                 </div>
               </div>
             </div>

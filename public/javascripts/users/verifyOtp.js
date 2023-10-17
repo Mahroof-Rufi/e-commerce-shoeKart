@@ -82,8 +82,10 @@ const resendBt = document.getElementById("resendButton");
 
 
     // Add an event listener to the "Resend OTP" button
-    const resendOTPButton = document.getElementById("resendButton");
-    resendOTPButton.addEventListener("click", function() {
+    
+    resendBt.addEventListener("click", function() {
+    
+    resendBt.classList.remove("active");
     // Get the user's email from the hidden field
     const userEmail = document.getElementById("usermail").value;
 

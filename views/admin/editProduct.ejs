@@ -62,39 +62,41 @@
                               <div class="rounded-image-preview">
                                 <img id="imagePreview1" src="/products/croped/<%= product.images.image1 %>" alt="Preview" />
                               </div>
-                              <input name="image1" type="file" accept="image/*" id="image1" class="imageInput" />
+                              <input name="image1" type="file" accept="image/*" id="image1" value="<%= product.images.image1 %>" class="imageInput" />
                             </div>
                             <div class="col-lg-3 col-md-6 rounded-image-preview">
                               <label for="image2" class="image-label">Image 2</label>
                               <div class="rounded-image-preview">
                                 <img id="imagePreview2" src="/products/croped/<%= product.images.image2 %>" alt="Preview" />
                               </div>
-                              <input name="image2" type="file" accept="image/*" id="image2" class="imageInput" />
+                              <input name="image2" type="file" accept="image/*" id="image2" value="<%= product.images.image2 %>" class="imageInput" />
                             </div>
                             <div class="col-lg-3 col-md-6 rounded-image-preview">
                               <label for="image3" class="image-label">Image 3</label>
                               <div class="rounded-image-preview">
                                 <img id="imagePreview3" src="/products/croped/<%= product.images.image3 %>" alt="Preview" />
                               </div>
-                              <input name="image3" type="file" accept="image/*" id="image3" class="imageInput" />
+                              <input name="image3" type="file" accept="image/*" id="image3" value="<%= product.images.image3 %>" class="imageInput" />
                             </div>
                             <div class="col-lg-3 col-md-6 rounded-image-preview">
                               <label for="image4" class="image-label">Image 4</label>
                               <div class="rounded-image-preview">
                                 <img id="imagePreview4" src="/products/croped/<%= product.images.image4 %>" alt="Preview" />
                               </div>
-                              <input name="image4" type="file" accept="image/*" id="image4" class="imageInput" />
+                              <input name="image4" type="file" accept="image/*" id="image4" value="<%= product.images.image4 %>" class="imageInput" />
                             </div>
                             
                           </div>
                           <br>
                           <div class="form-group">
                             <label for="exampleTextarea1">Description</label>
-                            <textarea class="form-control" aria-valuetext="<%= product.description %>" name="description" id="exampleTextarea1" rows="7"></textarea>
+                            <textarea class="form-control" name="description" id="exampleTextarea1" rows="7"><%= product.description %></textarea>
                           </div>
                           <input type="hidden" name="id"  value="<%= product._id %>">
-                          <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                          <button class="btn btn-light">Cancel</button>
+                          <div style="display: flex; justify-content: space-between;">
+                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                            <a href="/admin/products" class="btn btn-light">Cancel</a> <!-- Use a link/button for cancel -->
+                          </div>
                         </form>
                       </div>
                     </div>

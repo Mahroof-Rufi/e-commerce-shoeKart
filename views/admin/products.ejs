@@ -53,6 +53,8 @@
                       <tbody>
                         <% for (let i = 0; i < products.length; i++) { %>
                           <% const product = products[i]; %>
+                          <form action="/admin/edit_product" method="get">
+                            <input type="hidden" value="<%= product._id %>" name="id">
                           <tr>
                             <td><%= i+1 %></td>
                             <td><%= product.name %></td>
@@ -61,10 +63,11 @@
                             <td><%= product.stock %></td>
                             <td><%= product.price %></td>
                             <td>
-                              <a href="/admin/edit_product?id=<%= product._id %>"><button type="button" class="btn btn-primary">Edit</button></a>
+                              <button type="submit" class="btn btn-primary">Edit</button>
                               <a href="/admin/delete_product?id=<%= product._id %>"><button type="button" class="btn btn-danger">Delete</button></a>
                             </td>
                         </tr>
+                        </form>
                         <% } %> 
                       </tbody>
                     </table>

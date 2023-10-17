@@ -1,9 +1,9 @@
 const isAuth = async (req,res,next) => {
     try {
-        if(req.cookies.isLoggedIn){
+        if(req.session.admin){
             next()
         } else {
-            res.redirect('/login_page');
+            res.redirect('/admin/login');
         }
     } catch (error) {
         console.log(error);

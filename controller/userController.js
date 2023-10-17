@@ -1,6 +1,7 @@
 // require modules
 const User = require("../model/usersModel");
 const Products = require("../model/productsModel");
+const Cart = require("../model/cartModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer")
 
@@ -26,8 +27,67 @@ const loadSignup = async (req,res) => {
 const loadHome = async (req,res) => {
     try {
         const products = await Products.find();
-        res.render("home",{products});
+        const cartProducts = await Cart.findOne({user:req.session.user});
+        console.log(cartProducts);
+        res.render("home",{products:products,cartProducts:cartProducts});
 
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const loadResetPass = async (req,res) => {
+    try {
+        res.render('resetPass');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const validateEmail = async (req,res) => {
+    try {
+        const bodyMail = req.body.email
+        console.log(bodyMail);
+        const check = await User.find({email:bodyMail});
+
+        if (check) {
+            let mailTransporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: "bjnh478@gmail.com",
+                    pass: process.env.GMAIL_PASS,
+                }
+            });
+    
+            function generateOTP() {
+                const min = 100000; // Minimum 6-digit number
+                const max = 999999; // Maximum 6-digit number
+                const otp = Math.floor(Math.random() * (max - min + 1)) + min;
+              
+                return otp;
+              }
+              
+              generatedOtp = generateOTP();
+    
+            let details = {
+                from: "bjnh478@gmail.com",
+                to: bodyMail,
+                subject: "OTP Verification",
+                text: `Your OTP is ${generatedOtp}`,
+            }
+    
+            mailTransporter.sendMail(details, (err) => {
+                if(err){
+                    console.log("sending otp have an error");
+                } else {
+                    console.log("otp sended successfully");
+                    res.render('resetPassOtp', { userMail: bodyMail });
+                    console.log("successfully rendered");
+                }
+            })
+        } else {
+            res.render('resetPass',{message:"email not found"})
+        }
     } catch (error) {
         console.log(error);
     }
@@ -43,7 +103,7 @@ const sendOTP = async (req,res) => {
             service: "gmail",
             auth: {
                 user: "bjnh478@gmail.com",
-                pass: "upgo mrlo ocar vyah",
+                pass: process.env.GMAIL_PASS,
             }
         });
 
@@ -79,6 +139,38 @@ const sendOTP = async (req,res) => {
     }
 }
 
+const confirmResetOtp = async (req,res) => {
+    try {
+        const userMail = req.body.usermail
+        let userOtp = req.body.dig1+req.body.dig2+req.body.dig3+req.body.dig4+req.body.dig5+req.body.dig6
+        if(userOtp == generatedOtp){
+            
+            res.render('changePass',{userMail:userMail});
+        
+        } else {
+            console.log('otp incorrect');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const updatePass = async (req,res) => {
+    try {
+        const data = await User.findOne({email:req.body.usermail});
+        const hashedPass = await bcrypt.hash(req.body.confirmPassword, 13);
+        if (data) {
+            data.password = hashedPass
+            await data.save();
+            res.redirect('/login');
+        } else {
+            console.log("user not found");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // insert user data to database
 const insertUser = async(req,res) => {
 
@@ -104,7 +196,7 @@ const insertUser = async(req,res) => {
                 service: "gmail",
                 auth: {
                     user: "bjnh478@gmail.com",
-                    pass: "upgo mrlo ocar vyah",
+                    pass: process.env.GMAIL_PASS,
                 }
             });
     
@@ -187,7 +279,6 @@ const validateLogin = async (req,res) => {
     try {
         const {email,password} = req.body
         const check = await User.findOne({email:email});
-        // const isVerified = check.isVerified
 
         if(check){
             const isValid = await bcrypt.compare(password, check.password);
@@ -200,7 +291,7 @@ const validateLogin = async (req,res) => {
             } else {
                 req.session.user = check._id
                 const products = await Products.find();
-                res.render("home",{products});
+                res.redirect('/');
             }
         }else{
             res.render('logIn',{mailMessage:"email not found"})
@@ -219,12 +310,15 @@ const listUsers = async (req,res) => {
     }
 }
 
-const block = async (req, res) => {
+const userAction = async (req, res) => {
     try {
-        const check = await User.findOne({ _id: req.query.id }); // Use req.query.id
-        console.log(req.query.id); // Log the ID to check
-        console.log(check);
-        check.status = false;
+        const check = await User.findOne({ _id: req.body.id });
+        if(check.status === true){
+            check.status = false
+            req.session.user = null
+        } else {
+            check.status = true
+        }
         const userData = await check.save();
         res.redirect('/admin/users');
     } catch (error) {
@@ -247,14 +341,10 @@ const unblock = async (req,res) => {
 
 const loadProduct = async (req,res) => {
     try {
-        if(req.session.user){
-            const product = await Products.findOne({_id:req.query.id});
-            console.log(product);
-            res.render('productDetails',{product});
-        } else {
-            res.redirect('/login');
-        }
-        
+        const product = await Products.findOne({_id:req.query.id});
+        const cartProducts = await Cart.findOne({user:req.session.user});
+        console.log(product);
+        res.render('productDetails',{product,cartProducts});
     } catch (error) {
         console.log(error);
     }
@@ -262,8 +352,8 @@ const loadProduct = async (req,res) => {
 
 const logOut = async (req,res) => {
     try {
-        res.clearCookie("isLoggedIn");
-        res.redirect('login_page');
+        req.session.user = null
+        res.redirect('/');
     } catch (error) {
         console.log(error);
     }
@@ -274,13 +364,17 @@ module.exports = {
     loadLogin,
     loadSignup,
     loadHome,
+    loadResetPass,
+    validateEmail,
+    confirmResetOtp,
+    updatePass,
     insertUser,
     sendOTP,
     checkUser,
     validateLogin,
     confirmOtp,
     listUsers,
-    block,
+    userAction,
     unblock,
     loadProduct,
     logOut

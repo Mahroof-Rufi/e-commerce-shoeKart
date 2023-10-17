@@ -780,3 +780,68 @@ $(document).ready(function () {
         }, 10000)
     }
 });
+
+function addToCart(id) {
+    console.log("add to cart function started");
+    $.ajax({
+        method: 'post',
+        url: '/add_to_cart', 
+        data: JSON.stringify({id:id}),
+        contentType: 'application/json',
+        success: function (response) {
+            if(response.result===true){
+                $('#headerCart').load('/ #headerCart'); 
+                Swal.fire({
+                    title: 'success',
+                    text: 'product added to cart',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  });
+            }else{
+                Swal.fire({
+                    title: 'error',
+                    text: 'product is out of stock',
+                    icon: 'failed',
+                    confirmButtonText: 'OK'
+                  });
+            }
+        },
+        error: function (error) {
+
+            console.error(error);
+        }
+    });
+}
+
+function deleteFromCart(id) {
+    console.log("on delete cart function");
+    $.ajax({
+        method: 'post',
+        url: '/delete_from_cart', 
+        data: JSON.stringify({id:id}),
+        contentType: 'application/json',
+        success: function (response) {
+            if(response.result===true){
+                $('#headerCart').load('/ #headerCart'); 
+                $('#productsData').load('/cart #productsData');
+                // Swal.fire({
+                //     title: 'success',
+                //     text: 'product added to cart',
+                //     icon: 'success',
+                //     confirmButtonText: 'OK'
+                //   });
+            }else{
+                Swal.fire({
+                    title: 'error',
+                    text: 'product is out of stock',
+                    icon: 'failed',
+                    confirmButtonText: 'OK'
+                  });
+            }
+        },
+        error: function (error) {
+
+            console.error(error);
+        }
+    });
+}

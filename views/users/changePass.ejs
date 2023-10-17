@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Link your custom CSS file -->
+    <link rel="stylesheet" href="/stylesheets/login/resetPass.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header" id="heading">
+                        <h2>Change Your Password</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/update_pass" method="post">
+                            <div class="form-group">
+                                <label for="inputEmail">Enter your new Password</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Your email">
+                                <span id="passwordError" style="color: red;"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputEmail">Confirm your Password</label>
+                                <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="Your email">
+                                <span id="confirmPasswordError" style="color: red;"></span>
+                            </div>
+                            <% if (typeof message !== 'undefined') { %>
+                                <p style="color: red;"><%= message %></p>
+                            <% } %>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <input type="hidden" id="usermail" name="usermail" value="<%= userMail %>">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- include main js -->
+    <script src="/javascripts/users/resetPass.js"></script>
+</body>
+</html>

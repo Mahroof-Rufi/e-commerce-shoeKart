@@ -19,11 +19,16 @@ const loadAddCategory = async (req,res) => {
 
 const addNewCategory = async (req,res) => {
     try {
-        console.log(req.body.name);
-        const newCategory = { name:req.body.name, status:true }
-        const category = new Category(newCategory);
-        await category.save();
-        res.redirect('/admin/category');
+        const submittedName = req.body.name
+        const check = await Category.findOne({ name: { $regex: new RegExp(submittedName, 'i') } });
+        if(!check){
+            const newCategory = { name:req.body.name, status:true }
+            const category = new Category(newCategory);
+            await category.save();
+            res.redirect('/admin/category');
+        } else {
+            res.render("addNewCategory",{message:"category already exists"});
+        }
     } catch (error) {
         console.log(error);
     }
@@ -31,7 +36,7 @@ const addNewCategory = async (req,res) => {
 
 const editCategory = async (req,res) => {
     try {
-        const category = await Category.findOne({_id:req.query.id});
+        const category = await Category.findOne({_id:req.body.id});
         if (!category) {
             console.log(`Category not found for ID`);
         } else {
@@ -46,9 +51,15 @@ const editCategory = async (req,res) => {
 const updateCategory = async (req,res) => {
     try {
         const category = await Category.findOne({_id:req.body.id});
-        category.name = req.body.name;
-        const userData = await category.save();
-        res.redirect('/admin/category');
+        const submittedName = req.body.name
+        const check = await Category.findOne({ name: { $regex: new RegExp(submittedName, 'i') } });
+        if (!check) {
+            category.name = submittedName
+            const userData = await category.save();
+            res.redirect('/admin/category');
+        } else {
+            res.render("addNewCategory",{message:"category already exists"});
+        }
     } catch (error) {
         console.log(error);
     }
@@ -82,7 +93,7 @@ const unblock = async (req,res) => {
 
 const deleteCategory = async (req,res) => {
     try {
-        const user = await Category.findByIdAndDelete(req.query.id);
+        const user = await Category.findByIdAndDelete(req.body.id);
         res.redirect('/admin/category');
     } catch (error) {
         console.log(error);

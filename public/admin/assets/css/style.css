@@ -14288,4 +14288,10 @@ dl {
     margin: auto 0;
     color: #b1b1b1; }
 
+  .action-form {
+      display: inline-block; /* Display forms inline */
+      margin-right: 10px; /* Add spacing between buttons */
+  }
+    
+
 /*# sourceMappingURL=style.css.map */
