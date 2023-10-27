@@ -56,36 +56,34 @@
                         </div>
                           <h4 class="card-title">Choose product images</h4>
                           <div style="display: flex;">
-                            <!-- Input fields for images -->
                             <div class="col-lg-3 col-md-6 rounded-image-preview">
                               <label for="image1" class="image-label">Image 1</label>
                               <div class="rounded-image-preview">
-                                <img id="imagePreview1" src="" alt="Preview" />
+                                <img id="imagePreview1" width="300px" height="300px" src="" alt="Preview" />
                               </div>
-                              <input name="image1" type="file" accept="image/*" id="image1" class="imageInput" />
+                              <input name="image1" type="file" accept="image/*" id="image1" class="imageInput" onchange="previewImage(1)" />
                             </div>
                             <div class="col-lg-3 col-md-6 rounded-image-preview">
                               <label for="image2" class="image-label">Image 2</label>
                               <div class="rounded-image-preview">
-                                <img id="imagePreview2" src="" alt="Preview" />
+                                <img id="imagePreview2" width="300px" height="300px" src="" alt="Preview" />
                               </div>
-                              <input name="image2" type="file" accept="image/*" id="image2" class="imageInput" />
+                              <input name="image2" type="file" accept="image/*" id="image2" class="imageInput" onchange="previewImage(2)" />
                             </div>
                             <div class="col-lg-3 col-md-6 rounded-image-preview">
                               <label for="image3" class="image-label">Image 3</label>
                               <div class="rounded-image-preview">
-                                <img id="imagePreview3" src="" alt="Preview" />
+                                <img id="imagePreview3" width="300px" height="300px" src="" alt="Preview" />
                               </div>
-                              <input name="image3" type="file" accept="image/*" id="image3" class="imageInput" />
+                              <input name="image3" type="file" accept="image/*" id="image3" class="imageInput" onchange="previewImage(3)" />
                             </div>
                             <div class="col-lg-3 col-md-6 rounded-image-preview">
                               <label for="image4" class="image-label">Image 4</label>
                               <div class="rounded-image-preview">
-                                <img id="imagePreview4" src="" alt="Preview" />
+                                <img id="imagePreview4" width="300px" height="300px" src="" alt="Preview" />
                               </div>
-                              <input name="image4" type="file" accept="image/*" id="image4" class="imageInput" />
+                              <input name="image4" type="file" accept="image/*" id="image4" class="imageInput" onchange="previewImage(4)" />
                             </div>
-                            
                           </div>
                           <br>
                           <div class="form-group">

@@ -1097,13 +1097,5 @@ function checkPayment(event) {
    return true
 }
 
-// for set the payment method
-
-
   
   
-  
-
-
-
-

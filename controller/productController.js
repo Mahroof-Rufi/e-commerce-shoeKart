@@ -10,10 +10,6 @@ const listProducts = async (req,res) => {
         // console.log("session is:"+req.session.user);
         // console.log(cartProducts);
         // const totalPages = Math.ceil(products / productsPerPage);
-        // if (products.length % 9 !== 0) {
-
-        // }
-        // Math.ceil(products.length);
         res.render('products',{products,cartProducts});
     } catch (error) {
         console.log(error);

@@ -3,8 +3,10 @@
             const firstName = document.getElementById("firstName").value;
             if (firstName === "") {
                 document.getElementById("firstNameError").innerHTML = "first name is required.";
+                return false
             } else {
                 document.getElementById("firstNameError").innerHTML = "";
+                return true
             }
         }
 
@@ -12,8 +14,10 @@
             const lastName = document.getElementById("lastName").value;
             if (lastName === "") {
                 document.getElementById("lastNameError").innerHTML = "last name is required.";
+                return false
             } else {
                 document.getElementById("lastNameError").innerHTML = "";
+                return true
             }
         }
 
@@ -22,8 +26,10 @@
             const emailPattern = /^[a-zA-Z]+[a-zA-Z0-9]*@[a-zA-Z]+\.[a-zA-Z]+$/;
             if (!email.match(emailPattern)) {
                 document.getElementById("emailError").innerHTML = "Invalid email format.";
+                return false
             } else {
                 document.getElementById("emailError").innerHTML = "";
+                return true
             }
         }
 
@@ -32,8 +38,10 @@
             const phonePattern = /^[0-9]{10,}$/;
             if (!phone.match(phonePattern)) {
                 document.getElementById("phoneError").innerHTML = "Phone must contain at least 10 digits and only numbers.";
+                return false
             } else {
                 document.getElementById("phoneError").innerHTML = "";
+                return true
             }
         }
 
@@ -41,8 +49,10 @@
             const password = document.getElementById("password").value;
             if (password.length < 6) {
                 document.getElementById("passwordError").innerHTML = "Password must be at least 6 characters long.";
+                return false
             } else {
                 document.getElementById("passwordError").innerHTML = "";
+                return true
             }
         }
 
@@ -51,27 +61,24 @@
             const confirmPassword = document.getElementById("confirmPassword").value;
             if (password !== confirmPassword) {
                 document.getElementById("confirmPasswordError").innerHTML = "Passwords do not match.";
+                return false
             } else {
                 document.getElementById("confirmPasswordError").innerHTML = "";
+                return true
             }
         }
 
         // check all fields are correct
-        function validateForm() {
-            validateFirstName();
-            validateLastName();
-            validateEmail();
-            validatePhone();
-            validatePassword();
-            validateConfirmPassword();
+        function validateForm(event) {
+            const firstNameResult = validateFirstName();
+            const lastNameResult = validateLastName();
+            const emailResult = validateEmail();
+            const phoneResult = validatePhone();
+            const passwordResult = validatePassword();
+            const confirmPassResult = validateConfirmPassword();
 
-            // Check if any validation error messages exist
-            const errorElements = document.querySelectorAll(".addAddressError");
-            for (const errorElement of errorElements) {
-                if (errorElement.innerHTML !== "") {
-                    return false; // Prevent form submission
-                }
+            if (!firstNameResult || !lastNameResult || !emailResult || !phoneResult || !passwordResult || !confirmPassResult ) {
+                event.preventDefault();
+                alert('Please fill in all required fields.');
             }
-
-            return true; // Form is valid and can be submitted
         }

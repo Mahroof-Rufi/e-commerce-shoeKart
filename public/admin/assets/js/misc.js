@@ -174,3 +174,24 @@ function cancelOrder(id){
     }
 });
 }
+
+// for set the payment method
+
+function previewImage(imageNumber) {
+  const input = document.getElementById(`image${imageNumber}`);
+  const imagePreview = document.getElementById(`imagePreview${imageNumber}`);
+
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    // If no file is selected, clear the image preview
+    imagePreview.src = '';
+  }
+}
