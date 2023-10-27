@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- Coding by CodingLab || www.codinglabweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification Form</title>
+    <link rel="stylesheet" href="/stylesheets/login/verifyOtp.css" />
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <script src="/javascripts/users/verifyOtp.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <i class="bx bxs-check-shield"></i>
+      </header>
+      <h4>Enter OTP Code</h4>
+      <form action="/verify_mail_otp" method="post">
+        <div class="input-field">
+          <input type="number" name="dig1" />
+          <input type="number" name="dig2" disabled />
+          <input type="number" name="dig3" disabled />
+          <input type="number" name="dig4" disabled />
+          <input type="number" name="dig5" disabled />
+          <input type="number" name="dig6" disabled />
+          <input type="hidden" id="usermail" name="usermail" value="<%= userMail %>">
+        </div>
+        <p>Timer: <span id="timer">2:00</span></p>
+        <button type="submit" id="verifyButton">Verify OTP</button>
+        <button type="button" id="resendButton" class="active">resend otp</button>
+        <% if (typeof message !== 'undefined') { %>
+            <p style="color: red;"><%= message %></p>
+        <% } %>
+      </form>
+    </div>
+  </body>
+</html>

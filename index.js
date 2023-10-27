@@ -20,4 +20,4 @@ app.use('/admin', adminRoute);
 
 
 // set the port
-app.listen(process.env.PORT,() => console.log("Server Started Successfully"))
+app.listen(process.env.PORT,() => console.log(`Server Started Successfully on port ${process.env.PORT}`))

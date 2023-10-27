@@ -2,13 +2,15 @@
 const User = require("../model/usersModel");
 const Products = require("../model/productsModel");
 const Cart = require("../model/cartModel");
+const Address = require("../model/addressModel");
+const Order = require("../model/orderModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer")
 
 // load login page
 const loadLogin = async (req,res) => {
     try {
-        res.render("logIn")
+        res.render("logIn");
     } catch (error) {
         console.log(error);
     }
@@ -28,8 +30,9 @@ const loadHome = async (req,res) => {
     try {
         const products = await Products.find();
         const cartProducts = await Cart.findOne({user:req.session.user});
-        console.log(cartProducts);
-        res.render("home",{products:products,cartProducts:cartProducts});
+        // console.log(cartProducts);
+        const username = req.session.username
+        res.render("home",{products:products,cartProducts:cartProducts,username});
 
     } catch (error) {
         console.log(error);
@@ -129,7 +132,7 @@ const sendOTP = async (req,res) => {
                 console.log("sending otp have an error");
             } else {
                 console.log("otp sended successfully");
-                res.render('verifyOtp', { userMail: email });
+                res.render('verifyNewMail', { userMail: email });
                 console.log("successfully rendered");
             }
         })
@@ -181,6 +184,7 @@ const insertUser = async(req,res) => {
         const user = new User({
             fname:req.body.fname,
             lname:req.body.lname,
+            username:req.body.fname,
             email:req.body.email,
             phone:req.body.phone,
             gender:req.body.gender,
@@ -249,6 +253,7 @@ const confirmOtp = async (req,res) => {
 
         user.isVerified = true;
         req.session.user = user._id
+        req.session.username = user.fname
         await user.save();
         res.redirect('/');
         
@@ -290,6 +295,7 @@ const validateLogin = async (req,res) => {
                 res.render('logIn',{passMessage:"your account has been blocked by admin"})
             } else {
                 req.session.user = check._id
+                req.session.username = check.fname
                 const products = await Products.find();
                 res.redirect('/');
             }
@@ -350,9 +356,125 @@ const loadProduct = async (req,res) => {
     }
 }
 
+const loadProfile = async (req,res) => {
+    try {
+        const cartProducts = await Cart.findOne({user:req.session.user});
+        const user = await User.findOne({_id:req.session.user});
+        const userAddress = await Address.findOne({userId:req.session.user});
+        const username = req.session.username
+
+        const orders = await Order.find({user_Id:req.session.user})
+        res.render("profile",{cartProducts,user,username,userAddress,orders:orders});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const editProfile = async (req,res) => {
+    try {
+        const user = await User.findOne({_id:req.session.user});
+        user.fname = req.body.fname
+        user.lname = req.body.lname
+        user.username = req.body.username
+        user.gender = req.body.gender
+        user.phone = req.body.phone
+
+        await user.save()
+        res.redirect('/profile');
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const loadChangePass = async (req,res) => {
+    try {
+        res.render('newPass');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const validateNewPass = async (req,res) => {
+    try {
+        const check = await User.findOne({_id:req.session.user});
+        const userPass = req.body.currentPass;
+        const isValid = await bcrypt.compare(userPass, check.password);
+        if (!isValid) {
+            res.render('newPass',{currentPassMessage:"invalid password"});
+        } else {
+            if (req.body.newPass !== req.body.confPass) {
+                res.render('newPass',{message:"password should be same"});
+            }
+            const hashed = await bcrypt.hash(req.body.newPass, 13);
+            check.password = hashed
+            check.save()
+            res.redirect('/profile');
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const loadNewMail = async (req,res) => {
+    try {
+        res.render("newMail");
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const verifyNewMailOtp = async (req,res) => {
+    try {
+        const userMail = req.body.usermail
+        console.log("this is the user new mail:"+userMail);
+        let userOtp = req.body.dig1+req.body.dig2+req.body.dig3+req.body.dig4+req.body.dig5+req.body.dig6
+        if(userOtp == generatedOtp){
+            const user = await User.findOne({_id:req.session.user});
+            user.email = userMail
+            await user.save()
+            res.redirect('/profile');
+        } else {
+            res.render('verifyNewMail',{message: "incorrect OTP"});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const renderCheckout = async (req,res) => {
+    try {
+        const shippingMethod = req.body.shipping;
+        console.log("on checkout section");
+        const userName = req.session.username
+        console.log("username is :"+userName);
+        const cartProducts = await Cart.findOne({user:req.session.user});
+        console.log("cart products is:"+cartProducts);
+        const userAddress = await Address.findOne({userId:req.session.user});
+        console.log("address is :"+userAddress);
+        res.render('checkout',{userName,cartProducts,userAddress,shippingMethod});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const renderOrderDetails = async (req,res) => {
+    try {
+        const fname = req.session.username
+        const orders = await Order.find({_id:req.query._id});
+        const orderProducts = await Order.find({user_Id:req.session.user});
+        console.log("ordered products is :"+orderProducts);
+        const cartProducts = await Cart.findOne({user:req.session.user});
+        res.render('orderDetails',{orders,cartProducts,orderProducts,fname});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const logOut = async (req,res) => {
     try {
         req.session.user = null
+        req.session.username = undefined
         res.redirect('/');
     } catch (error) {
         console.log(error);
@@ -377,5 +499,13 @@ module.exports = {
     userAction,
     unblock,
     loadProduct,
+    loadProfile,
+    editProfile,
+    loadChangePass,
+    validateNewPass,
+    loadNewMail,
+    verifyNewMailOtp,
+    renderCheckout,
+    renderOrderDetails,
     logOut
 }

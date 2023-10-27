@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla - Bootstrap eCommerce Template</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="assets/images/icons/site.html">
+    <link rel="mask-icon" href="assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="assets/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+    <%- include('./layouts/header.ejs') %>
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">Order Details</h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <div class="container">
+            <div class="col-md-12">
+                <table class="table table-cart table-mobile">
+                    <thead>
+                        <tr>
+                            <th>Products</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i = 0; i < orders.length; i++) { %>
+                            <% let products = orders[i].products; %>
+                            <% for (let j = 0; j < products.length; j++) { %> 
+                                <% let product = products[j]; %>
+                                <tr>
+                                    <td class="product-col">
+                                        <div class="product">
+                                            <figure class="product-media">
+                                                <a href="#">
+                                                    <img src="/products/croped/<%= product.image %>" alt="Product image">
+                                                </a>
+                                            </figure>
+                                        </div><!-- End .product -->
+                                    </td>
+                                    <td class="price-col" style="margin-left: 20%;">
+                                        <h3 class="product-title">
+                                            <a href="#"><%= product.name %></a>
+                                        </h3><!-- End .product-title -->
+                                    </td>
+                                    <td class="price-col"><%= product.category %></td>
+                                    <td class="price-col">₹<%= product.price %></td>
+                                    <td class="price-col"><%= product.count %></td>
+                                    <td class="price-col">₹<%= product.price * product.count %></td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-dashboard">
+                        <div class="card-body">
+                            <h3>Delivery address</h3>
+                            <% let address = orders[0].deliveryDetails; %>
+                            <p>Name: <%= address.fullName %><br>
+                                Mobile: <%= address.mobile %><br>
+                                House name: <%= address.houseName %><br>
+                                Colony name: <%= address.colony %><br>
+                                City: <%= address.city %><br>
+                                State: <%= address.state %><br>
+                                Pincode: <%= address.pin %><br>
+                            </p>
+                        </div><!-- End .card-body -->
+                    </div><!-- End .card-dashboard -->
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-dashboard">
+                        <div class="card-body">
+                            <h3>Order summary</h3>
+                            <p>Order id: <%= orders[0]._id %><br>
+                                Purchase date: <%= orders[0].purchaseDate.toLocaleDateString('en-US', { year:
+                                    'numeric', month: 'short', day: '2-digit'
+                                    }).replace(/\//g, '-') %><br>
+                                Total amount: <%= orders[0].totalAmount %><br>
+                                Status: <%= orders[0].status %><br>
+                                Payment method: <%= orders[0].paymentMethod %><br>
+                                Shipping method: <%= orders[0].shippingMethod %><br>
+                                Shipping charge: <%= orders[0].shippingFee %><br>
+                            </p>
+                        </div><!-- End .card-body -->
+                    </div><!-- End .card-dashboard -->
+                </div>
+                <div class="col-md-6">
+                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
+                </div>
+                <div class="col-md-6 text-right">
+                    <a  href="/cancel_order?id=<%= orders[0]._id %>" onclick="return confirm('Are you sure? Do you want to Cancel')"><button class="btn btn-primary btn-block">Cancel Order</button></a>
+                </div>
+            </div>
+        </div>
+    </main><!-- End .main -->
+    
+
+    <%- include('./layouts/footer.ejs') %>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+            
+            <nav class="mobile-nav">
+                <ul class="mobile-menu">
+                    <li class="active">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="category.html">Shop</a>
+                    </li>
+                    <li>
+                        <a href="product.html" class="sf-with-ul">Product</a>
+                    </li>
+                    <li>
+                        <a href="#">Pages</a>
+                    </li>
+                    <li>
+                        <a href="blog.html">Blog</a>
+                    </li>
+                    <li>
+                        <a href="elements-list.html">Elements</a>
+                    </li>
+                </ul>
+            </nav><!-- End .mobile-nav -->
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+
+    <!-- Plugins JS File -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/superfish.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

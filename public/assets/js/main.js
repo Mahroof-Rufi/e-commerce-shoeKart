@@ -799,11 +799,11 @@ function addToCart(id) {
                   });
             }else{
                 Swal.fire({
-                    title: 'error',
-                    text: 'product is out of stock',
-                    icon: 'failed',
+                    title: 'Error',
+                    text: 'Product is out of stock',
+                    icon: 'error', // Use 'error' for an error message
                     confirmButtonText: 'OK'
-                  });
+                });
             }
         },
         error: function (error) {
@@ -824,12 +824,6 @@ function deleteFromCart(id) {
             if(response.result===true){
                 $('#headerCart').load('/ #headerCart'); 
                 $('#productsData').load('/cart #productsData');
-                // Swal.fire({
-                //     title: 'success',
-                //     text: 'product added to cart',
-                //     icon: 'success',
-                //     confirmButtonText: 'OK'
-                //   });
             }else{
                 Swal.fire({
                     title: 'error',
@@ -845,3 +839,271 @@ function deleteFromCart(id) {
         }
     });
 }
+
+function changeQuantity(val,id,count) {
+    // console.log("val is:" + val);
+    // console.log("id is:" + id);
+    const url = `/edit_qnty?val=${val}&id=${id}&count=${count}`;
+    $.ajax({
+        method: 'get',
+        url: url,
+        success: function (response) {
+            if (response.result === true) {
+                $('#productsData').load('/cart #productsData');
+                $('#headerCart').load('/ #headerCart'); 
+            } else if (response.message === true) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Product is out of stock',
+                    icon: 'error', // Use 'error' for an error message
+                    confirmButtonText: 'OK'
+                });
+            } else if (response.message === false) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Product stock limit exceede',
+                    icon: 'error', // Use 'error' for an error message
+                    confirmButtonText: 'OK'
+                });
+            } else if (response.result === false) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'something went wrong',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
+
+//for the profile edit
+
+function editProfile() {
+    document.querySelectorAll('input').forEach(function(input) {
+        input.removeAttribute('readonly');
+    })
+    
+    // Show the "Save" button and hide the "Edit" link
+    document.getElementById('editFields').style.display = 'none';
+    document.getElementById('changePass').style.display = 'none';
+    document.getElementById('changeMail').style.display = 'none';
+    document.getElementById('saveChanges').style.display = 'block';
+};
+
+// for add new Address
+
+function checkFullName() {
+    const inputElement = document.querySelector('input[name="fullname"]');
+    const trimmedValue = inputElement.value.trim();
+    console.log(trimmedValue);
+    const errorElement = document.querySelector('#fullNameError');
+    
+    if (trimmedValue.length < 6) {
+        errorElement.textContent = "Full Name must be at least 6 characters.";
+        return false
+    } else {
+        errorElement.textContent = "";
+        return true
+    }
+}
+
+function checkPhone() {
+    const inputElement = document.querySelector('input[name="mobile"]');
+    const trimmedValue = inputElement.value.trim();
+    const errorElement = document.querySelector('#mobileNumberError');
+    const phonePattern = /^[0-9]/;
+
+    if (phonePattern.test(trimmedValue) && trimmedValue.length === 10) {
+        errorElement.textContent = "";
+    } else {
+        errorElement.textContent = "Enter a valid mobile number"
+    }
+}
+
+
+function checkHouseName() {
+    const inputElement = document.querySelector('input[name="housename"]');
+    const trimmedValue = inputElement.value.trim();
+    const errorElement = document.querySelector('#houseNameError');
+
+    if (trimmedValue === "") {
+        errorElement.textContent = "This field is required"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function checkColony() {
+    const inputElement = document.querySelector('input[name="colony"]');
+    const trimmedValue = inputElement.value.trim();
+    const errorElement = document.querySelector('#colonyNameError');
+
+    if (trimmedValue == "") {
+        errorElement.textContent = "This field is required"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+} 
+
+function checkCity() {
+    const inputElement = document.querySelector('input[name="city"]');
+    const trimmedValue = inputElement.value.trim();
+    const errorElement = document.querySelector('#cityNameError');
+
+    if (trimmedValue == "") {
+        errorElement.textContent = "This field is required"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function checkState() {
+    const inputElement = document.querySelector('input[name="state"]');
+    const trimmedValue = inputElement.value.trim();
+    const errorElement = document.querySelector('#stateNameError');
+
+    if (trimmedValue == "") {
+        errorElement.textContent = "This is field is required"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function checkPincode() {
+    const inputElement = document.querySelector('input[name="pincode"]');
+    const trimmedValue = inputElement.value.trim();
+    const errorElement = document.querySelector('#pincodeError');
+
+    if (trimmedValue == "") {
+        errorElement.textContent = "This is field is required"
+    } else if (trimmedValue < 6) {
+        errorElement.textContent = "Enter a valid pincode"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function validateAddressForm(event) {
+    const checkFullNameResult = checkFullName();
+    const checkHouseNameResult = checkHouseName();
+    const checkPhoneResult = checkPhone();
+    const checkColonyResult = checkColony();
+    const checkCityResult = checkCity();
+    const checkStateResult = checkState();
+    const checkPincodeResult = checkPincode();
+
+    if (!checkFullNameResult || !checkHouseNameResult || !checkPhoneResult || !checkColonyResult || !checkCityResult || !checkStateResult || !checkPincodeResult) {
+        event.preventDefault();
+        alert('Please fill in all required fields.');
+    }
+}
+
+// for address session
+
+function deleteAddress(id) {
+    const url = `/delete_address/${id}`
+    $.ajax({
+        method: 'delete',
+        url: url,
+        success: function (response) {
+            if (response.result === true) {
+                $('#container').load('/profile #container');
+                // Swal.fire({
+                //     title: 'Success',
+                //     text: 'Address de changed',
+                //     icon: 'success', // Use 'success' for a success message
+                //     confirmButtonText: 'OK'
+                // });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Address not deleted',
+                    icon: 'error', // Use 'error' for an error message
+                    confirmButtonText: 'OK'
+                });
+            }
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
+
+// for add the shippping charge to the total
+
+function addShipcharge(total,charge) {
+
+    const finalAmount = parseInt(total) + parseInt(charge);
+    const result = document.querySelector('#final-amount');
+    result.textContent = '₹'+parseInt(finalAmount);
+}
+
+// check the address
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get the form element
+    const form = document.querySelector("#checkout-form");
+
+    // Add a submit event listener to the form
+    form.addEventListener("submit", function (event) {
+        const selectedAddress = document.querySelector("input[name='selectedAddress']:checked");
+
+        if (!selectedAddress) {
+            document.querySelector('#address-error').textContent = "you must select a valid Delivery address"
+            event.preventDefault(); // Prevent the form from submitting
+        }
+    });
+});
+
+// check the shipping method
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Get the form element
+    const form = document.querySelector("#cart-form");
+
+    // Add a submit event listener to the form
+    form.addEventListener("submit", function (event) {
+        const selectedAddress = document.querySelector("input[name='shipping']:checked");
+
+        if (!selectedAddress) {
+            document.querySelector('#shipping-error').textContent = "you must select a shipping method to continue"
+            event.preventDefault(); // Prevent the form from submitting
+        }
+    });
+});
+// for check the payment method selected or not
+function checkPayment(event) {
+    console.log("on the check payment function");
+   const value = document.querySelector('#paymentMethod').value
+   if (value == "") {
+    event.preventDefault();
+    document.querySelector('#paymentMethodError').textContent = "please select a payment method";
+    return false
+   }
+   return true
+}
+
+// for set the payment method
+
+
+  
+  
+  
+
+
+
+

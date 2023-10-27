@@ -66,7 +66,7 @@
             validateConfirmPassword();
 
             // Check if any validation error messages exist
-            const errorElements = document.querySelectorAll(".error");
+            const errorElements = document.querySelectorAll(".addAddressError");
             for (const errorElement of errorElements) {
                 if (errorElement.innerHTML !== "") {
                     return false; // Prevent form submission

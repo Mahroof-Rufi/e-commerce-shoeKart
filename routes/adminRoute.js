@@ -14,6 +14,7 @@ const adminController = require("../controller/adminController");
 const categoryController = require("../controller/categoryController");
 const userController = require("../controller/userController");
 const productController = require("../controller/productController");
+const orderController = require("../controller/orderController");
 
 const multer = require("../public/middlewares/multer");
 const adminAuth = require("../public/middlewares/adminAuth");
@@ -38,6 +39,10 @@ admin_route.post('/add_product',adminAuth.isAuth,multer.productImagesUpload,prod
 admin_route.get('/edit_product',adminAuth.isAuth,productController.loadEditProduct);
 admin_route.post('/edit_product',adminAuth.isAuth,multer.productImagesUpload,productController.editProduct);
 admin_route.get('/delete_product',adminAuth.isAuth,productController.deleteProduct);
+admin_route.get('/orders',adminAuth.isAuth,orderController.renderOrders);
+admin_route.get('/orderDetails',adminAuth.isAuth,adminController.renderOrderDetails);
+admin_route.post('/update_sts',adminAuth.isAuth,adminController.updateOrderStatus);
+admin_route.post('/cancel_order',adminAuth.isAuth,adminController.cancelOrder);
 admin_route.get('/logout',adminController.logOut);
 
 module.exports = admin_route 

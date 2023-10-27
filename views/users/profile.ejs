@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla - Bootstrap eCommerce Template</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="assets/images/icons/site.html">
+    <link rel="mask-icon" href="assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="assets/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+    <%- include('./layouts/header.ejs') %>
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+            <div class="container">
+                <h1 class="page-title">My Account<span>Shop</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+    
+        <div class="page-content" id="container">
+            <div class="dashboard">
+                <div class="container">
+                    <div class="row">
+                        <aside class="col-md-4 col-lg-3">
+                            <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tab-profile-link" data-toggle="tab" href="#tab-profile" role="tab" aria-controls="tab-profile" aria-selected="true">Profile</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Sign Out</a>
+                                </li>
+                            </ul>
+                        </aside><!-- End .col-lg-3 -->
+    
+                        <div class="col-md-8 col-lg-9">
+                            <div class="tab-content">
+
+                                <div class="tab-pane fade show active" id="tab-profile" role="tabpanel" aria-labelledby="tab-profile-link">
+                                    <form action="/edit_profile" method="post">
+                                        <div class="row col-sm-1" style="margin-left: auto;">
+                                            <a href="#" id="editFields" onclick="editProfile()">Edit <i class="icon-edit"></i></a>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>First Name</label>
+                                                <input type="text" name="fname" value="<%= user.fname %>" class="form-control" readonly>
+                                            </div><!-- End .col-sm-6 -->
+                                
+                                            <div class="col-sm-6">
+                                                <label>Last Name</label>
+                                                <input type="text" name="lname" value="<%= user.lname %>" class="form-control" readonly>
+                                            </div><!-- End .col-sm-6 -->
+                                        </div><!-- End .row -->
+                                
+                                        <label>Display Name</label>
+                                        <input type="text" name="username" value="<%= user.username %>" class="form-control" readonly>
+                                        
+                                        <label>Gender</label>
+                                        <input type="text" name="gender" value="<%= user.gender %>" class="form-control" readonly>
+                                
+                                        <label>Phone number</label>
+                                        <input type="tel" name="phone" value="<%= user.phone %>" class="form-control" readonly>
+                                
+                                        <div class="row" style="margin-top: 5px;">
+                                            <div class="col-sm-2" id="changeMail">
+                                                <a href="/change_mail">Change&nbsp;email</a>
+                                            </div> 
+                                            <div class="col-sm-2" id="changePass" style="margin-left: auto;">
+                                                <a href="/change_pass">Change&nbsp;password</a>
+                                            </div>
+                                        </div>                                        
+                                        <div class="row col-sm-1" style="margin-top: 5px; margin-left: auto;">
+                                            <button type="submit" id="saveChanges" style="display: none;">Save</button>
+                                        </div>                                      
+                                    </form>
+                                </div><!-- .End .tab-pane -->
+    
+                                <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                    <% if (orders.length==0) { %>
+                                        <div  style=" max-width: 800px;
+                                            margin: 0 auto;
+                                            padding: 20px;
+                                            text-align: center;">
+                                        <h1 style=" font-size: 24px;
+                                            margin-bottom: 20px;">Your Orders</h1>
+                                        <div style=" border: 1px solid #ddd;
+                                            padding: 20px;
+                                            background-color: #fff;
+                                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                                        <div style=" font-size: 18px;
+                                            margin-bottom: 20px;">
+                                        <div style="font-size: 48px;
+                                            color: #ccc;">&#128722;</div>
+                                        <p style="font-size: 16px;">Your orders list is empty.</p>
+                                         <p><a style=" text-decoration: none;
+                                            color: #007bff;" href="/">Continue shopping</a></p>
+                                        </div>
+                                        </div>
+                                        <div style="width: 100%;height: 77px;"></div>
+                                        </div>
+                                    <% }else { %>           
+                                                <table style="width: 100%; border-collapse: separate; border-spacing: 0 20px;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No.</th>
+                                                            <th>Date</th>
+                                                            <th>Amount</th>
+                                                            <th>Payment</th>
+                                                            <th>Status</th>
+                                                            <th>Details</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <% orders.forEach(function(order,index) { %>
+                                                        <tr>
+                                                            <td><%= index + 1 %></td>
+                                                            <td><%= order.purchaseDate.toLocaleDateString('en-US', { year:
+                                                                'numeric', month: 'short', day: '2-digit'
+                                                                }).replace(/\//g, '-') %></td>
+                                                            <td><%= order.totalAmount %></td>
+                                                            <td><%= order.paymentMethod %></td>
+                                                            <td><%= order.status %></td>
+                                                            <td><a href="/orderDetails?_id=<%= order._id %>">More Details</a></td>
+                                                        </tr>
+                                                        <% }); %>
+                                                    </tbody>
+                                                </table> 
+                                                <% } %>                            
+                                </div><!-- .End .tab-pane -->
+                                  
+                                  
+                                
+    
+                                <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
+                                    <form action="/add_address" method="post" >
+                                        <h4>Add new Address</h4>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>Full Name</label>
+                                                <input type="text" name="fullname" class="form-control" oninput="checkFullName()" placeholder="Full Name(Required)">
+                                                <span id="fullNameError" class="addAddressError" style="color: red;"></span>
+                                            </div><!-- End .col-sm-6 -->
+                                                
+                                            <div class="col-sm-6">
+                                                <label>Mobile</label>
+                                                <input type="tel" name="mobile" class="form-control" oninput="checkPhone()" placeholder="Phone number(Required)">
+                                                <span id="mobileNumberError" class="addAddressError" style="color: red;"></span>
+                                            </div><!-- End .col-sm-6 -->
+                                        </div><!-- End .row -->
+                                        
+                                        <label>House Name</label>
+                                        <input type="text" name="housename" class="form-control" oninput="checkHouseName()" placeholder="House Name, Building No (Required)">
+                                        <span id="houseNameError" class="addAddressError" style="color: red;"></span>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>Colony</label>
+                                                <input type="tel" name="colony" class="form-control" oninput="checkColony()" placeholder="Area, Colony (Required)">
+                                                <span id="colonyNameError" class="addAddressError" style="color: red;"></span>
+                                            </div><!-- End .col-sm-6 -->
+                                
+                                            <div class="col-sm-6">
+                                                <label>City</label>
+                                                <input type="text" name="city" class="form-control" oninput="checkCity()" placeholder="City (Required)">
+                                                <span id="cityNameError" class="addAddressError" style="color: red;"></span>
+                                            </div><!-- End .col-sm-6 -->
+                                        </div><!-- End .row -->
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>State</label>
+                                                <input type="text" name="state" class="form-control" oninput="checkState()" placeholder="State (Required)">
+                                                <span id="stateNameError" class="addAddressError" style="color: red;"></span>
+                                            </div><!-- End .col-sm-6 -->
+                                
+                                            <div class="col-sm-6">
+                                                <label>Pincode</label>
+                                                <input type="text" name="pincode" class="form-control" oninput="checkPincode()" placeholder="Pincode (Required)">
+                                                <span id="pincodeError" class="addAddressError" style="color: red;"></span>
+                                            </div><!-- End .col-sm-6 -->
+                                            <button type="submit" onclick="validateAddressForm(Event)">Save</button>
+                                        </div><!-- End .row -->
+                                    </form>
+                                </div><!-- .End .tab-pane -->
+    
+                                <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+                                    <div class="row">
+                                        <p>The following addresses will be used on the checkout page by default.</p>
+                                        <a style="margin-left: auto;" class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Add&nbsp;address</a>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <% if (userAddress) { %>
+                                            <% const address = userAddress.address; %>
+                                            <% address.forEach((adrs) => { %>
+                                                <div class="col-lg-6">
+                                                    <div class="card card-dashboard">
+                                                        <div class="card-body">
+                                                            <p><%- adrs.fullName %><br>
+                                                                <%- adrs.mobile %><br>
+                                                                <% if (adrs.email) { %>
+                                                                    <%- adrs.email %><br>
+                                                                <% } %>
+                                                                <%- adrs.houseName %><br>
+                                                                <%- adrs.colony %><br>
+                                                                <%- adrs.city %><br>
+                                                                <%- adrs.state %><br>
+                                                                <%- adrs.pin %><br>
+                                                            <div style="display: flex;">
+                                                                <a href="#" style="margin-right: auto;">Edit <i class="icon-edit"></i></a></p>
+                                                                <a href="#" onclick="deleteAddress('<%- adrs._id %>')" style="margin-left: auto;">Delete <i class="icon-delete"></i></a>
+                                                            </div>
+                                                        </div><!-- End .card-body -->
+                                                    </div><!-- End .card-dashboard -->
+                                                </div><!-- End .col-lg-6 -->
+                                            <% }); %>
+                                        <% } else { %>
+                                            <p><%- "address is empty" %></p>
+                                        <% } %>                                   
+                                    </div><!-- End .row -->
+                                    
+                                </div><!-- .End .tab-pane -->
+                            </div>
+                        </div><!-- End .col-lg-9 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .dashboard -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+    <%- include('./layouts/footer.ejs') %>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+            
+            <nav class="mobile-nav">
+                <ul class="mobile-menu">
+                    <li class="active">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="category.html">Shop</a>
+                    </li>
+                    <li>
+                        <a href="product.html" class="sf-with-ul">Product</a>
+                    </li>
+                    <li>
+                        <a href="#">Pages</a>
+                    </li>
+                    <li>
+                        <a href="blog.html">Blog</a>
+                    </li>
+                    <li>
+                        <a href="elements-list.html">Elements</a>
+                    </li>
+                </ul>
+            </nav><!-- End .mobile-nav -->
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+
+    <!-- Plugins JS File -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/superfish.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

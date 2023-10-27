@@ -112,3 +112,65 @@
     })
   });
 })(jQuery);
+
+// for update the order status 
+
+function updateOrder(id,data) {
+  // console.log("the data is :"+data);
+      $.ajax({
+        method: 'post',
+        url: '/admin/update_sts', 
+        data: JSON.stringify({data:data,id:id}),
+        contentType: 'application/json',
+        success: function (response) {
+            if(response.result === true){
+              $('#ordersMain').load('/admin/orders #ordersMain'); 
+            }else{
+                Swal.fire({
+                    title: 'error',
+                    text: 'something wrong',
+                    icon: 'failed',
+                    confirmButtonText: 'OK'
+                  });
+            }
+        },
+        error: function (error) {
+
+            console.error(error);
+        }
+    });
+}
+
+// for cancel order 
+
+function cancelOrder(id){
+  $.ajax({
+    method: 'post',
+    url: '/admin/cancel_order', 
+    data: JSON.stringify({id:id}),
+    contentType: 'application/json',
+    success: function (response) {
+        if(response.result === true){
+          Swal.fire({
+            title: 'success',
+            text: 'Order cancelled successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
+          $('#ordersMain').load('/admin/orders #ordersMain');
+          window.location.href = "/admin/orders"; 
+        }else{
+            Swal.fire({
+                title: 'error',
+                text: 'something wrong',
+                icon: 'failed',
+                confirmButtonText: 'OK'
+              });
+        }
+    },
+    error: function (error) {
+
+        console.error(error);
+    }
+});
+}

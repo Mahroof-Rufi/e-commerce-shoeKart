@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Molla - Bootstrap eCommerce Template</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="assets/images/icons/site.html">
+    <link rel="mask-icon" href="assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="assets/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<%- include('./layouts/header.ejs') %>
+<body>
+    <div class="page-wrapper">
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">Checkout</h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="checkout">
+	                <div class="container">
+            			<div class="checkout-container" style="display: flex;">
+							<div class="checkout-discount">
+								<form action="#">
+									<input type="text" class="form-control" required id="checkout-discount-input">
+									<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+								</form>
+							</div><!-- End .checkout-discount -->
+						
+							<div class="add-new-address" style="margin-left: auto; margin-top: 2rem;">
+								<a href="#">Add New Address</a>
+							</div>
+						</div>
+						
+            			<form action="/place_order" onsubmit="checkPayment(event)" method="post" style="display: flex;" id="checkout-form">
+							<div class="col-lg-9">
+								<h6>Choose your Delivery address</h6>
+								<p id="address-error" style="color: red;"></p>
+								<div class="row">
+									<% if (userAddress) { %>
+										<% const address = userAddress.address; %>
+										<% address.forEach((adrs, index) => { %>
+											<div class="col-lg-6">
+												<div class="card card-dashboard">
+													<div class="card-body">
+														<div class="custom-control custom-radio">
+															<input type="radio" value="<%- index %>" id="address<%- index %>" name="selectedAddress" class="custom-control-input">
+															<label class="custom-control-label" for="address<%- index %>">
+																<p><%- adrs.fullName %><br>
+																<%- adrs.mobile %><br>
+																<% if (adrs.email) { %>
+																	<%- adrs.email %><br>
+																<% } %>
+																<%- adrs.houseName %><br>
+																<%- adrs.colony %><br>
+																<%- adrs.city %><br>
+																<%- adrs.state %><br>
+																<%- adrs.pin %><br></p>
+															</label>
+														</div><!-- End .custom-control -->
+													</div><!-- End .card-body -->
+												</div><!-- End .card-dashboard -->
+											</div><!-- End .col-lg-6 -->
+										<% }); %>
+									</div><!-- End .row -->
+								<% } else { %>
+									<p><%- "Address is empty" %></p>
+								<% } %>
+							</div><!-- End .col-lg-9 -->
+
+		                		<aside class="col-lg-3" style="margin-right: auto;">
+		                			<div class="summary" style="margin-top: 3rem;">
+		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
+
+		                					<tbody>
+												<% let total = 0; %>
+												<% let count = 0; %>
+												<% if (cartProducts && cartProducts.products && cartProducts.products.length > 0) { %>
+													<% cartProducts.products.forEach(function(product, index) { %>
+														<% total += product.price * product.count; %>
+														<% count += product.count %>
+														<input type="hidden" value="<%= product.product_id %>" name="orderProducts">
+		                						<tr>
+		                							<td><a href="#"><%= product.name %> <%= product.category %></a></td>
+		                							<td><%= product.count %> x <%= product.price %></td>
+		                						</tr>
+                                        		<% }); %>
+		                						<tr class="summary-subtotal">
+		                							<td>Subtotal:</td>
+		                							<td>₹<%= total %></td>
+		                						</tr><!-- End .summary-subtotal -->
+		                						<tr>
+		                							<td>Shipping fee:</td>
+		                							<td>
+														<% let shippingCharge = 0; %>
+														<% if (shippingMethod == 'Express Delivery') { %>
+															<% shippingCharge += 99; %>
+														₹99
+													<% } else if (shippingMethod == 'Standart Delivery') { %>
+														<% shippingCharge += 49; %>
+														₹49
+													<% } else { %>
+														<% shippingCharge += 0; %>
+														₹0
+													<% } %>
+													<input type="hidden" name="shippingMethod" value="<%= shippingMethod %>">
+													<input type="hidden" name="shippingCharge" value="<%= shippingCharge %>">
+													<input type="hidden" name="totalAmount" value="<%= total %>">
+													<input type="hidden" name="totalItemCount" value="<%= count %>">
+													</td>
+		                						</tr>
+		                						<tr class="summary-total">
+		                							<td>Total:</td>
+		                							<td>₹<%= total + shippingCharge %></td>
+		                						</tr><!-- End .summary-total -->
+												<% } %>
+		                					</tbody>
+		                				</table><!-- End .table table-summary -->
+
+		                				<div class="accordion-summary" id="accordion-payment">
+										    <div class="card">
+										        <div class="card-header" id="heading-1">
+										            <h2 class="card-title">
+										                <a onclick="setPaymentMethod('Direct bank transfer')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-1" aria-expanded="false" aria-controls="collapse-1">
+										                    Direct bank transfer
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-3">
+										            <h2 class="card-title">
+										                <a onclick="setPaymentMethod('Cash on delivery')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+										                    Cash on delivery
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-4">
+										            <h2 class="card-title">
+										                <a onclick="setPaymentMethod('PayPal')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+										                    PayPal 
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-5">
+										            <h2 class="card-title">
+										                <a onclick="setPaymentMethod('Credit Card')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+										                    Credit Card (Stripe)
+										                    <img src="assets/images/payments-summary.png" alt="payments cards">
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+											<input type="hidden" id="paymentMethod" name="paymentMethod" value="">
+											<span id="paymentMethodError" style="color: red;"></span>
+										</div><!-- End .accordion -->
+
+		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+		                					<span class="btn-text">Place Order</span>
+		                					<span class="btn-hover-text">Proceed to Checkout</span>
+		                				</button>
+		                			</div><!-- End .summary -->
+		                		</aside><!-- End .col-lg-3 -->
+            			</form>
+	                </div><!-- End .container -->
+                </div><!-- End .checkout -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+    <%- include('./layouts/footer.ejs') %>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+            
+            <nav class="mobile-nav">
+                <ul class="mobile-menu">
+                    <li class="active">
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="category.html">Shop</a>
+                    </li>
+                    <li>
+                        <a href="product.html" class="sf-with-ul">Product</a>
+                    </li>
+                    <li>
+                        <a href="#">Pages</a>
+                    </li>
+            </nav><!-- End .mobile-nav -->
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+
+    <!-- Plugins JS File -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/superfish.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+</body>
+
+
+<!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
+</html>

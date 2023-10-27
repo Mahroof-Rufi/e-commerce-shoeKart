@@ -4,13 +4,17 @@ const Sharp = require('sharp');
 
 const listProducts = async (req,res) => {
     try {
-        const productsPerPage = 9
-        const products = await Products.find().skip(req.params.page-1).limit(productsPerPage);
+        // const productsPerPage = 9
+        const products = await Products.find()
         const cartProducts = await Cart.findOne({user:req.session.user});
         // console.log("session is:"+req.session.user);
         // console.log(cartProducts);
-        const totalPages = Math.ceil(products / productsPerPage);
-        res.render('products',{products,cartProducts,totalPages});
+        // const totalPages = Math.ceil(products / productsPerPage);
+        // if (products.length % 9 !== 0) {
+
+        // }
+        // Math.ceil(products.length);
+        res.render('products',{products,cartProducts});
     } catch (error) {
         console.log(error);
     }
@@ -145,5 +149,5 @@ module.exports = {
     loadEditProduct,
     editProduct,
     deleteProduct,
-    filterProducts
+    filterProducts,
 }

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connect Plus</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/admin/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/admin/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <%- include('./partials/_navbar.ejs') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('./partials/_sidebar.ejs') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="row">
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                    <h2 style="float: left;" class="card-title">Orders Details</h2>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-cart table-mobile">
+                            <thead>
+                                <tr>
+                                    <th>Products</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (let i = 0; i < orders.length; i++) { %>
+                                    <% let products = orders[i].products; %>
+                                    <% for (let j = 0; j < products.length; j++) { %> 
+                                        <% let product = products[j]; %>
+                                        <tr>
+                                            <td class="product-col">
+                                                <div class="product">
+                                                    <figure class="product-media">
+                                                        <a href="#">
+                                                            <img src="/products/croped/<%= product.image %>" alt="Product image">
+                                                        </a>
+                                                    </figure>
+                                                </div><!-- End .product -->
+                                            </td>
+                                            <td class="price-col" style="margin-left: 20%;">
+                                                <h3 class="product-title">
+                                                    <a href="#"><%= product.name %></a>
+                                                </h3><!-- End .product-title -->
+                                            </td>
+                                            <td class="price-col"><%= product.category %></td>
+                                            <td class="price-col">₹<%= product.price %></td>
+                                            <td class="price-col"><%= product.count %></td>
+                                            <td class="price-col">₹<%= product.price * product.count %></td>
+                                        </tr>
+                                    <% } %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card card-dashboard">
+                                <div class="card-body">
+                                    <h3 style="color: black;">Delivery address</h3>
+                                    <% let address = orders[0].deliveryDetails; %>
+                                    <p style="color: black;">Name: <%= address.fullName %><br>
+                                        Mobile: <%= address.mobile %><br>
+                                        House name: <%= address.houseName %><br>
+                                        Colony name: <%= address.colony %><br>
+                                        City: <%= address.city %><br>
+                                        State: <%= address.state %><br>
+                                        Pincode: <%= address.pin %><br>
+                                    </p>
+                                </div><!-- End .card-body -->
+                            </div><!-- End .card-dashboard -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card card-dashboard">
+                                <div class="card-body">
+                                    <h3 style="color: black;">Order summary</h3>
+                                    <p style="color: black;">Order id: <%= orders[0]._id %><br>
+                                        Purchase date: <%= orders[0].purchaseDate.toLocaleDateString('en-US', { year:
+                                            'numeric', month: 'short', day: '2-digit'
+                                            }).replace(/\//g, '-') %><br>
+                                        Total amount: <%= orders[0].totalAmount %><br>
+                                        Status: <%= orders[0].status %><br>
+                                        Payment method: <%= orders[0].paymentMethod %><br>
+                                        Shipping method: <%= orders[0].shippingMethod %><br>
+                                        Shipping charge: <%= orders[0].shippingFee %><br>
+                                    </p>
+                                </div><!-- End .card-body -->
+                            </div><!-- End .card-dashboard -->
+                        </div>
+                        <div class="col-md-12">
+                            <a href="/admin/orders"><button class="btn btn-primary btn-block">Go Back</button></a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('./partials/_footer.ejs') %>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/admin/assets/js/off-canvas.js"></script>
+    <script src="/admin/assets/js/hoverable-collapse.js"></script>
+    <script src="/admin/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+  </body>
+</html>
