@@ -788,6 +788,9 @@ function addToCart(id) {
         url: '/add_to_cart', 
         data: JSON.stringify({id:id}),
         contentType: 'application/json',
+        xhrFields: {
+            withCredentials: true // Include session cookies
+        },
         success: function (response) {
             if(response.result===true){
                 $('#headerCart').load('/ #headerCart'); 
@@ -820,6 +823,9 @@ function deleteFromCart(id) {
         url: '/delete_from_cart', 
         data: JSON.stringify({id:id}),
         contentType: 'application/json',
+        xhrFields: {
+            withCredentials: true // Include session cookies
+        },
         success: function (response) {
             if(response.result===true){
                 $('#headerCart').load('/ #headerCart'); 
@@ -1085,10 +1091,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+// set the payment method
+function setPaymentMethod(val) {
+    // console.log("on the set payment function:"+val+" "+num);
+    const payment = document.querySelector('#paymentMethodField');
+    if (payment) {
+        console.log("on if case of setpayement method");
+        payment.value = val;
+    } else {
+        console.error("Element with ID 'paymentMethod' not found.");
+    }
+}
+
 // for check the payment method selected or not
 function checkPayment(event) {
     console.log("on the check payment function");
-   const value = document.querySelector('#paymentMethod').value
+   const value = document.querySelector('#paymentMethodField').value
    if (value == "") {
     event.preventDefault();
     document.querySelector('#paymentMethodError').textContent = "please select a payment method";
