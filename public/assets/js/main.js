@@ -1115,6 +1115,3 @@ function checkPayment(event) {
    }
    return true
 }
-
-  
-  

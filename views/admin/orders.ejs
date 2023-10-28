@@ -60,18 +60,22 @@
                               <td><%= order.paymentMethod %></td>
                               <td><%= order.status %></td>
                               <td>
-                                <% if (order.status == 'cancelled') { %>
+                                <% if (order.status === 'cancelled') { %>
                                   <span style="color: red;">cancelled</span>
+                                <% } else { %>
+                                  <% if (order.status === 'delivered') { %>
+                                    <span style="color: green;">delivered</span>
                                   <% } else { %>
-                                  <select name="status" id="" class="form-control" onchange="updateOrder('<%= order._id %>',this.value)" required>
-                                    <option value="" disabled selected><%= order.status %></option>
-                                    <option value="shipped">shipped</option>
-                                    <option value="out for delivery">out for delivery</option>
-                                    <option value="delivered">delivered</option>
-                                    <option value="cancelled">cancel</option>
-                                    <option value="placed">placed</option>
-                                  </select>
+                                    <select name="status" class="form-control" onchange="handleStatusChange('<%= order._id %>')" required>
+                                      <option value="" disabled selected><%= order.status %></option>
+                                      <option value="shipped">shipped</option>
+                                      <option value="out for delivery">out for delivery</option>
+                                      <option value="delivered">deliver</option>
+                                      <option value="cancelled">cancel</option>
+                                      <option value="placed">placed</option>
+                                    </select>
                                   <% } %>
+                                <% } %>
                               </td>
                               <td><a href="/admin/orderDetails?id=<%= order._id %>">More Details</a></td>
                           </tr>

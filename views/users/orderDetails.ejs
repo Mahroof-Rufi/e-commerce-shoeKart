@@ -117,12 +117,18 @@
                         </div><!-- End .card-body -->
                     </div><!-- End .card-dashboard -->
                 </div>
-                <div class="col-md-6">
-                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
-                </div>
-                <div class="col-md-6 text-right">
-                    <a  href="/cancel_order?id=<%= orders[0]._id %>" onclick="return confirm('Are you sure? Do you want to Cancel')"><button class="btn btn-primary btn-block">Cancel Order</button></a>
-                </div>
+                <% if ( orders[0].status == 'cancelled' || orders[0].status == 'delivered') { %>
+                    <div class="col-md-12">
+                        <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
+                    </div>
+                <% } else { %>
+                    <div class="col-md-6">
+                        <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <a  href="/cancel_order?id=<%= orders[0]._id %>" onclick="return confirm('Are you sure? Do you want to Cancel')"><button class="btn btn-primary btn-block">Cancel Order</button></a>
+                    </div>
+                <% } %>
             </div>
         </div>
     </main><!-- End .main -->

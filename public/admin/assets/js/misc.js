@@ -195,3 +195,23 @@ function previewImage(imageNumber) {
     imagePreview.src = '';
   }
 }
+
+// for the confirmation for delivery status
+
+function handleStatusChange(orderId,currentStatus) {
+  const selectElement = document.querySelector('select[name="status"]');
+  const selectedValue = selectElement.value;
+
+  if ((selectedValue === 'cancelled' || selectedValue === 'delivered') && !confirm(`Are you sure? Do you want to change the status of this order to ${selectedValue}?`)) {
+    // User canceled, reset the select element to its previous value
+    selectElement.value = '<%= order.status %>';
+  } else {
+    // User confirmed or another option was selected, handle the action
+    updateOrder(orderId, selectedValue);
+  }
+}
+
+
+
+
+
