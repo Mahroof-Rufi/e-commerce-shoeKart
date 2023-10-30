@@ -46,11 +46,11 @@
                         <tr>
                             <th>Products</th>
                             <th>Name</th>
+                            <th>Status</th>
                             <th>Category</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Total</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,6 +73,7 @@
                                             <a href="#"><%= product.name %></a>
                                         </h3><!-- End .product-title -->
                                     </td>
+                                    <td class="price-col"><%= orders[i].status %></td>
                                     <td class="price-col"><%= product.category %></td>
                                     <td class="price-col">₹<%= product.price %></td>
                                     <td class="price-col"><%= product.count %></td>

@@ -170,24 +170,27 @@ $(document).ready(function () {
 		if (priceSlider == null) return;
 
 		noUiSlider.create(priceSlider, {
-			start: [ 0, 750 ],
+			start: [ 0, 10000 ],
 			connect: true,
-			step: 50,
-			margin: 200,
+			step: 100,
+			margin: 500,
 			range: {
 				'min': 0,
-				'max': 1000
+				'max': 10000
 			},
 			tooltips: true,
 			format: wNumb({
 		        decimals: 0,
-		        prefix: '$'
+		        prefix: '₹'
 		    })
 		});
 
 		// Update Price Range
 		priceSlider.noUiSlider.on('update', function( values, handle ){
 			$('#filter-price-range').text(values.join(' - '));
+            let selectedMaxPrice = values[1]; // The second value is the maximum price
+            let numericValue = selectedMaxPrice.replace(/[^0-9]/g, '');
+            $('#selected-max-price').val(numericValue);
 		});
 	}
 

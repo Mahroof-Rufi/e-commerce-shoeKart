@@ -1,19 +1,19 @@
 // require modules
 const mongoose = require("mongoose");
 
-// create admin schema
-const adminSchema = mongoose.Schema({
+// create otp schema
+const otpSchema = mongoose.Schema({
 
     email:{
         type:String,
         require:true
     },
-    password:{
-        type:String,
+    otp:{
+        type:Number,
         require:true
     }
 
 });
 
 // export modules
-module.exports = mongoose.model("Admin",adminSchema);
+module.exports = mongoose.model("OTP",otpSchema);

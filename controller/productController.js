@@ -117,13 +117,39 @@ const addProduct = async (req, res) => {
   const filterProducts = async (req,res) => {
     try {
       const selectedItems = req.body.selectedItems.split(',');
+      const maxPrice = req.body.maxPrice+1;
+      console.log(maxPrice);
         const filterQuery = {
-            category: { $in: selectedItems},
+            $and: [{category: { $in: selectedItems }},{ price: { $lt: maxPrice}}]
         };
+        const products = await Products.find(filterQuery);
+        const cartProducts = await Cart.findOne({user: req.session.user});
+
+        console.log(products);
+        res.render("products",{products,cartProducts});
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
+  const searchProduct = async (req,res) => {
+    try {
+        const selectedItems = req.body.searchedItems.split(' ').map(item => item.trim());
+
+        const filterQuery = {
+          $or: [
+            { category: { $in: selectedItems.map(item => new RegExp(item, 'i')) } },
+            { name: { $in: selectedItems.map(item => new RegExp(item, 'i')) } }
+          ]
+        };
+
+        const cartProducts = await Cart.findOne({user: req.session.user});
+
         const products = await Products.find(filterQuery);
 
         console.log(products);
-        res.render("products",{products})
+
+        res.render("products",{products,cartProducts});
     } catch (error) {
         console.log(error);
     }
@@ -144,6 +170,7 @@ module.exports = {
     addProduct,
     loadEditProduct,
     editProduct,
+    searchProduct,
     deleteProduct,
     filterProducts,
 }

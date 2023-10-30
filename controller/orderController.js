@@ -23,13 +23,14 @@ const addOrder = async (req,res) => {
             purchaseDate: Date.now(),
             totalAmount: req.body.totalAmount,
             status: "placed",
-            paymentMethod: req.body.paymentMethodField,
+            paymentMethod: req.body.paymentMethod,
             shippingMethod: req.body.shippingMethod,
             shippingFee: req.body.shippingCharge,
         })
 
 
         console.log("the full data is :"+newOrder);
+        console.log("order saved succesfully");
          for( let i=0;i<products.products.length;i++){
           let product = products.products[i].product_id
           let count = products.products[i].count
@@ -37,7 +38,6 @@ const addOrder = async (req,res) => {
           await Product.updateOne({_id:product},{$inc:{stock:-count}});
         }
         await newOrder.save();
-        console.log("order saved succesfully");
         await Cart.deleteOne({ user: req.session.user });
         res.render("orderSuccess");
 

@@ -41,6 +41,7 @@ user_route.post('/signup',userController.insertUser);
 user_route.post('/resend_otp',userController.sendOTP);
 user_route.post('/confirm_otp',userController.confirmOtp);
 user_route.get('/products',productController.listProducts);
+user_route.post('/search',productController.searchProduct);
 // user_route.get('/next_page');
 user_route.post('/filter_products',productController.filterProducts);
 user_route.get('/clear_all',productController.listProducts);

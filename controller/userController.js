@@ -363,7 +363,7 @@ const loadProfile = async (req,res) => {
         const userAddress = await Address.findOne({userId:req.session.user});
         const username = req.session.username
 
-        const orders = await Order.find({user_Id:req.session.user})
+        const orders = await Order.find({user_Id:req.session.user}).sort({purchaseDate:-1});
         res.render("profile",{cartProducts,user,username,userAddress,orders:orders});
     } catch (error) {
         console.log(error);
