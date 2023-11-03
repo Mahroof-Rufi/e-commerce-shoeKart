@@ -14,7 +14,33 @@ const loadLogin = async (req,res) => {
 
 const Login = async (req,res) => {
     try {
-        res.render('dashboard');
+        console.log('on the dashboard fn');
+        let orders = await Order.find({});
+        let totalOrders = orders.length;
+        let users = await User.find({});
+        let totalUsers = users.length;
+        let totalRevenue = 0
+        let totalSoldProduct = 0
+
+        for (var i = 0; i < orders.length; i++) {
+            if (orders[i].status == 'delivered') {
+                totalRevenue += orders[i].totalAmount
+                for (let product of orders[i].products) {
+                    totalSoldProduct += product.count;
+                }
+            }
+        }
+
+        const jsonData = {
+            totalOrders: totalOrders,
+            totalUsers: totalUsers,
+            totalRevenue: totalRevenue,
+            totalSoldProduct: totalSoldProduct,
+          };
+          console.log('on the dashboard rendering function');
+          
+        const datas = JSON.stringify(jsonData);
+        res.render('dashboard',{datas});
     } catch (error) {
         console.log(error);
     }
@@ -32,7 +58,7 @@ const validateLogin = async (req,res) => {
         } else {
             if(adminData.password === req.body.password){
                 req.session.admin = adminData._id
-                res.render("dashboard");
+                res.redirect('/admin');
             } else {
                 res.render("login",{message : "invalid password"});
             }

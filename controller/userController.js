@@ -471,6 +471,14 @@ const renderOrderDetails = async (req,res) => {
     }
 }
 
+const renderOrderSuccess = async (req,res) => {
+    try {
+        res.render('orderSuccess');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const logOut = async (req,res) => {
     try {
         req.session.user = null
@@ -507,5 +515,6 @@ module.exports = {
     verifyNewMailOtp,
     renderCheckout,
     renderOrderDetails,
+    renderOrderSuccess,
     logOut
 }

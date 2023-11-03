@@ -14292,6 +14292,46 @@ dl {
       display: inline-block; /* Display forms inline */
       margin-right: 10px; /* Add spacing between buttons */
   }
+
+  .card {
+    display: grid;
+    place-items: center; /* Center the card content both horizontally and vertically */
+    text-align: center;
+    height: 100%; /* Ensure the card takes up the entire height of the parent column */
+}
+
+.card {
+  display: grid;
+  place-items: center; /* Center the card content both horizontally and vertically */
+  text-align: center;
+  height: 100%; /* Ensure the card takes up the entire height of the parent column */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0; /* Add margin from the top and bottom */
+}
+
+.icon-container {
+  color: #000;
+  font-size: 2rem; /* Adjust the icon size as needed */
+}
+
+.text-container h3 {
+  color: #000;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.text-container h2 {
+  color: #000;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
     
 
 /*# sourceMappingURL=style.css.map */

@@ -15,7 +15,8 @@ const addOrder = async (req,res) => {
         console.log("products from cart :"+products);
         const actualOrderProduct = products.products;
         console.log("products only :"+actualOrderProduct);
-       
+        console.log('here the datas :'+req.body.totalAmount+" "+req.body.paymentMethod);
+
         const newOrder = new Order({
             user_Id: user_Id,
             deliveryDetails: actualAddress,
@@ -24,23 +25,28 @@ const addOrder = async (req,res) => {
             totalAmount: req.body.totalAmount,
             status: "placed",
             paymentMethod: req.body.paymentMethod,
+            paymentStatus: 'pending',
             shippingMethod: req.body.shippingMethod,
             shippingFee: req.body.shippingCharge,
         })
+        const saveDetail = await newOrder.save();
 
 
-        console.log("the full data is :"+newOrder);
-        console.log("order saved succesfully");
-         for( let i=0;i<products.products.length;i++){
-          let product = products.products[i].product_id
-          let count = products.products[i].count
-          console.log("product id and count is :"+product+" "+count);
-          await Product.updateOne({_id:product},{$inc:{stock:-count}});
+        if (req.body.paymentMethod == 'Cash on delivery'){ 
+            console.log("the full data is :"+newOrder);
+            console.log("order saved succesfully");
+            for( let i=0;i<products.products.length;i++){
+            let product = products.products[i].product_id
+            let count = products.products[i].count
+            console.log("product id and count is :"+product+" "+count);
+            await Product.updateOne({_id:product},{$inc:{stock:-count}});
+            }
+            console.log("this is the saveed details :"+saveDetail);
+            await Cart.deleteOne({ user: req.session.user });
+            res.json({cod:true});
+        } else {
+            res.redirect(`/payment?id=${saveDetail._id}&total=${saveDetail.totalAmount}`);
         }
-        await newOrder.save();
-        await Cart.deleteOne({ user: req.session.user });
-        res.render("orderSuccess");
-
     } catch (error) {
         console.log(error);
     }

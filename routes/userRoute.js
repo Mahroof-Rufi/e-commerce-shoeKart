@@ -61,6 +61,7 @@ user_route.delete('/delete_address/:id',userAuth.isAuth,addressController.delete
 user_route.post('/checkout',userAuth.isAuth,userController.renderCheckout);
 user_route.post('/place_order',userAuth.isAuth,orderController.addOrder);
 user_route.get('/orderDetails',userAuth.isAuth,userController.renderOrderDetails);
+user_route.get('/order_sucess',userAuth.isAuth,userController.renderOrderSuccess);
 user_route.get('/cancel_order',userAuth.isAuth,orderController.cancelOrder);
 user_route.get('/logout',userController.logOut);
 

@@ -13,11 +13,11 @@ dotenv.config();
 // for user routes
 const userRoute = require("./routes/userRoute");
 const adminRoute = require("./routes/adminRoute");
+const paymentRoute = require("./routes/paymentRoutes");
 
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
-
-
+app.use('/payment', paymentRoute);
 
 // set the port
 app.listen(process.env.PORT,() => console.log(`Server Started Successfully on port ${process.env.PORT}`))

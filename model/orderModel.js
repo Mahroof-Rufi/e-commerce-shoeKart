@@ -58,6 +58,10 @@ const orderSchema = mongoose.Schema({
          type: String,
          required: true
        },
+       paymentStatus: {
+         type: String,
+         require: true
+       },
        shippingMethod: {
          type: String,
          required: true

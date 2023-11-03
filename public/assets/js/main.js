@@ -1118,3 +1118,86 @@ function checkPayment(event) {
    }
    return true
 }
+
+// for the the razorpay
+$(document).ready(function(){
+	$('.pay-form').submit(function(e){
+		e.preventDefault();
+
+		let formData = $(this).serialize();
+
+		$.ajax({
+			url:"/place_order",
+			type:"POST",
+			data: formData,
+			success:function(response){
+				if(response.order){
+                    console.log("on success section");
+					openRazorPay(response.order)
+				} else if (response.cod === true) {
+                    window.location.href = '/order_sucess'
+                }else{
+					alert(res.msg);
+				}
+			}
+		})
+
+	});
+});
+
+function openRazorPay (order) {
+    var options = {
+        "key": ""+'rzp_test_I7JDTKOKb7OQLY',
+        "amount": order.amount,
+        "currency": "INR",
+        "name": "FEET UP",
+        "description": "sample description",
+        "image": "https://dummyimage.com/600x400/000/fff",
+        "order_id": ""+order.id,
+        "handler": function (response){
+            alert("Payment Succeeded");
+            verifyPayment(response,order);
+        },  
+        "notes" : {
+            "description":"Sample description 2"
+        },
+        "theme": {
+            "color": "#2300a3"
+        }
+    };
+    var razorpayObject = new Razorpay(options);
+    razorpayObject.on('payment.failed', function (response){
+            alert("Payment Failed");
+    });
+    razorpayObject.open();
+}
+
+function verifyPayment (res,order) {
+    $.ajax({
+        url:"/payment/verify_payment",
+        type:"POST",
+        data: {res,order},
+        success: function (response) {
+            if (response.success === true) {
+                // Swal.fire({
+                //     title: 'success',
+                //     text: 'Payment Successfull',
+                //     icon: 'success',
+                //     confirmButtonText: 'OK'
+                //   });
+                  window.location.href = '/order_sucess'
+            } else {
+                // Swal.fire({
+                //     title: 'Error',
+                //     text: 'Payment Failed',
+                //     icon: 'error', 
+                //     confirmButtonText: 'OK'
+                // });
+                window.location.href = '/'
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error in verify_payment request: " + error);
+        }
+    })
+}

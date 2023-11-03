@@ -2121,3 +2121,135 @@
     
 	});
 })(jQuery);
+
+window.onload = pageLoad();
+
+function pageLoad() {
+	const datas = document.querySelector('#datas').value;
+	const parsedData = JSON.parse(datas);
+	console.log(parsedData);
+	document.querySelector('#total-sold-products').textContent = parsedData.totalSoldProduct;
+	document.querySelector('#total-revenue').textContent = parsedData.totalRevenue;
+	document.querySelector('#total-users').textContent = parsedData.totalUsers;
+	document.querySelector('#total-orders').textContent = parsedData.totalOrders;
+}
+
+// for the dashboard diagram
+var options = {
+	series: [0, 5, 2],
+	chart: {
+	type: 'donut',
+  },
+  labels: ["wallet", "cash on delivery", "online payments"],
+  responsive: [{
+	breakpoint: 480,
+	options: {
+	  chart: {
+		width: 200
+	  },
+	  legend: {
+		position: 'bottom'
+	  }
+	}
+  }]
+  };
+
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
+
+// main Chart
+var options = {
+	series: [
+	  {
+		name: 'Total orders',
+		data: [44, 55, 41, 67, 22, 43, 60, 75, 81, 111, 70, 55]
+	  },
+	  {
+		name: 'Cancelled orders',
+		data: [13, 23, 20, 8, 13, 27, 15, 20, 17, 22, 8, 15]
+	  },
+	  {
+		name: 'Delivered orders',
+		data: [21, 7, 25, 13, 22, 8, 30, 19, 27, 32, 10, 18]
+	  }
+	],
+	chart: {
+	  type: 'bar',
+	  height: 500,
+	  stacked: true,
+	  toolbar: {
+		show: false
+	  },
+	  zoom: {
+		enabled: true
+	  }
+	},
+	responsive: [
+	  {
+		breakpoint: 480,
+		options: {
+		  legend: {
+			position: 'bottom',
+			offsetX: -10,
+			offsetY: 0
+		  }
+		}
+	  }
+	],
+	plotOptions: {
+	  bar: {
+		horizontal: false,
+		borderRadius: 10,
+		dataLabels: {
+		  total: {
+			enabled: true,
+			style: {
+			  fontSize: '13px',
+			  fontWeight: 900
+			}
+		  }
+		}
+	  }
+	},
+	xaxis: {
+	  categories: [
+		'January', 'February', 'March', 'April', 'May', 'June',
+		'July', 'August', 'September', 'October', 'November', 'December'
+	  ]
+	},
+	legend: {
+	  position: 'right',
+	  offsetY: 40
+	},
+	fill: {
+	  opacity: 1
+	}
+  };
+  
+  var chart = new ApexCharts(document.querySelector("#main-chart"), options);
+  chart.render();  
+
+//   total order details
+var options = {
+	series: [27, 5, 2],
+	chart: {
+	type: 'donut',
+  },
+  labels: ["delivered", "cancelled", "returned"],
+  responsive: [{
+	breakpoint: 480,
+	options: {
+	  chart: {
+		width: 200
+	  },
+	  legend: {
+		position: 'bottom'
+	  }
+	}
+  }]
+  };
+
+  var chart = new ApexCharts(document.querySelector("#orders-details"), options);
+  chart.render();
+  
+  

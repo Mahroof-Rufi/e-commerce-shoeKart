@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
+	<!-- ajax popup -->
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <%- include('./layouts/header.ejs') %>
 <body>
@@ -63,7 +65,7 @@
 							</div>
 						</div>
 						
-            			<form action="/place_order" onsubmit="checkPayment(event)" method="post" style="display: flex;" id="checkout-form">
+            			<form class="pay-form"  style="display: flex;" id="checkout-form">
 							<div class="col-lg-9">
 								<h6>Choose your Delivery address</h6>
 								<p id="address-error" style="color: red;"></p>
@@ -144,7 +146,7 @@
 													<% } %>
 													<input type="hidden" name="shippingMethod" value="<%= shippingMethod %>">
 													<input type="hidden" name="shippingCharge" value="<%= shippingCharge %>">
-													<input type="hidden" name="totalAmount" value="<%= total %>">
+													<input type="hidden" name="totalAmount" value="<%= total + shippingCharge %>">
 													<input type="hidden" name="totalItemCount" value="<%= count %>">
 													</td>
 		                						</tr>
@@ -157,17 +159,6 @@
 		                				</table><!-- End .table table-summary -->
 
 		                				<div class="accordion-summary" id="accordion-payment">
-										    <div class="card">
-										        <div class="card-header" id="heading-1">
-										            <h2 class="card-title">
-										                <a onclick="setPaymentMethod('Direct bank transfer')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-1" aria-expanded="false" aria-controls="collapse-1">
-										                    Direct bank transfer
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
 
 										    <div class="card">
 										        <div class="card-header" id="heading-3">
@@ -182,22 +173,10 @@
 										    </div><!-- End .card -->
 
 										    <div class="card">
-										        <div class="card-header" id="heading-4">
-										            <h2 class="card-title">
-										                <a onclick="setPaymentMethod('PayPal')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-										                    PayPal 
-										                </a>
-										            </h2>
-										        </div><!-- End .card-header -->
-										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-										        </div><!-- End .collapse -->
-										    </div><!-- End .card -->
-
-										    <div class="card">
 										        <div class="card-header" id="heading-5">
 										            <h2 class="card-title">
-										                <a onclick="setPaymentMethod('Credit Card')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-										                    Credit Card (Stripe)
+										                <a onclick="setPaymentMethod('Online payment')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+										                    Online payments
 										                    <img src="assets/images/payments-summary.png" alt="payments cards">
 										                </a>
 										            </h2>
@@ -205,7 +184,7 @@
 										        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
 										        </div><!-- End .collapse -->
 										    </div><!-- End .card -->
-											<input type="hidden" id="paymentMethodField" name="paymentMethodField" value="">
+											<input type="hidden" id="paymentMethodField" name="paymentMethod" >
 											<span id="paymentMethodError" style="color: red;"></span>
 										</div><!-- End .accordion -->
 
@@ -271,6 +250,10 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+	<!-- ajax popup -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+	<!-- razorpay -->
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </body>
 
 
