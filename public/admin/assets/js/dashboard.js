@@ -2122,21 +2122,45 @@
 	});
 })(jQuery);
 
+var totalOrders;
+var deliveredOrders;
+var cancelledOrders;
+
+var paymentCounts;
+var deliveryMethods;
+
 window.onload = pageLoad();
 
 function pageLoad() {
+	totalOrders = JSON.parse(monthlyData.getAttribute('data-payment-method-counts'));
+	deliveredOrders = JSON.parse(deliveredData.getAttribute('data-payment-method-counts'));
+	cancelledOrders = JSON.parse(cancelledData.getAttribute('data-payment-method-counts'));
+
+	paymentCounts = JSON.parse(paymentsMethods.getAttribute('data-payment-method-counts'));
+	console.log('payment counts :');
+	console.log(paymentCounts);
+
+	var deliveryMethodsDataElement = document.querySelector('#deliveryMethods');
+	deliveryMethods = JSON.parse(deliveryMethodsDataElement.getAttribute('data-delivery-method-counts'));
+	console.log('delivery methods :');
+	console.log(deliveryMethods);
+	
 	const datas = document.querySelector('#datas').value;
 	const parsedData = JSON.parse(datas);
 	console.log(parsedData);
+
 	document.querySelector('#total-sold-products').textContent = parsedData.totalSoldProduct;
-	document.querySelector('#total-revenue').textContent = parsedData.totalRevenue;
+	document.querySelector('#total-revenue').textContent = '₹'+parsedData.totalRevenue;
 	document.querySelector('#total-users').textContent = parsedData.totalUsers;
 	document.querySelector('#total-orders').textContent = parsedData.totalOrders;
 }
 
-// for the dashboard diagram
+	console.log('here the total order');
+	console.log(totalOrders);
+
+// for the payment methods diagram
 var options = {
-	series: [0, 5, 2],
+	series: paymentCounts,
 	chart: {
 	type: 'donut',
   },
@@ -2162,15 +2186,15 @@ var options = {
 	series: [
 	  {
 		name: 'Total orders',
-		data: [44, 55, 41, 67, 22, 43, 60, 75, 81, 111, 70, 55]
+		data: totalOrders,
 	  },
 	  {
 		name: 'Cancelled orders',
-		data: [13, 23, 20, 8, 13, 27, 15, 20, 17, 22, 8, 15]
+		data: cancelledOrders,
 	  },
 	  {
 		name: 'Delivered orders',
-		data: [21, 7, 25, 13, 22, 8, 30, 19, 27, 32, 10, 18]
+		data: deliveredOrders,
 	  }
 	],
 	chart: {
@@ -2231,7 +2255,7 @@ var options = {
 
 //   total order details
 var options = {
-	series: [27, 5, 2],
+	series: deliveryMethods,
 	chart: {
 	type: 'donut',
   },

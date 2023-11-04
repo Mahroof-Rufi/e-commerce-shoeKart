@@ -30,6 +30,138 @@ const Login = async (req,res) => {
                 }
             }
         }
+        // fetch the total order count on every months 
+        const monthlyOrderCounts = await Order.aggregate([
+            {
+              $group: {
+                _id: { $dateToString: { format: '%m', date: '$purchaseDate' } },
+                count: { $sum: 1 },
+              },
+            },
+          ]);
+
+        // fetch the total delivered orders count on every month 
+        const monthlyDeliveredOrderCounts = await Order.aggregate([
+            {
+              $match: {
+                status: 'delivered',
+              },
+            },
+            {
+              $group: {
+                _id: { $dateToString: { format: '%m', date: '$purchaseDate' } },
+                count: { $sum: 1 },
+              },
+            },
+          ]);
+
+        // fetch the total cancelled orders count on every month 
+          const monthlyCancelledOrderCounts = await Order.aggregate([
+            {
+              $match: {
+                status: 'cancelled',
+              },
+            },
+            {
+              $group: {
+                _id: { $dateToString: { format: '%m', date: '$purchaseDate' } },
+                count: { $sum: 1 },
+              },
+            },
+          ]);
+
+        // correct the total orders count on every month 
+          let indx1 = 0;
+          const monthlyData = [];
+
+          if(monthlyOrderCounts.length !=0){
+            for(let i=0;i<12;i++){
+    
+              if(i+1<monthlyOrderCounts[0]._id){
+                monthlyData.push(0)
+              }else{
+                if( monthlyOrderCounts[indx1]){
+                  let count = monthlyOrderCounts[indx1].count
+                  monthlyData.push(count)
+                }else{
+                  monthlyData.push(0)
+                }
+                indx1++
+              }
+            }
+          }
+
+        // correct the total delivered orders count on every month 
+          let indx2 = 0;
+          const deliveredData = [];
+
+          if(monthlyDeliveredOrderCounts.length !=0){
+            for(let i=0;i<12;i++){
+    
+              if(i+1<monthlyDeliveredOrderCounts[0]._id){
+                deliveredData.push(0)
+              }else{
+                if( monthlyDeliveredOrderCounts[indx2]){
+                  let count = monthlyDeliveredOrderCounts[indx2].count
+                  deliveredData.push(count)
+                }else{
+                  deliveredData.push(0)
+                }
+                indx2++
+              }
+            }
+          }
+
+        // correct the total cancelled orders count on every month 
+          let indx3 = 0;
+          const cancelledData = [];
+
+          if(monthlyCancelledOrderCounts.length !=0){
+            for(let i=0;i<12;i++){
+    
+              if(i+1<monthlyCancelledOrderCounts[0]._id){
+                cancelledData.push(0)
+              }else{
+                if( monthlyCancelledOrderCounts[indx3]){
+                  let count = monthlyCancelledOrderCounts[indx3].count
+                  cancelledData.push(count)
+                }else{
+                  cancelledData.push(0)
+                }
+                indx3++
+              }
+            }
+          }
+
+        // find count of wallet payments orders
+        const walletPayments = await Order.find({ paymentMethod: 'wallet payment' });
+        const walletCount = walletPayments.length;
+
+        // find count of online payments orders 
+        const onlinePayments = await Order.find({ paymentMethod: 'Online payment'});
+        const onlineCount = onlinePayments.length;
+
+        // find count of cash on delivery orders 
+        const codDelivery = await Order.find({ paymentMethod: 'Cash on delivery'});
+        const codCount = codDelivery.length;
+
+        const paymentMethods = [walletCount,onlineCount,codCount];
+
+        // find count of delivered orders 
+        const deliveredOrders = await Order.find({ status: 'delivered' });
+        const deliveredOrdersCount = deliveredOrders.length;
+
+        // find count of cancelled orders 
+        const cancelledOrders = await Order.find({ status: 'cancelled' });
+        const cancelledOrdersCount = cancelledOrders.length;
+
+        // find count of returned orders 
+        const returnedOrders = await Order.find({ status: 'returned' });
+        const returnedOrdersCount = returnedOrders.length;
+
+        const deliveryMethods = [deliveredOrdersCount,cancelledOrdersCount,returnedOrdersCount];
+        console.log('here the delivery methods');
+        console.log(deliveryMethods);
 
         const jsonData = {
             totalOrders: totalOrders,
@@ -37,10 +169,13 @@ const Login = async (req,res) => {
             totalRevenue: totalRevenue,
             totalSoldProduct: totalSoldProduct,
           };
-          console.log('on the dashboard rendering function');
+          console.log('here the aggregated data');
+          console.log(monthlyOrderCounts);
+          console.log('here the edited data');
+          console.log(monthlyData);
           
         const datas = JSON.stringify(jsonData);
-        res.render('dashboard',{datas});
+        res.render('dashboard',{datas,monthlyData,deliveredData,cancelledData,paymentMethods,deliveryMethods});
     } catch (error) {
         console.log(error);
     }
@@ -138,6 +273,56 @@ const cancelOrder = async (req,res) => {
     }
 }
 
+const renderSales = async (req,res) => {
+    try {
+        const data = await Order.aggregate([
+            {
+                $match: {
+                    status: "delivered",
+                }
+            },
+            {
+                $unwind: "$products"
+            },
+            {
+                $sort: { purchaseDate: -1 },
+            },
+        ]);
+        console.log('here the unwinded data');
+        console.log(data);
+        res.render('sales',{data});
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const filterSales = async (req,res) => {
+    try {
+        const duration = req.params.val;
+        const currentDate = new Date();
+        const startDate = new Date(currentDate - duration * 24 * 60 * 60 * 1000);
+
+        const report = await Order.aggregate([
+            {
+                $match: {
+                    status: "delivered",
+                    purchaseDate: { $gte: startDate, $lt: currentDate },
+                }
+            },
+            {
+                $unwind: "$products"
+            },
+            {
+                $sort: { purchaseDate: -1 },
+            },
+        ]);
+      
+          res.render('sales', { data:report });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     Login,
     loadLogin,
@@ -146,5 +331,7 @@ module.exports = {
     renderOrderDetails,
     updateOrderStatus,
     cancelOrder,
+    renderSales,
+    filterSales,
     logOut
 }

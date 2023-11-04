@@ -33,7 +33,22 @@
             <div class="row">
               <div class="col-lg-12 grid-margin stretch-card" id="ordersMain">
                 <div class="card">
-                    <h1 style="margin-top: 2rem;" class="card-title text-left">Orders</h1>
+                    <div class="row col-md-12 grid-margin stretch-card" style="margin-top: 2rem;">
+                        <div class="col-md-6">
+                            <h1 class="card-title text-left">Orders</h1>
+                        </div>
+                        <div class="dropdown col-md-6 text-right">
+                            <button class="btn p-0 text-dark dropdown dropdown-toggle" type="button" id="dropdownMenuIconButton1" style="color: red;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Filter
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIconButton1">
+                              <a class="dropdown-item" href="/admin/filter-sales/1">Daily</a>
+                              <a class="dropdown-item" href="/admin/filter-sales/7">Weekly</a>
+                              <a class="dropdown-item" href="/admin/filter-sales/30">Monthly</a>
+                              <a class="dropdown-item" href="/admin/filter-sales/365">Yearly</a>
+                          </div>
+                      </div>
+                    
                     <table class="table table-striped">
                       <thead>
                         <tr>
@@ -41,40 +56,23 @@
                           <th> Date </th>
                           <th> Total amount </th>
                           <th> Payment method </th>
-                          <th> Status </th>
-                          <th> Order action </th>
-                          <th> View more </th>
+                          <th> Username </th>
+                          <th> Product name </th>
+                          <th> quantity </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% orders.forEach(function(order,index) { %>
+                        <% data.forEach(function(order,index) { %>
                           <tr>
                               <td><%= index + 1 %></td>
                               <td><%= order.purchaseDate.toLocaleDateString('en-US', { year:
                                   'numeric', month: 'short', day: '2-digit'
                                   }).replace(/\//g, '-') %></td>
-                              <td><%= order.totalAmount %></td>
+                              <td>₹<%= order.totalAmount %></td>
                               <td><%= order.paymentMethod %></td>
-                              <td><%= order.status %></td>
-                              <td>
-                                <% if (order.status === 'cancelled') { %>
-                                  <span style="color: red;">cancelled</span>
-                                <% } else { %>
-                                  <% if (order.status === 'delivered') { %>
-                                    <span style="color: green;">delivered</span>
-                                  <% } else { %>
-                                    <select name="status" class="form-control" onchange="handleStatusChange('<%= order._id %>')" required>
-                                      <option value="" disabled selected><%= order.status %></option>
-                                      <option value="shipped">shipped</option>
-                                      <option value="out for delivery">out for delivery</option>
-                                      <option value="delivered">deliver</option>
-                                      <option value="cancelled">cancel</option>
-                                      <option value="placed">placed</option>
-                                    </select>
-                                  <% } %>
-                                <% } %>
-                              </td>
-                              <td><a href="/admin/orderDetails?id=<%= order._id %>">More Details</a></td>
+                              <td><%= order.deliveryDetails.fullName %></td>
+                              <td><%= order.products.name %></td>
+                              <td><%= order.products.count %></td>
                           </tr>
                           <% }); %>
                       </tbody>

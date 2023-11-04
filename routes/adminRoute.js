@@ -41,6 +41,8 @@ admin_route.get('/orders',adminAuth.isAuth,orderController.renderOrders);
 admin_route.get('/orderDetails',adminAuth.isAuth,adminController.renderOrderDetails);
 admin_route.post('/update_sts',adminAuth.isAuth,adminController.updateOrderStatus);
 admin_route.post('/cancel_order',adminAuth.isAuth,adminController.cancelOrder);
+admin_route.get('/sales',adminAuth.isAuth,adminController.renderSales);
+admin_route.get('/filter-sales/:val',adminAuth.isAuth,adminController.filterSales);
 admin_route.get('/logout',adminController.logOut);
 
 module.exports = admin_route 

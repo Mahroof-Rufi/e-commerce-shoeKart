@@ -79,7 +79,7 @@ const cancelOrder = async (req,res) => {
 
 const renderOrders = async (req,res) => {
     try {
-      const orders = await Order.find();
+      const orders = await Order.find().sort({ purchaseDate: -1 });
       res.render('orders',{orders});
     } catch (error) {
       console.log(error);
