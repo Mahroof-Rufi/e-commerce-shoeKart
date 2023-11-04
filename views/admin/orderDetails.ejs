@@ -33,10 +33,7 @@
             <div class="row">
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
-                  <div class="card-body">
-                    <div>
-                    <h2 style="float: left;" class="card-title">Orders Details</h2>
-                    </div>
+                    <h2 style="float: left; margin-top: 2rem;" class="card-title">Orders Details</h2>
                     <div class="col-md-12">
                         <table class="table table-cart table-mobile">
                             <thead>
@@ -80,10 +77,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row">
+                    <div class="row col-md-12" style="margin-top: 2rem;">
                         <div class="col-md-6">
                             <div class="card card-dashboard">
-                                <div class="card-body">
                                     <h3 style="color: black;">Delivery address</h3>
                                     <% let address = orders[0].deliveryDetails; %>
                                     <p style="color: black;">Name: <%= address.fullName %><br>
@@ -94,12 +90,10 @@
                                         State: <%= address.state %><br>
                                         Pincode: <%= address.pin %><br>
                                     </p>
-                                </div><!-- End .card-body -->
                             </div><!-- End .card-dashboard -->
                         </div>
                         <div class="col-md-6">
                             <div class="card card-dashboard">
-                                <div class="card-body">
                                     <h3 style="color: black;">Order summary</h3>
                                     <p style="color: black;">Order id: <%= orders[0]._id %><br>
                                         Purchase date: <%= orders[0].purchaseDate.toLocaleDateString('en-US', { year:
@@ -111,14 +105,12 @@
                                         Shipping method: <%= orders[0].shippingMethod %><br>
                                         Shipping charge: <%= orders[0].shippingFee %><br>
                                     </p>
-                                </div><!-- End .card-body -->
                             </div><!-- End .card-dashboard -->
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-12" style="margin-bottom: 2rem;">
                             <a href="/admin/orders"><button class="btn btn-primary btn-block">Go Back</button></a>
                         </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>

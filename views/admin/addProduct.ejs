@@ -32,79 +32,77 @@
         <!-- partial -->
         <div class="main-panel">
           <div class="content-wrapper">
-            <div class="row">
-                <div class="col-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                        <h4 class="card-title">Add new Product</h4>
-                        <form action="/admin/add_product" method="POST" enctype="multipart/form-data">
-                          <div class="form-group">
-                            <label for="exampleInputName1">Product name</label>
-                            <input type="text" name="name" class="form-control" id="exampleInputName1" placeholder="name">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail3">Product category</label>
-                            <input type="text" name="category" class="form-control" id="exampleInputEmail3" placeholder="category">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword4">Stock count</label>
-                            <input type="number" name="stock" class="form-control" id="exampleInputPassword4" placeholder="stock">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword4">Product price</label>
-                            <input type="number" name="price" class="form-control" id="exampleInputPassword4" placeholder="price">
-                        </div>
-                          <h4 class="card-title">Choose product images</h4>
-                          <div style="display: flex;">
-                            <div class="col-lg-3 col-md-6 rounded-image-preview">
-                              <label for="image1" class="image-label">Image 1</label>
-                              <div class="rounded-image-preview">
-                                <img id="imagePreview1" width="300px" height="300px" src="" alt="Preview" />
+              <div class="row">
+                  <div class="col-md-12 grid-margin stretch-card">
+                      <div class="card">
+                          <h4 class="card-title" style="margin-top: 2rem;">Add new Product</h4>
+                          <form action="/admin/add_product" method="POST" enctype="multipart/form-data" style="margin-bottom: 2rem;">
+                              <div class="form-group col-md-12">
+                                  <label for="exampleInputName1" style="float: left;">Product name</label>
+                                  <input type="text" name="name" class="form-control" id="exampleInputName1" placeholder="Name">
                               </div>
-                              <input name="image1" type="file" accept="image/*" id="image1" class="imageInput" onchange="previewImage(1)" />
-                            </div>
-                            <div class="col-lg-3 col-md-6 rounded-image-preview">
-                              <label for="image2" class="image-label">Image 2</label>
-                              <div class="rounded-image-preview">
-                                <img id="imagePreview2" width="300px" height="300px" src="" alt="Preview" />
+                              <div class="form-group col-md-12">
+                                  <label for="exampleInputEmail3" style="float: left;">Product category</label>
+                                  <input type="text" name="category" class="form-control" id="exampleInputEmail3" placeholder="Category">
                               </div>
-                              <input name="image2" type="file" accept="image/*" id="image2" class="imageInput" onchange="previewImage(2)" />
-                            </div>
-                            <div class="col-lg-3 col-md-6 rounded-image-preview">
-                              <label for="image3" class="image-label">Image 3</label>
-                              <div class="rounded-image-preview">
-                                <img id="imagePreview3" width="300px" height="300px" src="" alt="Preview" />
+                              <div class="form-group col-md-12">
+                                  <label for="exampleInputPassword4" style="float: left;">Stock count</label>
+                                  <input type="number" name="stock" class="form-control" id="exampleInputPassword4" placeholder="Stock">
                               </div>
-                              <input name="image3" type="file" accept="image/*" id="image3" class="imageInput" onchange="previewImage(3)" />
-                            </div>
-                            <div class="col-lg-3 col-md-6 rounded-image-preview">
-                              <label for="image4" class="image-label">Image 4</label>
-                              <div class="rounded-image-preview">
-                                <img id="imagePreview4" width="300px" height="300px" src="" alt="Preview" />
+                              <div class="form-group col-md-12">
+                                  <label for="exampleInputPassword5" style="float: left;">Product price</label>
+                                  <input type="number" name="price" class="form-control" id="exampleInputPassword5" placeholder="Price">
                               </div>
-                              <input name="image4" type="file" accept="image/*" id="image4" class="imageInput" onchange="previewImage(4)" />
-                            </div>
-                          </div>
-                          <br>
-                          <div class="form-group">
-                            <label for="exampleTextarea1">Description</label>
-                            <textarea class="form-control" name="description" id="exampleTextarea1" rows="7"></textarea>
-                          </div>
-                          <div style="display: flex; justify-content: space-between;">
-                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                            <a href="/admin/products" class="btn btn-light">Cancel</a> <!-- Use a link/button for cancel -->
-                          </div>
-                        </form>
+                              <h4 class="card-title">Choose product images</h4>
+                              <div class="row col-md-12">
+                                  <div class="col-lg-3 col-md-6 rounded-image-preview">
+                                      <label for="image1" class="image-label">Image 1</label>
+                                      <div class="rounded-image-preview">
+                                          <img id="imagePreview1" width="300" height="300" src="" alt="Preview" />
+                                      </div>
+                                      <input name="image1" type="file" accept="image/*" id="image1" class="imageInput" onchange="previewImage(1)" />
+                                  </div>
+                                  <div class="col-lg-3 col-md-6 rounded-image-preview">
+                                      <label for="image2" class="image-label">Image 2</label>
+                                      <div class="rounded-image-preview">
+                                          <img id="imagePreview2" width="300" height="300" src="" alt="Preview" />
+                                      </div>
+                                      <input name="image2" type="file" accept="image/*" id="image2" class="imageInput" onchange="previewImage(2)" />
+                                  </div>
+                                  <div class="col-lg-3 col-md-6 rounded-image-preview">
+                                      <label for="image3" class="image-label">Image 3</label>
+                                      <div class="rounded-image-preview">
+                                          <img id="imagePreview3" width="300" height="300" src="" alt="Preview" />
+                                      </div>
+                                      <input name="image3" type="file" accept="image/*" id="image3" class="imageInput" onchange="previewImage(3)" />
+                                  </div>
+                                  <div class="col-lg-3 col-md-6 rounded-image-preview">
+                                      <label for="image4" class="image-label">Image 4</label>
+                                      <div class="rounded-image-preview">
+                                          <img id="imagePreview4" width="300" height="300" src="" alt="Preview" />
+                                      </div>
+                                      <input name="image4" type="file" accept="image/*" id="image4" class="imageInput" onchange="previewImage(4)" />
+                                  </div>
+                              </div>
+                              <div class="form-group col-md-12">
+                                  <label for="exampleTextarea1">Description</label>
+                                  <textarea class="form-control" name="description" id="exampleTextarea1" rows="7"></textarea>
+                              </div>
+                              <div class="col-md-12" style="display: flex; justify-content: space-between;">
+                                  <button type="submit" class="btn btn-primary">Submit</button>
+                                  <a href="/admin/products" class="btn btn-light">Cancel</a>
+                              </div>
+                          </form>
                       </div>
-                    </div>
                   </div>
-            </div>
+              </div>
           </div>
           <!-- content-wrapper ends -->
           <!-- partial:../../partials/_footer.html -->
           <%- include('./partials/_footer.ejs') %>
           <!-- partial -->
-        </div>
+      </div>
+      
         <!-- main-panel ends -->
       </div>
       <!-- page-body-wrapper ends -->

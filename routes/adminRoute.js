@@ -31,7 +31,7 @@ admin_route.post('/add_category',adminAuth.isAuth,categoryController.addNewCateg
 admin_route.post('/edit',adminAuth.isAuth,categoryController.editCategory);
 admin_route.post('/update_category',adminAuth.isAuth,categoryController.updateCategory);
 admin_route.post('/delete',adminAuth.isAuth,categoryController.deleteCategory);
-admin_route.get('/products',adminAuth.isAuth,productController.listProducts);
+admin_route.get('/products',adminAuth.isAuth,productController.listInAdminside);
 admin_route.get('/add_product',adminAuth.isAuth,productController.loadAddProduct);
 admin_route.post('/add_product',adminAuth.isAuth,multer.productImagesUpload,productController.addProduct);
 admin_route.get('/edit_product',adminAuth.isAuth,productController.loadEditProduct);

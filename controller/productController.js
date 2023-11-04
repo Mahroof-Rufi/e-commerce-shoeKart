@@ -4,16 +4,27 @@ const Sharp = require('sharp');
 
 const listProducts = async (req,res) => {
     try {
-        // const productsPerPage = 9
-        const products = await Products.find()
+        const currentPage = req.query.page || 1;
+        const itemsPerPage = 9;
+        const totalDoc = await Products.countDocuments();
+        const skip = (currentPage - 1) * itemsPerPage;
+
+        const products = await Products.find().skip(skip).limit(itemsPerPage);
         const cartProducts = await Cart.findOne({user:req.session.user});
-        // console.log("session is:"+req.session.user);
-        // console.log(cartProducts);
-        // const totalPages = Math.ceil(products / productsPerPage);
-        res.render('products',{products,cartProducts});
+        res.render('products',{products,cartProducts,currentPage: parseInt(currentPage),totalPages: Math.ceil(totalDoc / itemsPerPage),});
     } catch (error) {
         console.log(error);
     }
+}
+
+const listInAdminside = async (req,res) => {
+  try {
+      const products = await Products.find({});
+      res.render('products',{products});
+
+  } catch (error) {
+    
+  }
 }
 
 const loadAddProduct = async (req,res) => {
@@ -86,8 +97,8 @@ const addProduct = async (req, res) => {
       const product = await Products.findOne({_id:req.body.id});
       console.log(product);
       const files = await req.files;
-      
-
+        console.log('here the files data');
+        console.log(files);
         product.name = req.body.name;
         product.price = req.body.price;
         product.stock = req.body.stock;
@@ -106,7 +117,6 @@ const addProduct = async (req, res) => {
           product.images.image4 = files.image4[0].filename;
         }
 
-        
       const data = await product.save();
       res.redirect("/admin/products");
     } catch (error) {
@@ -166,6 +176,7 @@ const addProduct = async (req, res) => {
 
 module.exports = {
     listProducts,
+    listInAdminside,
     loadAddProduct,
     addProduct,
     loadEditProduct,

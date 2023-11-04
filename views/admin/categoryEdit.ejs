@@ -35,16 +35,18 @@
             <div class="row">
               <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
-                  <div class="card-body">
+                  <div class="card-body col-md-12">
                     <h4 class="card-title">Edit Category</h4>
-                    <form class="forms-sample" action="/admin/update_category" method="post">
-                      <div class="form-group">
-                        <label for="exampleInputUsername1">Categoy name</label>
+                    <form class="forms-sample col-md-12" action="/admin/update_category" method="post">
+                      <div class="form-group col-md-12">
+                        <label for="exampleInputUsername1" style="float: left;">Categoy name</label>
                         <input type="hidden" name="id"  value="<%= category._id %>">
                         <input type="text" name="name" class="form-control" id="exampleInputUsername1" value="<%= category.name %>" placeholder="Categoy name">
                       </div>
-                      <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                      <a href="/admin/category"><button class="btn btn-light">Cancel</button></a>
+                      <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary mr-2" style="float: left;">Submit</button>
+                        <button type="button" class="btn btn-light" style="float: right;" onclick="window.location.href='/admin/category'">Cancel</button>
+                      </div>
                     </form>
                   </div>
                 </div>
