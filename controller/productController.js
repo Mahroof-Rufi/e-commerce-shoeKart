@@ -94,30 +94,45 @@ const addProduct = async (req, res) => {
   const editProduct = async (req,res) => {
     try {
       console.log("on product editing section");
-      const product = await Products.findOne({_id:req.body.id});
-      console.log(product);
-      const files = await req.files;
-        console.log('here the files data');
-        console.log(files);
-        product.name = req.body.name;
-        product.price = req.body.price;
-        product.stock = req.body.stock;
-        product.category = req.body.category;
-        product.description = req.body.description;
-        if (files && files.image1 && files.image1[0]) {
-          product.images.image1 = files.image1[0].filename;
-        }
-        if (files && files.image2 && files.image2[0]) {
-          product.images.image2 = files.image2[0].filename;
-        }
-        if (files && files.image3 && files.image3[0]) {
-          product.images.image3 = files.image3[0].filename;
-        }
-        if (files && files.image4 && files.image4[0]) {
-          product.images.image4 = files.image4[0].filename;
+      const productData = await Products.findOne({_id:req.body.id});
+      console.log(productData);
+      const imagesFiles = await req.files;
+
+        const img = [
+          imagesFiles.image1 ? imagesFiles.image1[0].filename : productData.images.image1,
+          imagesFiles.image2 ? imagesFiles.image2[0].filename : productData.images.image2,
+          imagesFiles.image3 ? imagesFiles.image3[0].filename : productData.images.image3,
+          imagesFiles.image4 ? imagesFiles.image4[0].filename : productData.images.image4,
+        ];
+
+        for (let i = 0; i < img.length; i++) { 
+          await Sharp("./public/products/images/" + img[i])
+            .resize(500, 500)
+            .toFile("./public/products/croped/" + img[i]);
         }
 
-      const data = await product.save();
+      let img1 = imagesFiles.image1 ? imagesFiles.image1[0].filename : productData.images.image1;
+      let img2 = imagesFiles.image2 ? imagesFiles.image2[0].filename : productData.images.image2;
+      let img3 = imagesFiles.image3 ? imagesFiles.image3[0].filename : productData.images.image3;
+      let img4 = imagesFiles.image4 ? imagesFiles.image4[0].filename : productData.images.image4;
+
+      await Products.findByIdAndUpdate(
+        { _id: req.body.id },
+        {
+          $set: {
+            name: req.body.name,
+            category: req.body.category,
+            price: req.body.price,
+            stock: req.body.stock,
+            description: req.body.description,
+            "images.image1": img1,
+            "images.image2": img2,
+            "images.image3": img3,
+            "images.image4": img4,
+          },
+        }
+      );
+
       res.redirect("/admin/products");
     } catch (error) {
       console.log(error);
