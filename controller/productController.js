@@ -159,12 +159,12 @@ const addProduct = async (req, res) => {
 
   const searchProduct = async (req,res) => {
     try {
-        const selectedItems = req.body.searchedItems.split(' ').map(item => item.trim());
+        const selectedItem = req.body.searchedItems;
 
         const filterQuery = {
           $or: [
-            { category: { $in: selectedItems.map(item => new RegExp(item, 'i')) } },
-            { name: { $in: selectedItems.map(item => new RegExp(item, 'i')) } }
+            { category: { $regex: new RegExp(selectedItem, "i") } },
+            { name: { $regex: new RegExp(selectedItem, "i") } },
           ]
         };
 

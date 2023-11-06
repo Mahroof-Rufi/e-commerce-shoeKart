@@ -15,7 +15,7 @@ const loadLogin = async (req,res) => {
 const Login = async (req,res) => {
     try {
         console.log('on the dashboard fn');
-        let orders = await Order.find({});
+        let orders = await Order.find({ status: 'delivered'  });
         let totalOrders = orders.length;
         let users = await User.find({});
         let totalUsers = users.length;
