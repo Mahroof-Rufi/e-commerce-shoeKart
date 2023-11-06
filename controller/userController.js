@@ -349,8 +349,9 @@ const loadProduct = async (req,res) => {
     try {
         const product = await Products.findOne({_id:req.query.id});
         const cartProducts = await Cart.findOne({user:req.session.user});
+        const similarProducts = await Products.find({ category:product.category });
         console.log(product);
-        res.render('productDetails',{product,cartProducts});
+        res.render('productDetails',{product,cartProducts,similarProducts});
     } catch (error) {
         console.log(error);
     }
