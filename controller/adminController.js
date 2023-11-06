@@ -316,6 +316,9 @@ const filterSales = async (req,res) => {
                 $sort: { purchaseDate: -1 },
             },
         ]);
+
+        console.log('here the report data');
+        console.log(report);
       
           res.render('sales', { data:report });
     } catch (error) {

@@ -68,7 +68,7 @@
                               <td><%= order.purchaseDate.toLocaleDateString('en-US', { year:
                                   'numeric', month: 'short', day: '2-digit'
                                   }).replace(/\//g, '-') %></td>
-                              <td>₹<%= order.totalAmount %></td>
+                                  <td>₹<%= (parseInt(order.products.price) * order.products.count) + parseInt(order.shippingFee) %></td>
                               <td><%= order.paymentMethod %></td>
                               <td><%= order.deliveryDetails.fullName %></td>
                               <td><%= order.products.name %></td>
