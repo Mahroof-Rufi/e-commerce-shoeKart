@@ -46,6 +46,12 @@ const orderSchema = mongoose.Schema({
          type: Date,
          required: true
        },
+       deliveredDate: {
+         type: Date,
+       },
+       returnedDate: {
+         type: Date,
+       },
        totalAmount: {
          type: Number,
          required: true,

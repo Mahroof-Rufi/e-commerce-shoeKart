@@ -1,47 +1,49 @@
 const Order = require('../model/orderModel');
+const User = require('../model/usersModel');
 const Cart = require('../model/cartModel');
-const Address = require('../model/addressModel');
 const Product = require('../model/productsModel');
 
 const addOrder = async (req,res) => {
     try {
         // const orderedProducts = req.body.orderProducts
         const user_Id = req.session.user;
+        const totalAmount = req.body.totalAmount;
+        const paymentMethod = req.body.paymentMethod;
+        const shippingMethod = req.body.shippingMethod;
+        const shippingCharge = req.body.shippingCharge;
         const addressIndex = req.body.selectedAddress;
-        const userAddress = await Address.findOne({userId:user_Id});
-        const actualAddress = userAddress.address[addressIndex];
+        const userDetails = await User.findOne({ _id:user_Id });
+        const actualAddress = userDetails.addresses[addressIndex];
         // console.log("actual address is:"+actualAddress);
         const products = await Cart.findOne({user:user_Id});
-        console.log("products from cart :"+products);
+        // console.log("products from cart :"+products);
         const actualOrderProduct = products.products;
-        console.log("products only :"+actualOrderProduct);
-        console.log('here the datas :'+req.body.totalAmount+" "+req.body.paymentMethod);
+        // console.log("products only :"+actualOrderProduct);
+        // console.log('here the datas :'+req.body.totalAmount+" "+req.body.paymentMethod);
 
         const newOrder = new Order({
             user_Id: user_Id,
             deliveryDetails: actualAddress,
             products: actualOrderProduct,
             purchaseDate: Date.now(),
-            totalAmount: req.body.totalAmount,
+            totalAmount: totalAmount,
             status: "placed",
-            paymentMethod: req.body.paymentMethod,
+            paymentMethod: paymentMethod,
             paymentStatus: 'pending',
-            shippingMethod: req.body.shippingMethod,
-            shippingFee: req.body.shippingCharge,
+            shippingMethod: shippingMethod,
+            shippingFee: shippingCharge,
         })
         const saveDetail = await newOrder.save();
 
 
         if (req.body.paymentMethod == 'Cash on delivery'){ 
-            console.log("the full data is :"+newOrder);
             console.log("order saved succesfully");
             for( let i=0;i<products.products.length;i++){
-            let product = products.products[i].product_id
-            let count = products.products[i].count
-            console.log("product id and count is :"+product+" "+count);
-            await Product.updateOne({_id:product},{$inc:{stock:-count}});
+                let product = products.products[i].product_id
+                let count = products.products[i].count
+            // console.log("product id and count is :"+product+" "+count);
+                await Product.updateOne({_id:product},{$inc:{stock:-count}});
             }
-            console.log("this is the saveed details :"+saveDetail);
             await Cart.deleteOne({ user: req.session.user });
             res.json({cod:true});
         } else {
@@ -54,12 +56,11 @@ const addOrder = async (req,res) => {
 
 const cancelOrder = async (req,res) => {
     try {
-        const orderDetails = await Order.findOne({_id:req.query.id});
-        console.log("the complete order details is"+orderDetails);
-            const products = orderDetails.products
-            console.log("the products only is :"+products);
-            console.log("product id and count is :"+products[0].product_id+" "+products[0].count);
-            for (let i = 0; i < products.length; i++) {
+        const userId = req.session.user;
+        const orderId = req.query.id;
+        const orderDetails = await Order.findOne({_id:orderId});
+        const products = orderDetails.products
+        for (let i = 0; i < products.length; i++) {
                 // const productToUpdate = await Products.findOne({_id:products[i].product_id});
                 await Product.findOneAndUpdate(
     
@@ -69,9 +70,47 @@ const cancelOrder = async (req,res) => {
                     }
                 );
             }
+
+            const newTransactionHistory = {
+                amount: orderDetails.totalAmount,
+                direction: 'received',
+                transactionDate: Date.now()
+            }
+            if (orderDetails.paymentMethod !== 'Online payment') {
+                await User.findOneAndUpdate(
+                    { _id: userId },
+                    {
+                      $push: {
+                        'wallet.transactionHistory': newTransactionHistory
+                      },
+                      $inc: { 'wallet.balance': orderDetails.totalAmount }
+                    },
+                    { upsert: true }
+                  );
+            }              
         orderDetails.status = "cancelled";
         await orderDetails.save();
         res.redirect('/profile');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const returnOrder = async (req,res) => {
+    try {
+        const orderId = req.body.orderId;
+        const newData = await Order.findOneAndUpdate(
+            { _id:orderId },
+            { $set: { status:'return requested' } },
+            { new:true },
+        );
+        console.log('here the updated data');
+        console.log(newData);
+        if (newData) {
+            res.json({ success:true });
+        } else {
+            res.json({ success:false });
+        }
     } catch (error) {
         console.log(error);
     }
@@ -89,5 +128,6 @@ const renderOrders = async (req,res) => {
 module.exports = {
     addOrder,
     cancelOrder,
+    returnOrder,
     renderOrders
 }

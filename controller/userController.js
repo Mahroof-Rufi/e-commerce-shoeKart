@@ -2,10 +2,11 @@
 const User = require("../model/usersModel");
 const Products = require("../model/productsModel");
 const Cart = require("../model/cartModel");
-const Address = require("../model/addressModel");
 const Order = require("../model/orderModel");
+const Wishlist = require("../model/wishlistModel");
 const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
+const { default: mongoose } = require("mongoose");
 
 // load login page
 const loadLogin = async (req,res) => {
@@ -33,6 +34,48 @@ const loadHome = async (req,res) => {
         // console.log(cartProducts);
         const username = req.session.username
         res.render("home",{products:products,cartProducts:cartProducts,username});
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const addToWishlist = async (req,res) => {
+    try {
+        console.log('on the add to wishlist section');
+        const userId = req.session.user;
+        const productId = req.query.id;
+        console.log('here the product id');
+        console.log(productId);
+
+        const result = await Wishlist.findOneAndUpdate(
+            { userId: userId },
+            { $addToSet: { products: { product_id: productId } } },
+            { upsert: true, new: true }
+        );             
+        
+        console.log('here the result');
+        console.log(result);
+        
+        if (result) {
+            res.json({success:true})
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const loadWishlist = async (req,res) => {
+    try {
+        const userId = req.session.user;
+        const wishlist = await Wishlist.findOne({ userId: userId })
+          .populate('products.product_id');
+        const wishlistProducts = wishlist.products;
+        console.log('here the products');
+        console.log(wishlistProducts);
+        const cartProducts = await Cart.findOne({ user: userId });
+        
+        res.render('wishlist',{cartProducts,wishlistProducts});
 
     } catch (error) {
         console.log(error);
@@ -190,7 +233,10 @@ const insertUser = async(req,res) => {
             gender:req.body.gender,
             password:hashedPass,
             isVerified:false,
-            status:true
+            status:true,
+            wallet:{
+                balance:0
+            }
         })
         const userMail = req.body.email
         const userData = await user.save();
@@ -357,15 +403,78 @@ const loadProduct = async (req,res) => {
     }
 }
 
+//<===================== Address managment =========================>
+
+const addNewAddress = async (req,res) => {
+    try {
+        // console.log("on address insert sedction");
+        const userId = req.session.user;
+        const newAddress = {
+            fullName:req.body.fullname,
+            mobile:req.body.mobile,
+            houseName:req.body.housename,
+            colony:req.body.colony,
+            city:req.body.city,
+            state:req.body.state,
+            pin:req.body.pincode,
+        }
+
+        console.log('here the body data');
+        console.log(newAddress);
+
+        if (newAddress) {
+            const result = await User.findOneAndUpdate(
+                { _id: userId }, // Search for the user by username
+                { $push: { addresses: newAddress } }, // Push the new address subdocument to the addresses array
+                { upsert: true }) // create if it doesn't exist
+
+                if (result) {
+                    res.redirect('/profile')
+                } else {
+                    
+                }
+
+        } else {
+            
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const deleteAddress = async (req,res) => {
+    try {
+        // console.log("on address deletion ");
+        // console.log(req.params.id);
+        const userId = req.session.user;
+        const addressIdToDelete = req.params.id;
+        const deleteResult = await User.findOneAndUpdate(
+            { _id: userId },
+            { $pull: { addresses: { _id: addressIdToDelete } } }
+        );
+        // console.log(deleteResult);
+
+        if (deleteResult) {
+            res.json({result:true});
+        } else {
+            res.json({result:false});
+        }
+    } catch (error) {
+       console.log(error); 
+    }
+}
+
 const loadProfile = async (req,res) => {
     try {
         const cartProducts = await Cart.findOne({user:req.session.user});
-        const user = await User.findOne({_id:req.session.user});
-        const userAddress = await Address.findOne({userId:req.session.user});
+        const user = await User.findOne({_id:new mongoose.Types.ObjectId(req.session.user)});
+        console.log('here the session id');
+        console.log(req.session.user);
         const username = req.session.username
-
         const orders = await Order.find({user_Id:req.session.user}).sort({purchaseDate:-1});
-        res.render("profile",{cartProducts,user,username,userAddress,orders:orders});
+        console.log('here the user details');
+        console.log(user);
+        res.render("profile",{cartProducts,user,username,orders:orders});
     } catch (error) {
         console.log(error);
     }
@@ -445,15 +554,15 @@ const verifyNewMailOtp = async (req,res) => {
 
 const renderCheckout = async (req,res) => {
     try {
+        const userId = req.session.user;
         const shippingMethod = req.body.shipping;
-        console.log("on checkout section");
         const userName = req.session.username
-        console.log("username is :"+userName);
+        const userData = await User.findOne({ _id:userId });
+        const addresses = userData.addresses;
+        // console.log("here the addresses");
+        // console.log(addresses);
         const cartProducts = await Cart.findOne({user:req.session.user});
-        console.log("cart products is:"+cartProducts);
-        const userAddress = await Address.findOne({userId:req.session.user});
-        console.log("address is :"+userAddress);
-        res.render('checkout',{userName,cartProducts,userAddress,shippingMethod});
+        res.render('checkout',{userName,cartProducts,addresses,shippingMethod});
     } catch (error) {
         console.log(error);
     }
@@ -499,6 +608,8 @@ module.exports = {
     validateEmail,
     confirmResetOtp,
     updatePass,
+    addToWishlist,
+    loadWishlist,
     insertUser,
     sendOTP,
     checkUser,
@@ -517,5 +628,7 @@ module.exports = {
     renderCheckout,
     renderOrderDetails,
     renderOrderSuccess,
+    addNewAddress,
+    deleteAddress,
     logOut
 }

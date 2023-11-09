@@ -15863,6 +15863,7 @@ button:focus {
 .icon-phoenix-framework:before {
   content: "\f3dc";
 }
+
 .icon-playstation:before {
   content: "\f3df";
 }
@@ -16331,4 +16332,68 @@ button:focus {
 .icon-yarn:before {
   content: "\f7e3";
 }
+
+/* Wallet Header Style */
+.wallet-header {
+  background-color: #f8f9fa;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+}
+
+.wallet-header h3 {
+  margin: 0;
+}
+
+/* Wallet Balance Style */
+.wallet-balance {
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  background-color: #444;
+  color: #fff;
+}
+
+/* Recent Transactions Style */
+.wallet-transactions {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.wallet-transactions h4 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.wallet-transactions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.wallet-transactions li {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+/* Transaction Date Style */
+.transaction-date {
+  font-weight: bold;
+  color: #555;
+}
+
+/* Transaction Description Style */
+.transaction-description {
+  margin-left: 10px;
+  color: #007bff;
+}
+
+/* Style the list items separately */
+.wallet-transactions li:last-child {
+  border-bottom: none;
+}
+
 /*# sourceMappingURL=style.css.map */

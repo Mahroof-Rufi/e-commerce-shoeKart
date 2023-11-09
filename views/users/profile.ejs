@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- sweet alert file -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -63,6 +65,9 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-wallet" role="tab" aria-controls="tab-wallet" aria-selected="false">Wallet</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Sign Out</a>
@@ -216,20 +221,19 @@
                                                 <input type="text" name="pincode" class="form-control" oninput="checkPincode()" placeholder="Pincode (Required)">
                                                 <span id="pincodeError" class="addAddressError" style="color: red;"></span>
                                             </div><!-- End .col-sm-6 -->
-                                            <button type="submit" onclick="validateAddressForm(Event)">Save</button>
+                                            <button type="button" onclick="validateAddressForm(this.form)">Save</button>
                                         </div><!-- End .row -->
                                     </form>
                                 </div><!-- .End .tab-pane -->
     
                                 <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                                     <div class="row">
-                                        <p>The following addresses will be used on the checkout page by default.</p>
+                                        <p>The following addresses will be shown on the checkout page.</p>
                                         <a style="margin-left: auto;" class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Add&nbsp;address</a>
-                                        
                                     </div>
                                     <div class="row">
-                                        <% if (userAddress) { %>
-                                            <% const address = userAddress.address; %>
+                                        <% if (user.addresses) { %>
+                                            <% const address = user.addresses; %>
                                             <% address.forEach((adrs) => { %>
                                                 <div class="col-lg-6">
                                                     <div class="card card-dashboard">
@@ -256,7 +260,38 @@
                                             <p><%- "address is empty" %></p>
                                         <% } %>                                   
                                     </div><!-- End .row -->
+                                </div><!-- .End .tab-pane -->
+                                
+                                <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+                                    <div class="wallet">
+                                        <div class="wallet-header">
+                                            <h3>My Wallet</h3>
+                                        </div>
+                                        <div class="wallet-balance">
+                                            <p>Available Balance: ₹<%= user.wallet.balance %></p>
+                                        </div>
+                                        <div class="wallet-transactions">
+                                            <h4>Recent Transactions</h4>
+                                            <% if (user.wallet.transactionHistory && user.wallet.transactionHistory.length > 0) { %>
+                                                <ul>
+                                                  <% user.wallet.transactionHistory.forEach(function(history) { %>
+                                                    <li>
+                                                      <span class="transaction-date"><%= history.transactionDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %></span>
+                                                      <span class="transaction-description"><%= history.direction %> ₹<%= history.amount %></span>
+                                                    </li>
+                                                  <% }); %>
+                                                </ul>
+                                              <% } else { %>
+                                                <p>Your transaction history is currently empty, indicating that no previous transactions have been recorded for your account.</p>
+                                              <% } %>
+                                              
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
                                     
+                                     
                                 </div><!-- .End .tab-pane -->
                             </div>
                         </div><!-- End .col-lg-9 -->
@@ -322,5 +357,7 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+    <!-- for sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 </body>
 </html>

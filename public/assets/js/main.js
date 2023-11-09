@@ -819,6 +819,35 @@ function addToCart(id) {
     });
 }
 
+function addToWishlist (productId) {
+    const URL = `/add_to_wishlist?id=${productId}`;
+    console.log("add to wishlist function started");
+    $.ajax({
+        method: 'get',
+        url: URL,  
+        contentType: 'application/json',
+        xhrFields: {
+            withCredentials: true
+        }, 
+        success: function (response) {
+            if(response.success === true){
+                Swal.fire({
+                    title: 'success',
+                    text: 'product added to wishlist',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  });
+            } else {
+                window.location.href = '/login';
+            }
+        },
+        error: function (error) {
+
+            console.error(error);
+        }
+    });
+}
+
 function deleteFromCart(id) {
     console.log("on delete cart function");
     $.ajax({
@@ -926,10 +955,12 @@ function checkPhone() {
     const errorElement = document.querySelector('#mobileNumberError');
     const phonePattern = /^[0-9]/;
 
-    if (phonePattern.test(trimmedValue) && trimmedValue.length === 10) {
+    if (phonePattern.test(trimmedValue) && trimmedValue.length == 10) {
         errorElement.textContent = "";
+        return true
     } else {
-        errorElement.textContent = "Enter a valid mobile number"
+        errorElement.textContent = "Enter a valid 10-digit mobile number";
+        return false
     }
 }
 
@@ -1006,7 +1037,7 @@ function checkPincode() {
     }
 }
 
-function validateAddressForm(event) {
+function validateAddressForm(form) {
     const checkFullNameResult = checkFullName();
     const checkHouseNameResult = checkHouseName();
     const checkPhoneResult = checkPhone();
@@ -1016,31 +1047,45 @@ function validateAddressForm(event) {
     const checkPincodeResult = checkPincode();
 
     if (!checkFullNameResult || !checkHouseNameResult || !checkPhoneResult || !checkColonyResult || !checkCityResult || !checkStateResult || !checkPincodeResult) {
-        event.preventDefault();
-        alert('Please fill in all required fields.');
+        console.log(checkFullNameResult,checkHouseNameResult,checkPhoneResult,checkColonyResult,checkCityResult,checkStateResult,checkPincodeResult);
+        Swal.fire({
+            title: 'Error',
+            text: 'Please fill in all required fields.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        })
+    } else {
+        Swal.fire({
+            title: 'Added',
+            text: 'Address added successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(() => {
+            form.submit();
+        });
     }
 }
 
-// for address session
-
 function deleteAddress(id) {
     const url = `/delete_address/${id}`
+    console.log('here the address id');
+    console.log(id);
     $.ajax({
         method: 'delete',
         url: url,
         success: function (response) {
             if (response.result === true) {
                 $('#container').load('/profile #container');
-                // Swal.fire({
-                //     title: 'Success',
-                //     text: 'Address de changed',
-                //     icon: 'success', // Use 'success' for a success message
-                //     confirmButtonText: 'OK'
-                // });
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Address deleted successfully',
+                    icon: 'success', 
+                    confirmButtonText: 'OK'
+                });
             } else {
                 Swal.fire({
                     title: 'Error',
-                    text: 'Address not deleted',
+                    text: 'something wrong',
                     icon: 'error', // Use 'error' for an error message
                     confirmButtonText: 'OK'
                 });
@@ -1193,6 +1238,38 @@ function verifyPayment (res,order) {
                 //     icon: 'error', 
                 //     confirmButtonText: 'OK'
                 // });
+                window.location.href = '/'
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error in verify_payment request: " + error);
+        }
+    })
+}
+
+function returnOrder (orderId) {
+    console.log('on the return order function');
+    $.ajax({
+        url:"/return_order",
+        type:"PATCH",
+        data: ({orderId}),
+        success: function (response) {
+            if (response.success === true) {
+                window.location.href = '/profile'
+                Swal.fire({
+                    title: 'success',
+                    text: 'Return order Successfull',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  });
+            } else if (response.success === false){
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Something wrong',
+                    icon: 'error', 
+                    confirmButtonText: 'OK'
+                });
+            } else {
                 window.location.href = '/'
             }
         },

@@ -39,18 +39,18 @@
                 <h1 class="page-title">Order Details</h1>
             </div><!-- End .container -->
         </div><!-- End .page-header -->
-        <div class="container">
+        <div class="container" id="mainContainer">
             <div class="col-md-12">
                 <table class="table table-cart table-mobile">
                     <thead>
                         <tr>
                             <th>Products</th>
-                            <th>Name</th>
                             <th>Status</th>
                             <th>Category</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Total</th>
+                            <th>Cancel</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,18 +66,18 @@
                                                     <img src="/products/croped/<%= product.image %>" alt="Product image">
                                                 </a>
                                             </figure>
+                            
+                                            <h3 class="product-title">
+                                                <a href="#"><%= product.name %></a>
+                                            </h3><!-- End .product-title -->
                                         </div><!-- End .product -->
                                     </td>
-                                    <td class="price-col" style="margin-left: 20%;">
-                                        <h3 class="product-title">
-                                            <a href="#"><%= product.name %></a>
-                                        </h3><!-- End .product-title -->
-                                    </td>
-                                    <td class="price-col"><%= orders[i].status %></td>
-                                    <td class="price-col"><%= product.category %></td>
+                                    <td class="product-col"><%= orders[i].status %></td>
+                                    <td class="product-col"><%= product.category %></td>
                                     <td class="price-col">₹<%= product.price %></td>
                                     <td class="price-col"><%= product.count %></td>
                                     <td class="price-col">₹<%= product.price * product.count %></td>
+                                    <td class="action-col"><button class="btn-remove">cancel</button></td>
                                 </tr>
                             <% } %>
                         <% } %>
@@ -106,11 +106,21 @@
                         <div class="card-body">
                             <h3>Order summary</h3>
                             <p>Order id: <%= orders[0]._id %><br>
-                                Purchase date: <%= orders[0].purchaseDate.toLocaleDateString('en-US', { year:
-                                    'numeric', month: 'short', day: '2-digit'
-                                    }).replace(/\//g, '-') %><br>
                                 Total amount: <%= orders[0].totalAmount %><br>
                                 Status: <%= orders[0].status %><br>
+                                <% if (<%= orders[0].status %> == 'delivered') { %>
+                                    Delivered date: <%= orders[0].deliveredDate.toLocaleDateString('en-US', { year:
+                                        'numeric', month: 'short', day: '2-digit'
+                                        }).replace(/\//g, '-') %><br>
+                                <% } else if (<%= orders[0].status %> == 'returned') { %>
+                                    Returned date: <%= orders[0].returnedDate.toLocaleDateString('en-US', { year:
+                                        'numeric', month: 'short', day: '2-digit'
+                                        }).replace(/\//g, '-') %><br>
+                                <% } else { %>
+                                    Purchase date: <%= orders[0].purchaseDate.toLocaleDateString('en-US', { year:
+                                        'numeric', month: 'short', day: '2-digit'
+                                        }).replace(/\//g, '-') %><br>
+                                <% } %>
                                 Payment method: <%= orders[0].paymentMethod %><br>
                                 Shipping method: <%= orders[0].shippingMethod %><br>
                                 Shipping charge: <%= orders[0].shippingFee %><br>
@@ -118,18 +128,30 @@
                         </div><!-- End .card-body -->
                     </div><!-- End .card-dashboard -->
                 </div>
-                <% if ( orders[0].status == 'cancelled' || orders[0].status == 'delivered') { %>
-                    <div class="col-md-12">
-                        <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
-                    </div>
-                <% } else { %>
-                    <div class="col-md-6">
-                        <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <a  href="/cancel_order?id=<%= orders[0]._id %>" onclick="return confirm('Are you sure? Do you want to Cancel')"><button class="btn btn-primary btn-block">Cancel Order</button></a>
-                    </div>
-                <% } %>
+                <% let currentDate = Date.now(); %>
+            <% let daysPassed = Math.floor((currentDate - orders[0].purchaseDate) / (1000 * 60 * 60 * 24)); %>
+
+            <% if (orders[0].status === 'cancelled' || (orders[0].status === 'delivered' && daysPassed >= 7) || orders[0].status === 'return requested') { %>
+                <div class="col-md-12">
+                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
+                </div>
+            <% } else if (orders[0].status === 'delivered' && daysPassed <= 7) { %>
+                <div class="col-md-6">
+                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-primary btn-block" onclick="if (confirm('Are you sure? Do you want to Cancel')) { returnOrder('<%= orders[0]._id %>'); }">Return Order</button>
+                </div>
+            <% } else { %>
+                <div class="col-md-6">
+                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
+                </div>
+                <div class="col-md-6 text-right">
+                    <a href="/cancel_order?id=<%= orders[0]._id %>" onclick="return confirm('Are you sure? Do you want to Cancel')">
+                        <button class="btn btn-primary btn-block">Cancel Order</button>
+                    </a>
+                </div>
+            <% } %>               
             </div>
         </div>
     </main><!-- End .main -->

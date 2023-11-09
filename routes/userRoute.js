@@ -1,5 +1,8 @@
 // require modules
 const express = require("express");
+const methodOverride = require('method-override');
+const mongoSanitizer = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 const session = require('express-session');
 const user_route = express();
 
@@ -16,12 +19,20 @@ user_route.use(session({
     resave: false,
     saveUninitialized:true,
 }))
+// middlewire for override HTTP method
+user_route.use(methodOverride('_method'));
+
+// middleware for prevent noSql injection
+user_route.use(mongoSanitizer());
+
+// middleware for prevent site script xss
+user_route.use(xss());
 
 // require user controller
 const userController = require("../controller/userController");
 const productController = require("../controller/productController");
 const cartController = require("../controller/cartController");
-const addressController = require("../controller/addressController");
+// const addressController = require("../controller/addressController");
 const orderController = require("../controller/orderController");
 
 // require user authentication
@@ -29,7 +40,9 @@ const userAuth = require("../public/middlewares/UserAuth");
 
 // set routes
 user_route.get('/',userController.loadHome);
+user_route.get('/add_to_wishlist',userAuth.isAuth,userController.addToWishlist);
 user_route.get('/product',userController.loadProduct);
+user_route.get('/wishlist',userAuth.isAuth,userController.loadWishlist);
 user_route.get('/login',userController.loadLogin);
 user_route.post('/login',userController.validateLogin);
 user_route.get('/forgot_pass',userController.loadResetPass);
@@ -56,13 +69,14 @@ user_route.post('/change_pass',userAuth.isAuth,userController.validateNewPass);
 user_route.get('/change_mail',userAuth.isAuth,userController.loadNewMail);
 user_route.post('/change_mail',userAuth.isAuth,userController.sendOTP);
 user_route.post('/verify_mail_otp',userController.verifyNewMailOtp);
-user_route.post('/add_address',userAuth.isAuth,addressController.validateNewAddress);
-user_route.delete('/delete_address/:id',userAuth.isAuth,addressController.deleteAddress);
+user_route.post('/add_address',userAuth.isAuth,userController.addNewAddress);
+user_route.delete('/delete_address/:id',userAuth.isAuth,userController.deleteAddress);
 user_route.post('/checkout',userAuth.isAuth,userController.renderCheckout);
 user_route.post('/place_order',userAuth.isAuth,orderController.addOrder);
 user_route.get('/orderDetails',userAuth.isAuth,userController.renderOrderDetails);
 user_route.get('/order_sucess',userAuth.isAuth,userController.renderOrderSuccess);
 user_route.get('/cancel_order',userAuth.isAuth,orderController.cancelOrder);
+user_route.patch('/return_order',userAuth.isAuth,orderController.returnOrder);
 user_route.get('/logout',userController.logOut);
 
 // export modules

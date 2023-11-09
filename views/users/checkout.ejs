@@ -70,9 +70,8 @@
 								<h6>Choose your Delivery address</h6>
 								<p id="address-error" style="color: red;"></p>
 								<div class="row">
-									<% if (userAddress) { %>
-										<% const address = userAddress.address; %>
-										<% address.forEach((adrs, index) => { %>
+									<% if (addresses) { %>
+										<% addresses.forEach((adrs, index) => { %>
 											<div class="col-lg-6">
 												<div class="card card-dashboard">
 													<div class="card-body">

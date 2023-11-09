@@ -211,6 +211,11 @@ function handleStatusChange(orderId,currentStatus) {
   }
 }
 
+function acceptReturn (id,data) {
+  console.log('return ajax function');
+  updateOrder(id,data);
+}
+
 
 
 

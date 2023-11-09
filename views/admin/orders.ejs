@@ -43,6 +43,7 @@
                           <th> Payment method </th>
                           <th> Status </th>
                           <th> Order action </th>
+                          <th> Return requests </th>
                           <th> View more </th>
                         </tr>
                       </thead>
@@ -59,10 +60,13 @@
                               <td>
                                 <% if (order.status === 'cancelled') { %>
                                   <span style="color: red;">cancelled</span>
-                                <% } else { %>
-                                  <% if (order.status === 'delivered') { %>
+                                <% } else if(order.status === 'delivered') { %>
                                     <span style="color: green;">delivered</span>
-                                  <% } else { %>
+                                  <% } else if(order.status === 'return requested') { %>
+                                    <span>return requested</span>
+                                    <% } else if(order.status === 'returned') { %>
+                                      <span style="color: orange;">returned</span>
+                                      <% } else { %>
                                     <select name="status" class="form-control" onchange="handleStatusChange('<%= order._id %>')" required>
                                       <option value="" disabled selected><%= order.status %></option>
                                       <option value="shipped">shipped</option>
@@ -71,9 +75,15 @@
                                       <option value="cancelled">cancel</option>
                                       <option value="placed">placed</option>
                                     </select>
-                                  <% } %>
                                 <% } %>
                               </td>
+                              <th>
+                                <% if (order.status === 'return requested') { %>
+                                  <button onclick="acceptReturn('<%= order._id %>','returned')">accept</button>
+                                <% } else if (order.status === 'return accepted') { %>
+                                  <p style="color: green;">return accepted</p>
+                                <% } %>
+                              </th>
                               <td><a href="/admin/orderDetails?id=<%= order._id %>">More Details</a></td>
                           </tr>
                           <% }); %>

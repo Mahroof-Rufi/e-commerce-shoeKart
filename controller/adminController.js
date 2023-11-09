@@ -235,27 +235,56 @@ const renderOrderDetails = async (req,res) => {
 const updateOrderStatus = async (req,res) => {
     try {
         const newStatus = req.body.data;
-        console.log("on the status updation section");
-        console.log("new status is :"+newStatus);
-        const order = await Order.findOne({_id:req.body.id});
-        console.log("the order data is :"+order);
+        const orderId = req.body.id;
+        const order = await Order.findOne({_id:orderId});
         if (newStatus == 'cancelled') {
-            console.log("on cancel if case");
             const products = order.products
             for (let i = 0; i < products.length; i++) {
-                console.log("on loop of if case");
-                // const productToUpdate = await Products.findOne({_id:products[i].product_id});
                 await Products.findOneAndUpdate(
     
                     { _id: products[i].product_id },
                     {
-                        $inc: { stock: products[i].count } // Use $inc to increment the stock field
+                        $inc: { stock: products[i].count } 
                     }
                 );
+                await Order.findOneAndUpdate(
+                  { _id:orderId },
+                  { $set: { status: newStatus, paymentStatus: 'cancelled' } },
+                );
             }
+        } else if (newStatus == 'delivered') {
+          await Order.findOneAndUpdate(
+            { _id: orderId },
+            { $set: { status: newStatus, paymentStatus: 'paid', deliveredDate: Date.now() } },
+            { upsert: true },
+          );
+        } else if(newStatus == 'returned'){
+          const orderdetails = await Order.findOneAndUpdate(
+            { _id:orderId },
+            { $set: { status:newStatus, returnedDate:Date.now() } },
+            { new:true },
+          );
+          const userId = req.session.user;
+          const newTransactionHistory = {
+            amount: orderdetails.totalAmount,
+            direction: 'received',
+            transactionDate: Date.now()
+          }
+
+          await User.findOneAndUpdate(
+            { _id: userId },
+            {
+              $inc: { 'wallet.balance': orderdetails.totalAmount },
+              $push: { 'wallet.transactionHistory': newTransactionHistory },
+            }
+          );
+          
+        } else {
+          await Order.findOneAndUpdate(
+            { _id:orderId },
+            { $set: { status: newStatus} },
+          );
         }
-        order.status = newStatus;
-        await order.save();
         res.json({result:true});  
     } catch (error) {
         console.log(error);
