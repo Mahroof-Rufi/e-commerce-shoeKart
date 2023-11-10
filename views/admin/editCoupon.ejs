@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connect Plus</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/admin/vendor/select2/select2.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/admin/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/admin/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <%- include('./partials/_navbar.ejs') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <%- include('./partials/_sidebar.ejs') %>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <h4 class="card-title" style="margin-top: 2rem;">Edit Coupon</h4>
+                    <form class="forms-sample col-md-12" style="margin-bottom: 2rem;" action="/admin/add_coupon?_method=PUT" method="post">
+                      <div class="row">
+                        <div class="form-group col-md-6">
+                          <label for="couponCode" style="float: left;">Coupon code</label>
+                          <input style="text-transform: uppercase;" type="text" value="<%= coupon.code %>" name="code" class="form-control" id="couponCode" placeholder="coupon code">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="discountValue" style="float: left;">Discount value</label>
+                          <input type="number" value="<%= coupon.discountValue %>" name="discountValue" class="form-control" id="discountValue" placeholder="discount value">
+                        </div>
+                      </div>
+                      <div class="row form-group col-md-12">
+                        <label for="description" style="float: left;">Description</label>
+                        <input type="text" value="<%= coupon.description %>" name="description" class="form-control" id="description" placeholder="description">
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-6">
+                          <label for="activationDate" style="float: left;">Activation date</label>
+                          <input type="date" value="<%= coupon.activationDate.toISOString().split('T')[0] %>" name="activationDate" class="form-control" id="activationDate" placeholder="activation date">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="expireDate" style="float: left;">Expiration date date</label>
+                          <input type="date" value="<%= coupon.expireDate.toISOString().split('T')[0] %>" name="expireDate" class="form-control" id="expireDate" placeholder="expiration date">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-6">
+                          <label for="minPurchaseAmount" style="float: left;">Minimum purchase amount</label>
+                          <input type="number" value="<%= coupon.minPurchaseAmount %>" name="minPurchaseAmount" class="form-control" id="minPurchaseAmount" placeholder="minimum purchase amount">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="totalUsageLimit" style="float: left;">Maximum usage limit</label>
+                          <input type="number" value="<%= coupon.totalUsageLimit %>" name="totalUsageLimit" class="form-control" id="totalUsageLimit" placeholder="maximum usage limit">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-6 text-left">
+                            <a href="/admin/coupons"><button type="button" class="btn btn-secondary">cancel</button></a>
+                        </div>
+                        <div class="form-group col-md-6 text-right">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                      </div>
+                      <input type="hidden" name="id" value="<%= coupon._id %>">
+                    </form>
+                  </div>
+                </div>
+              </div>
+              
+              
+          
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('./partials/_footer.ejs') %>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <script>
+          function formatDate(dateString) {
+    // Parse the input date string
+    const date = new Date(dateString);
+
+    // Get day, month, and year components
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Note: months are zero-based
+    const year = date.getFullYear().toString().slice(-2); // Get the last two digits of the year
+
+    // Assemble the formatted date
+    const formattedDate = `${day}/${month}/${year}`;
+
+    return formattedDate;
+  }
+    </script>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/admin/vendor/select2/select2.min.js"></script>
+    <script src="/admin/assets/js/typeahead.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/admin/assets/js/off-canvas.js"></script>
+    <script src="/admin/assets/js/hoverable-collapse.js"></script>
+    <script src="/admin/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="/admin/assets/js/file-upload.js"></script>
+    <script src="/admin/assets/js/typeahead.js"></script>
+    <script src="/admin/assets/js/select2.js"></script>
+    <!-- End custom js for this page -->
+  </body>
+</html>

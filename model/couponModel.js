@@ -10,7 +10,7 @@ const couponSchema = mongoose.Schema({
         type:String,
         require:true
     },
-    discountAmount: {
+    discountValue: {
         type:Number,
         require:true
     },
@@ -31,3 +31,5 @@ const couponSchema = mongoose.Schema({
         require:true
     }
 })
+
+module.exports = mongoose.model("Coupon", couponSchema);

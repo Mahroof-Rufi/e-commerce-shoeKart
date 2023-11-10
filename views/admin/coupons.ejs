@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connect Plus</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/admin/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/admin/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <%- include('./partials/_navbar.ejs') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('./partials/_sidebar.ejs') %>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                  <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="row col-md-12 grid-margin stretch-card" style="margin-top: 2rem;">
+                        <div class="col-md-6">
+                          <h1 class="card-title text-right">Users list</h1>
+                        </div>
+                        <div class="col-md-6 text-right">
+                          <a href="/admin/add_coupon">
+                            <button type="button" class="btn btn-dark btn-fw">Add</button>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th> No: </th>
+                              <th> coupon code </th>
+                              <th> discount value </th>
+                              <th> description </th>
+                              <th> activation date </th>
+                              <th> expiration date </th>
+                              <th> minimum purchase amount </th>
+                              <th> total usage limit </th>
+                              <th> actions </th>
+                              <th></th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% coupons.forEach(function(coupon,index) { %>
+                            <tr>
+                                <td><%= index+1 %></td>
+                                <td style="text-transform: uppercase;"><%= coupon.code %></td>
+                                <td><%= coupon.discountValue %>%</td>
+                                <td><%= coupon.description %></td>
+                                <td><%= coupon.activationDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %></td>
+                                <td><%= coupon.expireDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %></td>
+                                <td><%= coupon.minPurchaseAmount %></td>
+                                <td><%= coupon.totalUsageLimit %></td>
+                                <td><a href="/admin/edit_coupon?id=<%= coupon._id %>"><button>edit</button></a></td>
+                                <td><a href=""><i class="mdi mdi-close"></i></a></td>
+                            </tr> 
+                              <% }); %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>              
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('./partials/_footer.ejs') %>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/admin/assets/js/off-canvas.js"></script>
+    <script src="/admin/assets/js/hoverable-collapse.js"></script>
+    <script src="/admin/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+  </body>
+</html>

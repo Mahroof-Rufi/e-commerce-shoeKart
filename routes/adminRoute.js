@@ -21,6 +21,7 @@ const categoryController = require("../controller/categoryController");
 const userController = require("../controller/userController");
 const productController = require("../controller/productController");
 const orderController = require("../controller/orderController");
+const couponController = require("../controller/couponController");
 
 const multer = require("../public/middlewares/multer");
 const adminAuth = require("../public/middlewares/adminAuth");
@@ -51,6 +52,11 @@ admin_route.post('/update_sts',adminAuth.isAuth,adminController.updateOrderStatu
 admin_route.post('/cancel_order',adminAuth.isAuth,adminController.cancelOrder);
 admin_route.get('/sales',adminAuth.isAuth,adminController.renderSales);
 admin_route.get('/filter-sales/:val',adminAuth.isAuth,adminController.filterSales);
+admin_route.get('/coupons',adminAuth.isAuth,couponController.renderCoupons);
+admin_route.get('/add_coupon',adminAuth.isAuth,couponController.renderAddCoupon);
+admin_route.post('/add_coupon',adminAuth.isAuth,couponController.addCoupon);
+admin_route.put('/add_coupon',adminAuth.isAuth,couponController.updateCoupon);
+admin_route.get('/edit_coupon',adminAuth.isAuth,couponController.renderEditCoupon);
 admin_route.get('/logout',adminController.logOut);
 
 module.exports = admin_route 
