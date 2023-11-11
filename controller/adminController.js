@@ -134,7 +134,7 @@ const Login = async (req,res) => {
           }
 
         // find count of wallet payments orders
-        const walletPayments = await Order.find({ paymentMethod: 'wallet payment' });
+        const walletPayments = await Order.find({ paymentMethod: 'Wallet payment' });
         const walletCount = walletPayments.length;
 
         // find count of online payments orders 

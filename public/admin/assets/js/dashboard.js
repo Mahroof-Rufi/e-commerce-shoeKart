@@ -2164,7 +2164,7 @@ var options = {
 	chart: {
 	type: 'donut',
   },
-  labels: ["wallet", "cash on delivery", "online payments"],
+  labels: ["Wallet payment", "cash on delivery", "online payments"],
   responsive: [{
 	breakpoint: 480,
 	options: {

@@ -175,8 +175,6 @@ function cancelOrder(id){
 });
 }
 
-// for set the payment method
-
 function previewImage(imageNumber) {
   const input = document.getElementById(`image${imageNumber}`);
   const imagePreview = document.getElementById(`imagePreview${imageNumber}`);

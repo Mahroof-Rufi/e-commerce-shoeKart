@@ -48,7 +48,7 @@
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
-
+			<% let shippingCharge = 0; %>
             <div class="page-content">
             	<div class="checkout">
 	                <div class="container">
@@ -131,8 +131,7 @@
 		                						</tr><!-- End .summary-subtotal -->
 		                						<tr>
 		                							<td>Shipping fee:</td>
-		                							<td>
-														<% let shippingCharge = 0; %>
+		                							<td style="color: orange ;">+
 														<% if (shippingMethod == 'Express Delivery') { %>
 															<% shippingCharge += 99; %>
 														₹99
@@ -145,13 +144,19 @@
 													<% } %>
 													<input type="hidden" name="shippingMethod" value="<%= shippingMethod %>">
 													<input type="hidden" name="shippingCharge" value="<%= shippingCharge %>">
-													<input type="hidden" name="totalAmount" value="<%= total + shippingCharge %>">
+													<input type="hidden" name="totalAmount" value="<%= (total + shippingCharge) - discount %>">
+													<input type="hidden" name="discount" value="<%= (discount) %>">
 													<input type="hidden" name="totalItemCount" value="<%= count %>">
+													<input type="hidden" name="couponDetail" value="<%= couponDetail %>">
 													</td>
 		                						</tr>
+												<tr>
+													<td>Discount amount:</td>
+													<td style="color: green;">-₹<%= discount %></td>
+												</tr>
 		                						<tr class="summary-total">
 		                							<td>Total:</td>
-		                							<td>₹<%= total + shippingCharge %></td>
+		                							<td>₹<%= (total + shippingCharge) - discount %></td>
 		                						</tr><!-- End .summary-total -->
 												<% } %>
 		                					</tbody>
@@ -183,6 +188,33 @@
 										        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
 										        </div><!-- End .collapse -->
 										    </div><!-- End .card -->
+
+											<% if (walletBalance >=  total + shippingCharge) { %>
+												<div class="card">
+													<div class="card-header" id="heading-4">
+														<h2 class="card-title">
+															<a onclick="setPaymentMethod('Wallet payment')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+																₹<%= walletBalance %>   <span>(Pay using wallet amount)</span>
+															</a>
+														</h2>
+													</div><!-- End .card-header -->
+													<div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+													</div><!-- End .collapse -->
+												</div><!-- End .card -->
+											<% } else { %>
+												<div class="card disabled">
+													<div class="card-header" id="heading-4">
+														<h2 class="card-title">
+															<a onclick="setPaymentMethod('Wallet payment')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+																₹<%= walletBalance %>   <span>(Pay using wallet amount)</span>
+																<p style="color: red;">insufficent balace</p>
+															</a>
+														</h2>
+													</div><!-- End .card-header -->
+													<div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+													</div><!-- End .collapse -->
+												</div><!-- End .card -->
+											<% } %>
 											<input type="hidden" id="paymentMethodField" name="paymentMethod" >
 											<span id="paymentMethodError" style="color: red;"></span>
 										</div><!-- End .accordion -->

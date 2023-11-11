@@ -29,7 +29,14 @@ const couponSchema = mongoose.Schema({
     totalUsageLimit: {
         type:Number,
         require:true
-    }
+    },
+    usedUsers: [
+        {
+            userId: {
+                type: String,
+            }
+        }
+    ]
 })
 
 module.exports = mongoose.model("Coupon", couponSchema);

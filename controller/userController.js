@@ -3,6 +3,7 @@ const User = require("../model/usersModel");
 const Products = require("../model/productsModel");
 const Cart = require("../model/cartModel");
 const Order = require("../model/orderModel");
+const Coupon = require("../model/couponModel");
 const Wishlist = require("../model/wishlistModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
@@ -556,13 +557,16 @@ const renderCheckout = async (req,res) => {
     try {
         const userId = req.session.user;
         const shippingMethod = req.body.shipping;
+        const couponDetail = req.body.couponDetail;
+        const discount = req.body.discount;
         const userName = req.session.username
         const userData = await User.findOne({ _id:userId });
         const addresses = userData.addresses;
+        const walletBalance = userData.wallet.balance;
         // console.log("here the addresses");
         // console.log(addresses);
         const cartProducts = await Cart.findOne({user:req.session.user});
-        res.render('checkout',{userName,cartProducts,addresses,shippingMethod});
+        res.render('checkout',{userName,cartProducts,addresses,shippingMethod,discount,couponDetail,walletBalance});
     } catch (error) {
         console.log(error);
     }

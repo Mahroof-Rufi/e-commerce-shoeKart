@@ -34,6 +34,7 @@ const productController = require("../controller/productController");
 const cartController = require("../controller/cartController");
 // const addressController = require("../controller/addressController");
 const orderController = require("../controller/orderController");
+const couponController = require("../controller/couponController");
 
 // require user authentication
 const userAuth = require("../public/middlewares/UserAuth");
@@ -77,6 +78,7 @@ user_route.get('/orderDetails',userAuth.isAuth,userController.renderOrderDetails
 user_route.get('/order_sucess',userAuth.isAuth,userController.renderOrderSuccess);
 user_route.get('/cancel_order',userAuth.isAuth,orderController.cancelOrder);
 user_route.patch('/return_order',userAuth.isAuth,orderController.returnOrder);
+user_route.patch('/add_discount',userAuth.isAuth,couponController.addDiscount);
 user_route.get('/logout',userController.logOut);
 
 // export modules

@@ -109,6 +109,45 @@ img {
   position: relative;
   z-index: 2;
 }
+
+.coupon-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s, transform 0.3s;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.coupon-item:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.02);
+}
+
+.coupon-details {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.coupon-details h4 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #007bff;
+}
+
+.coupon-details p {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.coupon-details .time {
+  font-size: 12px;
+  color: #777;
+}
+
+
 @keyframes rotating {
   from {
     transform: rotate(0deg);
@@ -16394,6 +16433,70 @@ button:focus {
 /* Style the list items separately */
 .wallet-transactions li:last-child {
   border-bottom: none;
+}
+
+.coupon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s, transform 0.3s;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.coupon-item:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.02);
+}
+
+.coupon-details {
+  flex: 1;
+  margin-bottom: 10px;
+}
+
+.coupon-details h4 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #007bff;
+}
+
+.coupon-details p {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.coupon-details .time {
+  font-size: 12px;
+  color: #777;
+}
+
+.apply-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: #007bff;
+  border: 1px solid #0056b3;
+  color: #fff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.apply-button:hover {
+  background-color: #0056b3;
+  color: #fff;
+}
+
+.card.disabled {
+    opacity: 0.7; /* Adjust the opacity as needed */
+    pointer-events: none; /* Disable pointer events to make it non-interactive */
+    /* Add any other styles to visually indicate it's disabled */
+    background-color: #f0f0f0; /* Example background color */
+    color: #999; /* Example text color */
+    /* ... */
 }
 
 /*# sourceMappingURL=style.css.map */

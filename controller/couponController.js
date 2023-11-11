@@ -81,10 +81,39 @@ const updateCoupon = async (req,res) => {
     }
 }
 
+const addDiscount = async (req,res) => {
+    try {
+        const userId = req.session.user;
+        const couponId = req.body.couponId;
+        const totalAmount = req.body.totalAmount;
+        const currentDate = Date.now();
+        const couponDetails = await Coupon.findOne({ _id:couponId });
+        let discountedAmount,discount;
+        if ( totalAmount < couponDetails.minPurchaseAmount ) {
+            res.json({ minimumPurchaseAmount:false });
+        } else if ( currentDate > couponDetails.expireDate ) {
+            res.json({ expired:true });
+        } else if (couponDetails.usedUsers.some(user => user.userId === userId)) {
+            res.json({ used: true });        
+        } else if ( couponDetails.totalUsageLimit < 1 ) {
+            res.json({ exceed:true });
+        } else {
+            discountedAmount = parseInt(totalAmount - (totalAmount * couponDetails.discountValue / 100));
+            discount = parseInt((couponDetails.discountValue / 100) * totalAmount);
+            res.json({discountedAmount,coupon:couponDetails,discount});
+        }
+
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     renderCoupons,
     renderAddCoupon,
     addCoupon,
     renderEditCoupon,
-    updateCoupon
+    updateCoupon,
+    addDiscount,
 }

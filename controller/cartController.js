@@ -1,4 +1,5 @@
 const Cart = require("../model/cartModel");
+const Coupon = require("../model/couponModel");
 const Product = require("../model/productsModel");
 
 const addProduct = async (req,res) => {
@@ -76,6 +77,7 @@ const deleteProduct = async (req,res) => {
 
 const loadCart = async (req,res) => {
     try {
+        const coupons = await Coupon.find({});
         const products = await Cart.findOne({user:req.session.user});
         // const totalStock = [];
         // console.log("founded product of this user"+products);
@@ -85,7 +87,7 @@ const loadCart = async (req,res) => {
         //     totalStock.push(productData.stock);
         // }
         // console.log(totalStock);
-        res.render("cart",{cartProducts:products});
+        res.render("cart",{cartProducts:products,coupons});
     } catch (error) {
         console.log(error);
     }

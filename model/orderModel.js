@@ -56,6 +56,13 @@ const orderSchema = mongoose.Schema({
          type: Number,
          required: true,
        },
+       discount: {
+         type: Number,
+         require: true,
+       },
+       usedCouponCode: {
+         type: String,
+       },
        status: {
          type: String,
          required: true

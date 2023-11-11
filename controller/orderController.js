@@ -2,18 +2,24 @@ const Order = require('../model/orderModel');
 const User = require('../model/usersModel');
 const Cart = require('../model/cartModel');
 const Product = require('../model/productsModel');
+const Coupon = require('../model/couponModel');
 
 const addOrder = async (req,res) => {
     try {
         // const orderedProducts = req.body.orderProducts
         const user_Id = req.session.user;
         const totalAmount = req.body.totalAmount;
+        const discount = req.body.discount;
+        const couponDetail = req.body.couponDetail ? JSON.parse(req.body.couponDetail) : null;
         const paymentMethod = req.body.paymentMethod;
         const shippingMethod = req.body.shippingMethod;
         const shippingCharge = req.body.shippingCharge;
         const addressIndex = req.body.selectedAddress;
         const userDetails = await User.findOne({ _id:user_Id });
         const actualAddress = userDetails.addresses[addressIndex];
+        console.log('here the address and the payment method');
+        console.log(actualAddress);
+        console.log(paymentMethod);
         // console.log("actual address is:"+actualAddress);
         const products = await Cart.findOne({user:user_Id});
         // console.log("products from cart :"+products);
@@ -27,6 +33,8 @@ const addOrder = async (req,res) => {
             products: actualOrderProduct,
             purchaseDate: Date.now(),
             totalAmount: totalAmount,
+            discount: discount,
+            couponCode: couponDetail ? couponDetail.code : "",
             status: "placed",
             paymentMethod: paymentMethod,
             paymentStatus: 'pending',
@@ -35,6 +43,18 @@ const addOrder = async (req,res) => {
         })
         const saveDetail = await newOrder.save();
 
+        if (couponDetail) {
+            console.log('here the coupon details');
+            console.log(couponDetail._id);
+            await Coupon.findOneAndUpdate(
+                { _id: couponDetail._id },
+                {
+                    $inc: { totalUsageLimit: -1 },
+                    $push: { usedUsers: { userId: user_Id } }
+                },
+                { new: true, upsert: true }
+            );
+        }
 
         if (req.body.paymentMethod == 'Cash on delivery'){ 
             console.log("order saved succesfully");
@@ -46,6 +66,26 @@ const addOrder = async (req,res) => {
             }
             await Cart.deleteOne({ user: req.session.user });
             res.json({cod:true});
+        } else if (req.body.paymentMethod == 'Wallet payment') {
+
+            const newTransactionHistory = {
+                amount: totalAmount,
+                direction: 'paid',
+                transactionDate: Date.now()
+            }
+
+            await User.findOneAndUpdate(
+                { _id: user_Id },
+                {
+                  $push: {
+                    'wallet.transactionHistory': newTransactionHistory
+                  },
+                  $inc: { 'wallet.balance': -totalAmount }
+                },
+                { upsert: true }
+            );
+
+            res.json({wallet:true});
         } else {
             res.redirect(`/payment?id=${saveDetail._id}&total=${saveDetail.totalAmount}`);
         }
@@ -76,7 +116,7 @@ const cancelOrder = async (req,res) => {
                 direction: 'received',
                 transactionDate: Date.now()
             }
-            if (orderDetails.paymentMethod !== 'Online payment') {
+            if (orderDetails.paymentMethod == 'Online payment') {
                 await User.findOneAndUpdate(
                     { _id: userId },
                     {
@@ -86,7 +126,7 @@ const cancelOrder = async (req,res) => {
                       $inc: { 'wallet.balance': orderDetails.totalAmount }
                     },
                     { upsert: true }
-                  );
+                );
             }              
         orderDetails.status = "cancelled";
         await orderDetails.save();

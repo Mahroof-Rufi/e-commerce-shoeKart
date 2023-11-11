@@ -105,22 +105,20 @@
                     <div class="card card-dashboard">
                         <div class="card-body">
                             <h3>Order summary</h3>
-                            <p>Order id: <%= orders[0]._id %><br>
+                            <p>
+                                Order id: <%= orders[0]._id %><br>
                                 Total amount: <%= orders[0].totalAmount %><br>
+                                Discount: <%= orders[0].discount %><br>
                                 Status: <%= orders[0].status %><br>
-                                <% if (<%= orders[0].status %> == 'delivered') { %>
-                                    Delivered date: <%= orders[0].deliveredDate.toLocaleDateString('en-US', { year:
-                                        'numeric', month: 'short', day: '2-digit'
-                                        }).replace(/\//g, '-') %><br>
-                                <% } else if (<%= orders[0].status %> == 'returned') { %>
-                                    Returned date: <%= orders[0].returnedDate.toLocaleDateString('en-US', { year:
-                                        'numeric', month: 'short', day: '2-digit'
-                                        }).replace(/\//g, '-') %><br>
+                
+                                <% if (orders[0].status === 'delivered') { %>
+                                    Delivered date: <%= orders[0].deliveredDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %><br>
+                                <% } else if (orders[0].status === 'returned') { %>
+                                    Returned date: <%= orders[0].returnedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %><br>
                                 <% } else { %>
-                                    Purchase date: <%= orders[0].purchaseDate.toLocaleDateString('en-US', { year:
-                                        'numeric', month: 'short', day: '2-digit'
-                                        }).replace(/\//g, '-') %><br>
+                                    Purchase date: <%= orders[0].purchaseDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g, '-') %><br>
                                 <% } %>
+                
                                 Payment method: <%= orders[0].paymentMethod %><br>
                                 Shipping method: <%= orders[0].shippingMethod %><br>
                                 Shipping charge: <%= orders[0].shippingFee %><br>
@@ -128,6 +126,7 @@
                         </div><!-- End .card-body -->
                     </div><!-- End .card-dashboard -->
                 </div>
+                
                 <% let currentDate = Date.now(); %>
             <% let daysPassed = Math.floor((currentDate - orders[0].purchaseDate) / (1000 * 60 * 60 * 24)); %>
 

@@ -1099,8 +1099,14 @@ function deleteAddress(id) {
 
 // for add the shippping charge to the total
 
-function addShipcharge(total,charge) {
-
+function addShipcharge(charge) {
+    const totalVal = document.querySelector('#subTotal').textContent;
+    let total;
+    if (!isNaN(totalVal)) {
+        total = totalVal;
+    } else {
+        total = totalVal.substring(1);
+    }
     const finalAmount = parseInt(total) + parseInt(charge);
     const result = document.querySelector('#final-amount');
     result.textContent = '₹'+parseInt(finalAmount);
@@ -1179,9 +1185,11 @@ $(document).ready(function(){
 				if(response.order){
                     console.log("on success section");
 					openRazorPay(response.order)
-				} else if (response.cod === true) {
+				} else if ( response.cod === true ) {
                     window.location.href = '/order_sucess'
-                }else{
+                } else if ( response.wallet === true ) {
+                    window.location.href = '/order_sucess'
+                } else {
 					alert(res.msg);
 				}
 			}
@@ -1277,4 +1285,82 @@ function returnOrder (orderId) {
             console.error("Error in verify_payment request: " + error);
         }
     })
+}
+
+function addDiscount (couponId) {
+    const totalAmountValue = document.querySelector('#subTotal').textContent
+    const totalAmount = totalAmountValue.substring(1);
+    console.log(totalAmount);
+    $.ajax({
+        url:"/add_discount",
+        type:"PATCH",
+        data: ({couponId,totalAmount}),
+        success: function (response) {
+            if (response.minimumPurchaseAmount === false) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Minimum purchase amount not reached',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
+            } else if (response.expired === false){
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Coupon expired',
+                    icon: 'error', 
+                    confirmButtonText: 'OK'
+                });
+            } else if (response.used === true){
+                Swal.fire({
+                    title: 'Error',
+                    text: 'You already used the coupon',
+                    icon: 'error', 
+                    confirmButtonText: 'OK'
+                });
+            } else if (response.exceed === true) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Coupon usage limit exceed',
+                    icon: 'error', 
+                    confirmButtonText: 'OK'
+                });
+            } else if (response.discountedAmount) {
+                console.log('the final case');
+                $('#cart-form').load('/cart #cart-form', function () {
+                    console.log('Content loaded successfully');
+                    $('#subTotal').html("₹"+response.discountedAmount);
+                    $('#final-amount').html("₹"+response.discountedAmount);
+                    $('#discount').val(response.discount);
+                    $('#coupon-input').val(response.coupon.code);
+                    $('#couponDetail').val(JSON.stringify(response.coupon));
+                    couponChange();
+                });                
+                Swal.fire({
+                    title: 'success',
+                    text: 'Coupon applied sucessfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  });
+            } else {
+                window.location.href = '/'
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error in verify_payment request: " + error);
+        }
+    })
+}
+
+function couponChange () {
+    console.log('the change function on the coupon code section');
+    const codeValue = document.querySelector('#coupon-input').value;
+    const couponButton = document.querySelector('#couponButton');
+    const showButton = document.querySelector('#deleteButton');
+    if (codeValue) {
+        showButton.hidden = false
+        couponButton.hidden = true
+    } else {
+        showButton.hidden = true
+        couponButton.hidden = false
+    }
 }
