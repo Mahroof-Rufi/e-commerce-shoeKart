@@ -63,6 +63,7 @@
 									<thead>
 										<tr>
 											<th>Product</th>
+                                            <th></th>
 											<th>Price</th>
 											<th>Quantity</th>
 											<th>Total</th>
@@ -88,6 +89,11 @@
 													</h3><!-- End .product-title -->
 												</div><!-- End .product -->
 											</td>
+                                            <td class="price-col" style="color: red;">
+                                                <% if (typeof stockError[index] !== 'undefined') { %>
+                                                    <%= stockError[index]  %>
+                                                <% } %>
+                                            </td>
 											<td class="price-col">₹<%= product.price %></td>
                                             <td class="quantity-col">
                                                 <div class="cart-product-quantity">

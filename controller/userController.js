@@ -592,8 +592,30 @@ const renderCheckout = async (req,res) => {
         const walletBalance = userData.wallet.balance;
         // console.log("here the addresses");
         // console.log(addresses);
-        const cartProducts = await Cart.findOne({user:req.session.user});
-        res.render('checkout',{userName,cartProducts,addresses,shippingMethod,discount,couponDetail,walletBalance});
+        const cartProducts = await Cart.findOne({ user: req.session.user });
+
+        // Define an async function to use await
+        var errorIndex;
+        const fetchProductDetails = async () => {
+        for (const [index, product] of Object.entries(cartProducts.products)) {
+            const productDetails = await Products.findOne({ _id: product.product_id });
+            console.log(productDetails);
+            if (productDetails.stock < product.count) {
+                errorIndex = index
+                return `only ${productDetails.stock} left`
+            }
+        }
+        };
+
+        const theErrorMess = await fetchProductDetails();
+        const stockError = {};
+        const coupons = await Coupon.find({});
+        if (theErrorMess) {
+            stockError[errorIndex] = theErrorMess;
+            res.render('cart', { stockError,cartProducts,coupons });
+        } else {
+            res.render('checkout',{userName,cartProducts,addresses,shippingMethod,discount,couponDetail,walletBalance});
+        }
     } catch (error) {
         console.log(error);
     }

@@ -1144,6 +1144,7 @@ function newAddress (form) {
     });
 }
 
+
 function deleteAddress(id) {
     const url = `/delete_address/${id}`
     console.log('here the address id');

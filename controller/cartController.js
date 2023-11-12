@@ -87,7 +87,7 @@ const loadCart = async (req,res) => {
         //     totalStock.push(productData.stock);
         // }
         // console.log(totalStock);
-        res.render("cart",{cartProducts:products,coupons});
+        res.render("cart",{cartProducts:products,coupons,stockError:""});
     } catch (error) {
         console.log(error);
     }
