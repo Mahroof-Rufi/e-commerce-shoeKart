@@ -1066,6 +1066,84 @@ function validateAddressForm(form) {
     }
 }
 
+function validateNewAddressForm() {
+    const checkFullNameResult = checkFullName();
+    const checkHouseNameResult = checkHouseName();
+    const checkPhoneResult = checkPhone();
+    const checkColonyResult = checkColony();
+    const checkCityResult = checkCity();
+    const checkStateResult = checkState();
+    const checkPincodeResult = checkPincode();
+
+    if (!checkFullNameResult || !checkHouseNameResult || !checkPhoneResult || !checkColonyResult || !checkCityResult || !checkStateResult || !checkPincodeResult) {
+        console.log(checkFullNameResult,checkHouseNameResult,checkPhoneResult,checkColonyResult,checkCityResult,checkStateResult,checkPincodeResult);
+        
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function handleAddNewAddress (event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    if ( validateNewAddressForm() ) {
+        console.log('form data if case');
+        newAddress(formData)
+    } else {
+        Swal.fire({
+            title: 'Error',
+            text: 'Please fill in all required fields.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    return false
+}
+
+function newAddress (form) {
+    console.log('here the form data');
+    const data = {};
+    for (const pair of form.entries()) {
+        data[pair[0]] = pair[1];
+    }
+    console.log(data);
+
+    $.ajax({
+        method: 'post',
+        url: '/new_address',
+        data: data,
+        success: function (response) {
+            if (response.success) {
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Address added successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                }).then((result) => {
+                    // Check if the user clicked the "OK" button
+                    if (result.isConfirmed || result.isDismissed) {
+                        // Reload the page after the user closes the alert
+                        window.location.reload(true); // Pass true to force a full page reload
+                    }
+                })
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'something wrong',
+                    icon: 'error', // Use 'error' for an error message
+                    confirmButtonText: 'OK'
+                });
+            }
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
+
 function deleteAddress(id) {
     const url = `/delete_address/${id}`
     console.log('here the address id');

@@ -443,6 +443,33 @@ const addNewAddress = async (req,res) => {
     }
 }
 
+const addNewAddressFromCheckout = async (req,res) => {
+    try {
+        console.log('now the new address function');
+        const userId = req.session.user;
+        const newAddress = {
+            fullName: req.body.fullname,
+            mobile: req.body.mobile,
+            houseName: req.body.housename,
+            colony: req.body.colony,
+            city: req.body.city,
+            state: req.body.state,
+            pin: req.body.pincode,
+        }
+
+        const result = await User.findOneAndUpdate(
+            { _id: userId }, // Search for the user by username
+            { $push: { addresses: newAddress } }, // Push the new address subdocument to the addresses array
+            { upsert: true, new: true } // create if it doesn't exist
+        );
+        
+        res.json({ success: result });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const deleteAddress = async (req,res) => {
     try {
         // console.log("on address deletion ");
@@ -633,6 +660,7 @@ module.exports = {
     renderOrderDetails,
     renderOrderSuccess,
     addNewAddress,
+    addNewAddressFromCheckout,
     deleteAddress,
     logOut
 }

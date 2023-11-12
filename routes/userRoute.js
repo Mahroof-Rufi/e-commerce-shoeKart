@@ -71,6 +71,7 @@ user_route.get('/change_mail',userAuth.isAuth,userController.loadNewMail);
 user_route.post('/change_mail',userAuth.isAuth,userController.sendOTP);
 user_route.post('/verify_mail_otp',userController.verifyNewMailOtp);
 user_route.post('/add_address',userAuth.isAuth,userController.addNewAddress);
+user_route.post('/new_address',userAuth.isAuth,userController.addNewAddressFromCheckout);
 user_route.delete('/delete_address/:id',userAuth.isAuth,userController.deleteAddress);
 user_route.post('/checkout',userAuth.isAuth,userController.renderCheckout);
 user_route.post('/place_order',userAuth.isAuth,orderController.addOrder);
