@@ -22,6 +22,7 @@ const userController = require("../controller/userController");
 const productController = require("../controller/productController");
 const orderController = require("../controller/orderController");
 const couponController = require("../controller/couponController");
+const bannerController = require("../controller/bannerController");
 
 const multer = require("../public/middlewares/multer");
 const adminAuth = require("../public/middlewares/adminAuth");
@@ -57,6 +58,13 @@ admin_route.get('/add_coupon',adminAuth.isAuth,couponController.renderAddCoupon)
 admin_route.post('/add_coupon',adminAuth.isAuth,couponController.addCoupon);
 admin_route.put('/add_coupon',adminAuth.isAuth,couponController.updateCoupon);
 admin_route.get('/edit_coupon',adminAuth.isAuth,couponController.renderEditCoupon);
+admin_route.get('/banners',adminAuth.isAuth,bannerController.renderBanners);
+admin_route.delete('/banners',adminAuth.isAuth,bannerController.deleteBanner);
+admin_route.put('/banners',adminAuth.isAuth,multer.bannerImageUpload,bannerController.editBanner);
+admin_route.patch('/banners',adminAuth.isAuth,bannerController.changeStatus);
+admin_route.get('/add_banner',adminAuth.isAuth,bannerController.renderAddBanner);
+admin_route.get('/edit_banner',adminAuth.isAuth,bannerController.renderEditBanner);
+admin_route.post('/banners',adminAuth.isAuth,multer.bannerImageUpload,bannerController.addBanner);
 admin_route.get('/logout',adminController.logOut);
 
 module.exports = admin_route 

@@ -18,4 +18,24 @@ const productImagesUpload = upload.fields([
   { name: "image4", maxCount: 1 },
 ]);
 
-module.exports = { productImagesUpload}
+
+const bannerStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/images/banners");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const uploadBanner = multer({ storage: bannerStorage });
+const bannerImageUpload = uploadBanner.fields([
+  { name: "banner", maxCount: 1 }
+]);
+
+
+module.exports = { 
+  productImagesUpload,
+  bannerImageUpload
+  }

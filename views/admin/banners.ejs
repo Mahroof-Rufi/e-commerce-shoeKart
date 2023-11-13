@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connect Plus</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/admin/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/admin/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_navbar.html -->
+      <%- include('./partials/_navbar.ejs') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <%- include('./partials/_sidebar.ejs') %>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row">
+                  <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="row col-md-12 grid-margin stretch-card" style="margin-top: 2rem;">
+                        <div class="col-md-6">
+                          <h1 class="card-title text-right">Banners</h1>
+                        </div>
+                        <div class="col-md-6 text-right">
+                          <a href="/admin/add_banner">
+                            <button type="button" class="btn btn-dark btn-fw">Add</button>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th> No: </th>
+                              <th> Img </th>
+                              <th> Subtitle </th>
+                              <th> Text </th>
+                              <th> Price text </th>
+                              <th> Category </th>
+                              <th> Edit </th>
+                              <th> Delete </th>
+                              <th> Action </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% banners.forEach(function(banner, index) { %>
+                            <tr>
+                                <td><%= index+1 %></td>
+                                <td><img src="/images/banners/<%= banner.image %>" alt="img" ></td>
+                                <td><%= banner.subtile %></td>
+                                <td><%= banner.text %></td>
+                                <td><%= banner.priceText %></td>
+                                <td><%= banner.category %></td>
+                                <td><a href="/admin/edit_banner?id=<%= banner._id %>"><button class="btn btn-rounded btn-primary">edit</button></a></td>
+                                <td><form action="/admin/banners?_method=DELETE" method="post">
+                                  <input type="hidden" name="id" value="<%= banner._id %>">
+                                  <input type="hidden" name="image" value="<%= banner.image %>">
+                                  <button type="submit" class="btn btn-rounded btn-danger">delete</button>
+                                </form></td>
+                                <td>
+                                  <% if (banner.status === true) { %>
+                                    <form action="/admin/banners?_method=PATCH" method="post">
+                                      <input type="hidden" name="id" value="<%= banner._id %>">
+                                      <input type="hidden" name="status" value="<%= false %>">
+                                      <button type="submit" class="btn btn-rounded btn-warning">block</button>
+                                    </form>
+                                  <% } else { %>
+                                    <form action="/admin/banners?_method=PATCH" method="post">
+                                      <input type="hidden" name="id" value="<%= banner._id %>">
+                                      <input type="hidden" name="status" value="<%= true %>">
+                                      <button type="submit" class="btn btn-rounded btn-success">unblock</button>
+                                    </form>
+                                  <% } %>
+                                </td>                                
+                            </tr>
+                            <% }); %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>              
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('./partials/_footer.ejs') %>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/admin/assets/js/off-canvas.js"></script>
+    <script src="/admin/assets/js/hoverable-collapse.js"></script>
+    <script src="/admin/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+  </body>
+</html>

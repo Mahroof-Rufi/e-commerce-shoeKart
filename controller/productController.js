@@ -39,7 +39,6 @@ const addProduct = async (req, res) => {
     try {
       let details =  req.body;
       const files = await req.files;
-      console.log('hey',details);
       
   
       const img = [

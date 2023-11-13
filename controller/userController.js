@@ -5,6 +5,7 @@ const Cart = require("../model/cartModel");
 const Order = require("../model/orderModel");
 const Coupon = require("../model/couponModel");
 const Wishlist = require("../model/wishlistModel");
+const Banner = require("../model/bannerModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const { default: mongoose } = require("mongoose");
@@ -33,8 +34,9 @@ const loadHome = async (req,res) => {
         const products = await Products.find();
         const cartProducts = await Cart.findOne({user:req.session.user});
         // console.log(cartProducts);
+        const banners = await Banner.find({status:true});
         const username = req.session.username
-        res.render("home",{products:products,cartProducts:cartProducts,username});
+        res.render("home",{products:products,cartProducts:cartProducts,username,banners});
 
     } catch (error) {
         console.log(error);

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connect Plus</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/admin/vendor/select2/select2.min.css">
+    <link rel="stylesheet" href="/admin/assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/admin/assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/admin/assets/images/favicon.png" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <%- include('./partials/_navbar.ejs') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <%- include('./partials/_sidebar.ejs') %>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="row col-md-12 grid-margin stretch-card">
+                  <div class="card">
+                    <h4 class="card-title" style="margin-top: 2rem;">Add new Banner</h4>
+                    <form class="forms-sample col-md-12" onsubmit="checkAddBanner(event)" style="margin-bottom: 2rem;" action="/admin/banners" enctype="multipart/form-data" method="post">
+                      <div class="row">
+                        <div class="form-group col-md-12">
+                          <label for="image" style="float: left;">Banner image</label>
+                          <input type="file" accept="image/*" name="banner" onchange="checkBannerImg(); showPreview()" class="form-control" id="bannerImage" placeholder="banner image">
+                          <span style="color: red;" id="bannerImgError"></span>
+                        </div>
+                        <div class="row form-group col-md-12">
+                          <img id="bannerPreview" src="" alt="Preview" style="width: 100%; height: auto; display: none;"/>
+                        </div>
+                      </div>
+                      <div class="row form-group col-md-12">
+                        <label for="subtitle" style="float: left;">Banner subtitle</label>
+                        <input type="text" name="subtitle" class="form-control" id="bannerSubtitle" placeholder="banner subtitle (optional)">
+                      </div>
+                        <div class="row form-group col-md-12">
+                          <label for="text" style="float: left;">Banner text</label>
+                          <input type="text" name="text" class="form-control" id="bannerText" placeholder="banner text (optional)">
+                        </div>
+                        <div class="row form-group col-md-12">
+                          <label for="priceText" style="float: left;">Price and text</label>
+                          <input type="text" name="priceText" class="form-control" id="bannerPriceText" placeholder="banner price text (optional)">
+                        </div>
+                      <div class="row">
+                        <div class="form-group col-md-12">
+                          <label for="category" style="float: left;">Select category</label>
+                          <select name="category" class="form-control" onchange="checkBannerCategory()" required id="bannerCategory">
+                            <option disabled selected>select category</option>
+                            <% categories.forEach(function(category, index) { %>
+                            <option value="<%= category.name %>"><%= category.name %></option>
+                            <% }); %>
+                          </select>
+                          <span style="color: red;" id="bannerCategoryError"></span>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-6 text-left">
+                            <a href="/admin/banners"><button type="button" class="btn btn-secondary">cancel</button></a>
+                        </div>
+                        <div class="form-group col-md-6 text-right">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              
+              
+          
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('./partials/_footer.ejs') %>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/admin/assets/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/admin/vendor/select2/select2.min.js"></script>
+    <script src="/admin/assets/js/typeahead.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/admin/assets/js/off-canvas.js"></script>
+    <script src="/admin/assets/js/hoverable-collapse.js"></script>
+    <script src="/admin/assets/js/misc.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="/admin/assets/js/file-upload.js"></script>
+    <script src="/admin/assets/js/typeahead.js"></script>
+    <script src="/admin/assets/js/select2.js"></script>
+    <!-- End custom js for this page -->
+  </body>
+</html>

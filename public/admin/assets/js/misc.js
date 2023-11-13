@@ -220,3 +220,63 @@ function formatActivationDate(dateString) {
   const formattedDate = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
   return formattedDate;
 }
+
+function checkBannerImg () {
+  const bannerImg = document.querySelector('#bannerImage').value;
+  if (bannerImg !== ""){
+    document.querySelector('#bannerImgError').textContent = ''
+    return true
+  } else {
+    document.querySelector('#bannerImgError').textContent = 'image is required'
+    return false
+  }
+}
+
+function checkBannerCategory () {
+  const bannerCategory = document.querySelector('#bannerCategory').value;
+  if (bannerCategory !== "" && bannerCategory != "select category") {
+    document.querySelector('#bannerCategoryError').textContent = ""
+    return true
+  } else {
+    document.querySelector('#bannerCategoryError').textContent = "select a category"
+    return false
+  }
+}
+
+function checkAddBanner (event) {
+
+  const checkBannerImgResult = checkBannerImg();
+  const checkBannerCategoryResult = checkBannerCategory();
+
+  if (!checkBannerImgResult || !checkBannerCategoryResult){
+    event.preventDefault();
+  }
+}
+
+function showPreview () {
+  const input = document.querySelector('#bannerImage');
+  const imagePreview = document.querySelector('#bannerPreview');
+
+  const file = input.files[0];
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = 'block';
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    // If no file is selected, clear the image preview
+    imagePreview.src = '';
+  }
+}
+
+function checkEditBanner (event) {
+  const checkBannerCategoryResult = checkBannerCategory();
+
+  if ( !checkBannerCategoryResult){
+    event.preventDefault();
+  }
+}
