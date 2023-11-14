@@ -134,12 +134,12 @@
                 <div class="col-md-12">
                     <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
                 </div>
-            <% } else if (orders[0].status === 'delivered' && daysPassed <= 7) { %>
+            <% } else if (orders[0].status === 'delivered' || 'return request rejected' && daysPassed <= 7) { %>
                 <div class="col-md-6">
                     <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
                 </div>
                 <div class="col-md-6 text-right">
-                    <button class="btn btn-primary btn-block" onclick="if (confirm('Are you sure? Do you want to Cancel')) { returnOrder('<%= orders[0]._id %>'); }">Return Order</button>
+                    <button class="btn btn-primary btn-block" onclick="if (confirm('Are you sure? Do you want to Return the product')) { returnOrder('<%= orders[0]._id %>'); }">Return Order</button>
                 </div>
             <% } else { %>
                 <div class="col-md-6">

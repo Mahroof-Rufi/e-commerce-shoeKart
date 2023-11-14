@@ -2125,6 +2125,7 @@
 var totalOrders;
 var deliveredOrders;
 var cancelledOrders;
+var returnedOrders;
 
 var paymentCounts;
 var deliveryMethods;
@@ -2135,6 +2136,7 @@ function pageLoad() {
 	totalOrders = JSON.parse(monthlyData.getAttribute('data-payment-method-counts'));
 	deliveredOrders = JSON.parse(deliveredData.getAttribute('data-payment-method-counts'));
 	cancelledOrders = JSON.parse(cancelledData.getAttribute('data-payment-method-counts'));
+	returnedOrders = JSON.parse(returnedData.getAttribute('data-payment-method-counts'));
 
 	paymentCounts = JSON.parse(paymentsMethods.getAttribute('data-payment-method-counts'));
 	console.log('payment counts :');
@@ -2164,7 +2166,7 @@ var options = {
 	chart: {
 	type: 'donut',
   },
-  labels: ["Wallet payment", "cash on delivery", "online payments"],
+  labels: ["Wallet payment","online payments","cash on delivery"],
   responsive: [{
 	breakpoint: 480,
 	options: {
@@ -2195,6 +2197,10 @@ var options = {
 	  {
 		name: 'Delivered orders',
 		data: deliveredOrders,
+	  },
+	  {
+		name: 'Returned orders',
+		data: returnedOrders,
 	  }
 	],
 	chart: {

@@ -8,6 +8,17 @@ const renderCoupons = async (req,res) => {
         console.log(error);
     }
   }
+
+const deleteCoupon = async (req,res) => {
+    try {
+        console.log('this is the coupon delete function');
+        const couponId = req.body.id;
+        await Coupon.deleteOne({ _id:couponId });
+        res.redirect('/admin/coupons');
+    } catch (error) {
+        console.log(error);
+    }
+}
   
   const renderAddCoupon = async (req,res) => {
     try {
@@ -116,4 +127,5 @@ module.exports = {
     renderEditCoupon,
     updateCoupon,
     addDiscount,
+    deleteCoupon
 }

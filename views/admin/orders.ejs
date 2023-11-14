@@ -79,7 +79,8 @@
                               </td>
                               <th>
                                 <% if (order.status === 'return requested') { %>
-                                  <button onclick="acceptReturn('<%= order._id %>','returned')">accept</button>
+                                  <button onclick="acceptReturn('<%= order._id %>','returned')" class="btn btn-rounded btn-success">accept</button>
+                                  <button onclick="acceptReturn('<%= order._id %>','return request rejected')" class="btn btn-rounded btn-danger">reject</button>
                                 <% } else if (order.status === 'return accepted') { %>
                                   <p style="color: green;">return accepted</p>
                                 <% } %>

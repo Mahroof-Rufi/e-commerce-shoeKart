@@ -70,6 +70,21 @@ const Login = async (req,res) => {
             },
           ]);
 
+          // fetch the total returned orders count on every month 
+          const monthlyreturnedCounts = await Order.aggregate([
+            {
+              $match: {
+                status: 'returned',
+              },
+            },
+            {
+              $group: {
+                _id: { $dateToString: { format: '%m', date: '$purchaseDate' } },
+                count: { $sum: 1 },
+              },
+            },
+          ]);
+
         // correct the total orders count on every month 
           let indx1 = 0;
           const monthlyData = [];
@@ -133,6 +148,27 @@ const Login = async (req,res) => {
             }
           }
 
+          // correct the total returned orders count on every month 
+          let indx4 = 0;
+          const returnedData = [];
+
+          if(monthlyreturnedCounts.length !=0){
+            for(let i=0;i<12;i++){
+    
+              if(i+1<monthlyreturnedCounts[0]._id){
+                returnedData.push(0)
+              }else{
+                if( monthlyreturnedCounts[indx4]){
+                  let count = monthlyreturnedCounts[indx4].count
+                  returnedData.push(count)
+                }else{
+                  returnedData.push(0)
+                }
+                indx4++
+              }
+            }
+          }
+
         // find count of wallet payments orders
         const walletPayments = await Order.find({ paymentMethod: 'Wallet payment' });
         const walletCount = walletPayments.length;
@@ -175,7 +211,7 @@ const Login = async (req,res) => {
           console.log(monthlyData);
           
         const datas = JSON.stringify(jsonData);
-        res.render('dashboard',{datas,monthlyData,deliveredData,cancelledData,paymentMethods,deliveryMethods});
+        res.render('dashboard',{datas,monthlyData,deliveredData,cancelledData,returnedData,paymentMethods,deliveryMethods});
     } catch (error) {
         console.log(error);
     }
