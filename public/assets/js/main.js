@@ -1443,3 +1443,8 @@ function couponChange () {
         couponButton.hidden = false
     }
 }
+
+function addAmount (event) {
+    event.preventDefault()
+    
+}

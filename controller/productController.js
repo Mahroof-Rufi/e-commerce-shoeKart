@@ -1,6 +1,7 @@
 const Products = require('../model/productsModel');
 const Cart = require('../model/cartModel');
 const Sharp = require('sharp');
+const fs = require('fs').promises;
 
 const listProducts = async (req,res) => {
     try {
@@ -138,6 +139,42 @@ const addProduct = async (req, res) => {
     }
   }
 
+  const deleteProductImage = async (req, res) => {
+    try {
+      console.log('start');
+      const productId = req.params.id;
+      const imageToDelete = req.params.img;
+
+      const result = await Products.findByIdAndUpdate(
+        { _id: productId },
+        { $unset: { [`images.${imageToDelete}`]: 1 } },
+        { new: false }
+      );
+  
+      const filePath1 = `./public/products/images/${result.images[imageToDelete]}`;
+      const filePath2 = `./public/products/croped/${result.images[imageToDelete]}`;
+  
+      await Promise.all([
+        fs.unlink(filePath1).catch((err) => {
+          throw new Error('image delete from the path 1 is failed' + err);
+        }).then(() => {
+          console.log('image succefully deleted from path 1');
+        }),
+        fs.unlink(filePath2).catch((err) => {
+          throw new Error('image delete from the path 2 is failed' + err);
+        }).then(() => {
+          console.log('image succefully deleted from path 2');
+        }),
+      ]);
+      
+      res.json({ success: true, message: 'Image deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+  };
+  
+
   const filterProducts = async (req,res) => {
     try {
       const selectedItems = req.body.selectedItems.split(',');
@@ -198,4 +235,5 @@ module.exports = {
     searchProduct,
     deleteProduct,
     filterProducts,
+    deleteProductImage
 }

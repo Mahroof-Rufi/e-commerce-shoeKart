@@ -280,3 +280,39 @@ function checkEditBanner (event) {
     event.preventDefault();
   }
 }
+
+
+function deleteProductImage (id,img) {
+  console.log('this is the product image delete function ');
+  const productId = id;
+  const image = img 
+  $.ajax({
+      url: `/admin/edit_product/${productId}/${image}`,
+      method:"DELETE",
+      data: { productId,image },
+      success: function (response) {
+          if (response.success === true) {
+              Swal.fire({
+                  title: 'success',
+                  text: response.message,
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }).then(() => {
+                  location.reload();
+                })
+          } else if (response.success === false){
+              Swal.fire({
+                  title: 'Error',
+                  text: response.message,
+                  icon: 'error', 
+                  confirmButtonText: 'OK'
+              });
+          } else {
+              window.location.href = '/admin'
+          }
+      },
+      error: function (xhr, status, error) {
+          console.error("Error in verify_payment request: " + error);
+      }
+  })
+}

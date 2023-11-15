@@ -46,6 +46,7 @@ admin_route.get('/add_product',adminAuth.isAuth,productController.loadAddProduct
 admin_route.post('/add_product',adminAuth.isAuth,multer.productImagesUpload,productController.addProduct);
 admin_route.get('/edit_product',adminAuth.isAuth,productController.loadEditProduct);
 admin_route.post('/edit_product',adminAuth.isAuth,multer.productImagesUpload,productController.editProduct);
+admin_route.delete('/edit_product/:id/:img',adminAuth.isAuth,productController.deleteProductImage);
 admin_route.get('/delete_product',adminAuth.isAuth,productController.deleteProduct);
 admin_route.get('/orders',adminAuth.isAuth,orderController.renderOrders);
 admin_route.get('/orderDetails',adminAuth.isAuth,adminController.renderOrderDetails);

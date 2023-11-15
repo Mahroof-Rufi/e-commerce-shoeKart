@@ -602,7 +602,10 @@ const renderCheckout = async (req,res) => {
         for (const [index, product] of Object.entries(cartProducts.products)) {
             const productDetails = await Products.findOne({ _id: product.product_id });
             console.log(productDetails);
-            if (productDetails.stock < product.count) {
+            if (productDetails.stock == 0) {
+                errorIndex = index
+                return `out of stock`
+            } else if (productDetails.stock < product.count) {
                 errorIndex = index
                 return `only ${productDetails.stock} left`
             }
