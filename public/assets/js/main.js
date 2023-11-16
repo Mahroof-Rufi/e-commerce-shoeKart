@@ -1278,11 +1278,12 @@ $(document).ready(function(){
 });
 
 function openRazorPay (order) {
+    console.log(order);
     var options = {
         "key": ""+'rzp_test_I7JDTKOKb7OQLY',
         "amount": order.amount,
         "currency": "INR",
-        "name": "FEET UP",
+        "name": "SheoKart",
         "description": "sample description",
         "image": "https://dummyimage.com/600x400/000/fff",
         "order_id": ""+order.id,
@@ -1446,5 +1447,121 @@ function couponChange () {
 
 function addAmount (event) {
     event.preventDefault()
-    
+
+	let formData = $(this).serialize();
+    $.ajax({
+        url:"/add_amount",
+        type:"POST",
+        data: formData,
+        success:function(response){
+            if(response.order){
+                console.log("on success section");
+                openRazorPay(response.order)
+            } else if ( response.cod === true ) {
+                window.location.href = '/order_sucess'
+            } else if ( response.wallet === true ) {
+                window.location.href = '/order_sucess'
+            } else {
+                alert(res.msg);
+            }
+        }
+    })
+}
+
+$(document).ready(function(){
+	$('.add-amount-form').submit(function(e){
+		e.preventDefault();
+
+		let formData = $(this).serialize();
+
+		$.ajax({
+			url:"/add_amount",
+			type:"POST",
+			data: formData,
+			success:function(response){
+				if(response.addMoney){
+                    console.log("on success section");
+					openRazorPay2(response.addMoney,response.result)
+				} else if ( response.success === false ) {
+                    console.log('something went wrong, try agian later');
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'something went wrong, try agian later',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                      }).then(() => window.location.href = '/profile')
+                } else if ( response.cod === true ) {
+                    window.location.href = '/order_sucess'
+                } else if ( response.wallet === true ) {
+                    window.location.href = '/order_sucess'
+                } else {
+					alert(res.msg);
+				}
+			}
+		})
+
+	});
+});
+
+function openRazorPay2 (addMoney,actualMoney) {
+    console.log(addMoney);
+        var options = {
+        "key": "rzp_test_I7JDTKOKb7OQLY",
+        "amount": addMoney.amount, 
+        "currency": "INR",
+        "name": "Fashion Arclight",
+        "description": "Test Transaction",
+        "image": "/user/images/Fs Hat Logo.jpg",
+        "order_id": addMoney.id, 
+        handler: function (response) {
+            verifyPayment(response, addMoney, actualMoney);
+        },
+        "prefill": { 
+            "name": "Fashion Arclight", 
+            "email": "fashionarclight.com",
+            "contact": "9000090000"
+        },
+        "notes": {
+            "address": "Fashion Arclight "
+        },
+        "theme": {
+            "color": "#cc9967"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+}
+
+function verifyPayment(payment, order,actualMoney) {
+    console.log('look here');
+    console.log(actualMoney);
+    console.log(payment,order);
+    if (payment.razorpay_payment_id) {
+        $.ajax({
+        url: "/payment/comfirm-payment",
+        method: "post",
+        data: {
+            payment: payment,
+            order: order,
+            data: actualMoney,
+        },
+        success: (response) => {
+        if (response.final === true) {
+            Swal.fire({
+                title: 'success',
+                text: 'Amount added sucessfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              }).then(() => window.location.href = '/profile')
+        } else if (response.final === false) {
+            Swal.fire({
+                title: 'Error',
+                text: 'something wrong, try again',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
+        }
+    },
+    });
+    }
 }

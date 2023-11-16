@@ -8,7 +8,13 @@ const Wishlist = require("../model/wishlistModel");
 const Banner = require("../model/bannerModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const Razorpay = require("razorpay");
 const { default: mongoose } = require("mongoose");
+
+const razorpayInstance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_SECRET_ID,
+});
 
 // load login page
 const loadLogin = async (req,res) => {
@@ -639,6 +645,55 @@ const renderOrderDetails = async (req,res) => {
     }
 }
 
+const addMonetToWallet = async (req,res) => {
+    try {
+        console.log('this is the add amount function');
+
+        const userId = req.session.user;
+        const addAmount = req.body.amount;
+        const newTransactionHistory = {
+            amount: addAmount,
+            direction: 'added',
+            transactionDate: Date.now(),
+            confirm: false
+        }
+
+        const result = await User.updateOne(
+            { _id: userId },
+            {
+              $push: {
+                'wallet.transactionHistory': newTransactionHistory
+              },
+            },
+            { upsert: true, new: true }
+        );
+
+        if (result.modifiedCount > 0) {
+            const recentlyAddedTransaction = result.wallet.transactionHistory[result.wallet.transactionHistory.length - 1];
+            const options = {
+                amount: recentlyAddedTransaction.amount*100,
+                currency: 'INR',
+                receipt: recentlyAddedTransaction._id + "",
+            };
+            razorpayInstance.orders.create(options, (err, addMoney) => {
+                if (err) {
+                    console.log("Error creating order:", err);
+                    res.json({ sucess:false })
+                } else {
+                    res.json({ addMoney,result:recentlyAddedTransaction });
+                }
+            });
+        } else {
+            res.json({success:false});
+        }
+
+
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const renderOrderSuccess = async (req,res) => {
     try {
         res.render('orderSuccess');
@@ -688,6 +743,7 @@ module.exports = {
     renderOrderSuccess,
     addNewAddress,
     addNewAddressFromCheckout,
+    addMonetToWallet,
     deleteAddress,
     logOut
 }

@@ -80,6 +80,7 @@ user_route.get('/order_sucess',userAuth.isAuth,userController.renderOrderSuccess
 user_route.get('/cancel_order',userAuth.isAuth,orderController.cancelOrder);
 user_route.patch('/return_order',userAuth.isAuth,orderController.returnOrder);
 user_route.patch('/add_discount',userAuth.isAuth,couponController.addDiscount);
+user_route.post('/add_amount',userAuth.isAuth,userController.addMonetToWallet)
 user_route.get('/logout',userController.logOut);
 
 // export modules

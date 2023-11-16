@@ -84,6 +84,9 @@ const userSchema = mongoose.Schema({
             transactionDate:{
                 type:Date,
                 require:true
+            },
+            confirm: {
+                type:Boolean
             }
         }]
     },
