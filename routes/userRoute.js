@@ -1,5 +1,6 @@
 // require modules
 const express = require("express");
+const morgan = require("morgan");
 const methodOverride = require('method-override');
 const mongoSanitizer = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -12,6 +13,7 @@ user_route.set('views','./views/users');
 
 // set middlewares
 user_route.use(express.json());
+user_route.use(morgan('dev'));
 user_route.use(express.urlencoded({extended:true}));
 user_route.use(express.static('public'))
 user_route.use(session({

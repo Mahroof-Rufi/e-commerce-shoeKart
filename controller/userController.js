@@ -6,6 +6,7 @@ const Order = require("../model/orderModel");
 const Coupon = require("../model/couponModel");
 const Wishlist = require("../model/wishlistModel");
 const Banner = require("../model/bannerModel");
+const OTP = require("../model/otpModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const Razorpay = require("razorpay");
@@ -122,7 +123,15 @@ const validateEmail = async (req,res) => {
                 return otp;
               }
               
-              generatedOtp = generateOTP();
+              const generatedOtp = generateOTP();
+                const data = {
+                    email: email,
+                    otp: generatedOtp,
+                    expiration: Date.now(),
+                };
+                await OTP.findOneAndDelete({ email: bodyMail });
+                await OTP.create( data );
+              
     
             let details = {
                 from: "bjnh478@gmail.com",
@@ -148,8 +157,6 @@ const validateEmail = async (req,res) => {
     }
 }
 
-let generatedOtp;
-
 const sendOTP = async (req,res) => {
     try {
         const email = req.body.email
@@ -170,7 +177,14 @@ const sendOTP = async (req,res) => {
             return otp;
           }
           
-          generatedOtp = generateOTP();
+          const generatedOtp = generateOTP();
+          const data = {
+            email: email,
+            otp: generatedOtp,
+            expiration: Date.now(),
+          };
+        await OTP.findOneAndDelete({ email: email });
+        await OTP.create( data );
 
         let details = {
             from: "bjnh478@gmail.com",
@@ -198,8 +212,11 @@ const confirmResetOtp = async (req,res) => {
     try {
         const userMail = req.body.usermail
         let userOtp = req.body.dig1+req.body.dig2+req.body.dig3+req.body.dig4+req.body.dig5+req.body.dig6
-        if(userOtp == generatedOtp){
-            
+        const otp = await OTP.findOne(
+            { email: userMail }
+        )
+        if(userOtp == otp.otp){
+            await OTP.findOneAndDelete({ email: userMail });
             res.render('changePass',{userMail:userMail});
         
         } else {
@@ -231,9 +248,10 @@ const insertUser = async(req,res) => {
 
     try {
         const toCheck = await User.findOne({email:req.body.email});
-        if(!toCheck){
+        if(toCheck.isVerified === false){
+            console.log('first if case');
             const hashedPass = await bcrypt.hash(req.body.password, 13);
-        const user = new User({
+        const user ={
             fname:req.body.fname,
             lname:req.body.lname,
             username:req.body.fname,
@@ -246,11 +264,16 @@ const insertUser = async(req,res) => {
             wallet:{
                 balance:0
             }
-        })
+        }
         const userMail = req.body.email
-        const userData = await user.save();
-        
-        
+        const userData = await User.updateOne(
+            { email: userMail }, 
+            { $set: user },      
+            { upsert: true, new: true }
+        );
+        console.log(userData);
+        if (userData.modifiedCount > 0 || userData.upserted) {
+            console.log('here the 2 nd if case');
             let mailTransporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
@@ -267,7 +290,15 @@ const insertUser = async(req,res) => {
                 return otp;
               }
               
-              generatedOtp = generateOTP();
+              const generatedOtp = generateOTP();
+
+              const data = {
+                email: userMail,
+                otp: generatedOtp,
+                expiration: Date.now(),
+            };
+
+            await OTP.create( data );
     
             let details = {
                 from: "bjnh478@gmail.com",
@@ -285,6 +316,11 @@ const insertUser = async(req,res) => {
                     console.log("successfully rendered");
                 }
             })
+            console.log('here the otp and email');
+            console.log(userMail,generatedOtp);
+        }else {
+            console.log('2nd else case');
+        }
         } else {
             res.render("signUp",{errorMessage:"email already taken"});
         }
@@ -298,7 +334,8 @@ const insertUser = async(req,res) => {
 const confirmOtp = async (req,res) => {
     const userMail = req.body.usermail
     let userOtp = req.body.dig1+req.body.dig2+req.body.dig3+req.body.dig4+req.body.dig5+req.body.dig6
-    if(userOtp == generatedOtp){
+    const otp = await OTP.findOne({ email: userMail });
+    if(userOtp == otp.otp){
         // console.log(userMail);
         const user = await User.findOne({ email:userMail})
         if(!user){
@@ -310,6 +347,7 @@ const confirmOtp = async (req,res) => {
         req.session.user = user._id
         req.session.username = user.fname
         await user.save();
+        await OTP.findOneAndDelete({ email: userMail });
         res.redirect('/');
         
     } else {
@@ -575,10 +613,12 @@ const verifyNewMailOtp = async (req,res) => {
         const userMail = req.body.usermail
         console.log("this is the user new mail:"+userMail);
         let userOtp = req.body.dig1+req.body.dig2+req.body.dig3+req.body.dig4+req.body.dig5+req.body.dig6
-        if(userOtp == generatedOtp){
+        const otp = await OTP.findOne({ email:userMail });
+        if(userOtp == otp.otp){
             const user = await User.findOne({_id:req.session.user});
             user.email = userMail
             await user.save()
+            await OTP.findOneAndDelete({ email:userMail });
             res.redirect('/profile');
         } else {
             res.render('verifyNewMail',{message: "incorrect OTP"});
