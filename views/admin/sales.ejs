@@ -48,6 +48,25 @@
                               <a class="dropdown-item" href="/admin/filter-sales/365">Yearly</a>
                           </div>
                       </div>
+                      <div class="page-header">
+                        <div class="dropdown">
+                          <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuOutlineButton1"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Report Download </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuOutlineButton1">
+              
+              
+                            
+                            <% if (typeof startDate !== 'undefined') { %>
+                              <a class="dropdown-item" href="/admin/save_report/<%= startDate %>/excel">Excel Format</a>
+                              <a class="dropdown-item" href="/admin/save_report/<%= startDate %>/pdf">Pdf Format</a>
+                          <% } else { %>
+                            <a class="dropdown-item" href="/admin/save_report/<%= 0 %>/excel">Excel Format</a>
+                            <a class="dropdown-item" href="/admin/save_report/<%= 0 %>/pdf">Pdf Format</a>
+                          <% } %>
+              
+                          </div>
+                        </div>
+                      </div>
                     
                     <table class="table table-striped">
                       <thead>

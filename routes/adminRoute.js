@@ -54,6 +54,7 @@ admin_route.post('/update_sts',adminAuth.isAuth,adminController.updateOrderStatu
 admin_route.post('/cancel_order',adminAuth.isAuth,adminController.cancelOrder);
 admin_route.get('/sales',adminAuth.isAuth,adminController.renderSales);
 admin_route.get('/filter-sales/:val',adminAuth.isAuth,adminController.filterSales);
+admin_route.get('/save_report/:duration/:format',adminAuth.isAuth,adminController.downloadSalesReport);
 admin_route.get('/coupons',adminAuth.isAuth,couponController.renderCoupons);
 admin_route.delete('/coupons',adminAuth.isAuth,couponController.deleteCoupon)
 admin_route.get('/add_coupon',adminAuth.isAuth,couponController.renderAddCoupon);
