@@ -14,6 +14,10 @@ const couponSchema = mongoose.Schema({
         type:Number,
         require:true
     },
+    maxDiscountAmount: {
+        type:Number,
+        required:true
+    },
     activationDate: {
         type:Date,
         require:true

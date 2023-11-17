@@ -54,6 +54,7 @@
                               <th> activation date </th>
                               <th> expiration date </th>
                               <th> minimum purchase amount </th>
+                              <th> maximum discount amount </th>
                               <th> total usage limit </th>
                               <th> actions </th>
                               <th></th>
@@ -70,6 +71,7 @@
                                 <td><%= coupon.activationDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %></td>
                                 <td><%= coupon.expireDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %></td>
                                 <td><%= coupon.minPurchaseAmount %></td>
+                                <td><%= coupon.maxDiscountAmount %></td>
                                 <td><%= coupon.totalUsageLimit %></td>
                                 <td><a href="/admin/edit_coupon?id=<%= coupon._id %>"><button class="btn btn-rounded btn-primary">edit</button></a></td>
                                 <td>

@@ -131,16 +131,38 @@
 													<button id="couponButton" class="btn btn-outline-primary-2" type="button"><i class="icon-long-arrow-down"></i></button>
 												</div><!-- .End .input-group-append -->
                                                 <div style="max-height: 300px; overflow-y: auto; max-width: max-content;" class="dropdown-menu">	
-                                                    <% coupons.forEach(function(coupon) { %>					  	
-                                                    <div class="dropdown-item d-flex align-items-start coupon-item" href="#">
-                                                        <div class="coupon-details">
-                                                            <h4 style="text-transform: uppercase;"><%= coupon.code %></h4>
-                                                            <p><%= coupon.description %></p>
-                                                            <span class="time"><%= coupon.activationDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %> - <%= coupon.expireDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %></span>
-                                                        </div>
-                                                        <button class="btn btn-primary btn-sm apply-button" onclick="addDiscount('<%= coupon._id %>')">Apply</button>
-                                                    </div>
+                                            	  	
+                                                    <% coupons.forEach(function(coupon) { %>
+                                                        <% var currentDate = new Date(); %>
+                                                        <% var activationDate = new Date(coupon.activationDate); %>
+                                                    
+                                                        <% if (currentDate >= activationDate) { %>
+                                                            <div class="dropdown-item d-flex align-items-start coupon-item" href="#">
+                                                                <div class="coupon-details">
+                                                                    <h4 style="text-transform: uppercase;"><%= coupon.code %></h4>
+                                                                    <p><%= coupon.description %></p>
+                                                                    <span class="time"><%= coupon.activationDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %> - <%= coupon.expireDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %></span>
+                                                                </div>
+                                                                <button class="btn btn-primary btn-sm apply-button" onclick="addDiscount('<%= coupon._id %>')">Apply</button>
+                                                            </div>
+                                                        <% } else { %>
+                                                            <fieldset disabled>
+                                                                <div class="dropdown-item d-flex align-items-start coupon-item">
+                                                                    <div class="coupon-details">
+                                                                        <h4 style="text-transform: uppercase;"><%= coupon.code %></h4>
+                                                                        <p><%= coupon.description %></p>
+                                                                        <span class="time">
+                                                                            <%= coupon.activationDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %> -
+                                                                            <%= coupon.expireDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); %>
+                                                                        </span>
+                                                                        <p style="color: red;">coming soon</p>
+                                                                    </div>
+                                                                    <button class="btn btn-primary btn-sm apply-button" onclick="addDiscount('<%= coupon._id %>')">Apply</button>
+                                                                </div>
+                                                            </fieldset>
+                                                        <% } %>
                                                     <% }); %>
+                                                    
                                                 </div>
 			        						</div><!-- End .input-group -->
 			            			</div><!-- End .cart-discount -->

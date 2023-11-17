@@ -1445,6 +1445,11 @@ function couponChange () {
     }
 }
 
+document.querySelector('#deleteButton').addEventListener('click', () => {
+    window.location.reload();
+});
+
+
 function addAmount (event) {
     event.preventDefault()
 

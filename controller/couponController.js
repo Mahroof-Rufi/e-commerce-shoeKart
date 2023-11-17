@@ -39,6 +39,7 @@ const deleteCoupon = async (req,res) => {
             expireDate: req.body.expireDate,
             minPurchaseAmount: req.body.minPurchaseAmount,
             totalUsageLimit: req.body.totalUsageLimit,
+            maxDiscountAmount: req.body.maxDiscountAmount
       })
         
 
@@ -111,6 +112,9 @@ const addDiscount = async (req,res) => {
         } else {
             discountedAmount = parseInt(totalAmount - (totalAmount * couponDetails.discountValue / 100));
             discount = parseInt((couponDetails.discountValue / 100) * totalAmount);
+            if (discount > couponDetails.maxDiscountAmount) {
+                discountedAmount = totalAmount - couponDetails.maxDiscountAmount
+            }
             res.json({discountedAmount,coupon:couponDetails,discount});
         }
 
