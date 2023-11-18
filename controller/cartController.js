@@ -1,6 +1,28 @@
+// require models
 const Cart = require("../model/cartModel");
 const Coupon = require("../model/couponModel");
 const Product = require("../model/productsModel");
+
+
+//<================================== cart ==================================>
+
+const loadCart = async (req,res) => {
+    try {
+        const coupons = await Coupon.find({});
+        const products = await Cart.findOne({user:req.session.user});
+        // const totalStock = [];
+        // console.log("founded product of this user"+products);
+        // for (let i = 0; i < products.products.length; i++) {
+        //     const productId = products.products
+        //     const productData = await Product.findOne({_id:productId[i].product_id});
+        //     totalStock.push(productData.stock);
+        // }
+        // console.log(totalStock);
+        res.render("cart",{cartProducts:products,coupons,stockError:""});
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 const addProduct = async (req,res) => {
     try {
@@ -71,24 +93,6 @@ const deleteProduct = async (req,res) => {
             }
     } catch (error) {
         console.log("something happened");
-        console.log(error);
-    }
-}
-
-const loadCart = async (req,res) => {
-    try {
-        const coupons = await Coupon.find({});
-        const products = await Cart.findOne({user:req.session.user});
-        // const totalStock = [];
-        // console.log("founded product of this user"+products);
-        // for (let i = 0; i < products.products.length; i++) {
-        //     const productId = products.products
-        //     const productData = await Product.findOne({_id:productId[i].product_id});
-        //     totalStock.push(productData.stock);
-        // }
-        // console.log(totalStock);
-        res.render("cart",{cartProducts:products,coupons,stockError:""});
-    } catch (error) {
         console.log(error);
     }
 }

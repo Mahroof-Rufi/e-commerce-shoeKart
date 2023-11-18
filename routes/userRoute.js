@@ -92,7 +92,7 @@ user_route.post('/add_address',userAuth.isAuth,userController.addNewAddress);
 user_route.delete('/delete_address/:id',userAuth.isAuth,userController.deleteAddress);
 
 //<================================== profile orders ==================================>
-user_route.get('/orderDetails',userAuth.isAuth,userController.renderOrderDetails);
+user_route.get('/orderDetails',userAuth.isAuth,orderController.renderOrderDetails);
 user_route.get('/cancel_order',userAuth.isAuth,orderController.cancelOrder);
 user_route.patch('/return_order',userAuth.isAuth,orderController.returnOrder);
 
@@ -102,6 +102,8 @@ user_route.post('/add_amount',userAuth.isAuth,userController.addMonetToWallet);
 //<================================== checkout ==================================>
 user_route.post('/checkout',userAuth.isAuth,userController.renderCheckout);
 user_route.post('/place_order',userAuth.isAuth,orderController.addOrder);
+user_route.post('/verify_payment',userAuth.isAuth,orderController.verifyPayment);
+user_route.post('/comfirm-payment',userAuth.isAuth,orderController.comfirmPayment);
 user_route.get('/order_sucess',userAuth.isAuth,userController.renderOrderSuccess);
 user_route.post('/new_address',userAuth.isAuth,userController.addNewAddressFromCheckout);
 
@@ -111,14 +113,14 @@ user_route.post('/search',productController.searchProduct);
 user_route.post('/filter_products',productController.filterProducts);
 user_route.get('/clear_all',productController.listProducts);
 
+//<================================== logout ==================================>
+user_route.get('/logout',userController.logOut);
+
 //<================================== undefined routes ==================================>
 user_route.get("*", async (req,res) => {
     const cartProducts = await Cart.findOne({ user:req.session.user });
     res.render('error',{cartProducts});
 });
-
-//<================================== logout ==================================>
-user_route.get('/logout',userController.logOut);
 
 
 // export modules

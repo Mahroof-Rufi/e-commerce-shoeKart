@@ -1293,8 +1293,7 @@ function openRazorPay (order) {
         "image": "https://dummyimage.com/600x400/000/fff",
         "order_id": ""+order.id,
         "handler": function (response){
-            alert("Payment Succeeded");
-            verifyPayment(response,order);
+            verifyOrderPayment(response,order);
         },  
         "notes" : {
             "description":"Sample description 2"
@@ -1310,28 +1309,26 @@ function openRazorPay (order) {
     razorpayObject.open();
 }
 
-function verifyPayment (res,order) {
+function verifyOrderPayment (res,order) {
     $.ajax({
-        url:"/payment/verify_payment",
+        url:"/verify_payment",
         type:"POST",
         data: {res,order},
         success: function (response) {
             if (response.success === true) {
-                // Swal.fire({
-                //     title: 'success',
-                //     text: 'Payment Successfull',
-                //     icon: 'success',
-                //     confirmButtonText: 'OK'
-                //   });
-                  window.location.href = '/order_sucess'
+                Swal.fire({
+                    title: 'success',
+                    text: 'Payment Successfull',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  }).then(() => window.location.href = '/order_sucess');
             } else {
-                // Swal.fire({
-                //     title: 'Error',
-                //     text: 'Payment Failed',
-                //     icon: 'error', 
-                //     confirmButtonText: 'OK'
-                // });
-                window.location.href = '/'
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Payment Failed',
+                    icon: 'error', 
+                    confirmButtonText: 'OK'
+                });
             }
         },
         error: function (xhr, status, error) {
@@ -1469,7 +1466,7 @@ function addAmount (event) {
         success:function(response){
             if(response.order){
                 console.log("on success section");
-                openRazorPay(response.order)
+                openRazorPay2(response.order)
             } else if ( response.cod === true ) {
                 window.location.href = '/order_sucess'
             } else if ( response.wallet === true ) {
@@ -1519,23 +1516,18 @@ function openRazorPay2 (addMoney,actualMoney) {
         "key": "rzp_test_OVwm8vSjjV54PO",
         "amount": addMoney.amount, 
         "currency": "INR",
-        "name": "Fashion Arclight",
-        "description": "Test Transaction",
-        "image": "/user/images/Fs Hat Logo.jpg",
+        "name": "SheoKart",
+        "description": "sample description",
+        "image": "https://dummyimage.com/600x400/000/fff",
         "order_id": addMoney.id, 
         handler: function (response) {
             verifyPayment(response, addMoney, actualMoney);
         },
-        "prefill": { 
-            "name": "Fashion Arclight", 
-            "email": "fashionarclight.com",
-            "contact": "9000090000"
-        },
-        "notes": {
-            "address": "Fashion Arclight "
+        "notes" : {
+            "description":"Sample description 2"
         },
         "theme": {
-            "color": "#cc9967"
+            "color": "#2300a3"
         }
     };
     var rzp1 = new Razorpay(options);
@@ -1548,7 +1540,7 @@ function verifyPayment(payment, order,actualMoney) {
     console.log(payment,order);
     if (payment.razorpay_payment_id) {
         $.ajax({
-        url: "/payment/comfirm-payment",
+        url: "/comfirm-payment",
         method: "post",
         data: {
             payment: payment,

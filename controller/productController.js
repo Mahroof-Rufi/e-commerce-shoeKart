@@ -1,7 +1,10 @@
+// require models
 const Products = require('../model/productsModel');
 const Cart = require('../model/cartModel');
 const Sharp = require('sharp');
 const fs = require('fs').promises;
+
+//<================================== viewmore products ==================================>
 
 const listProducts = async (req,res) => {
     try {
@@ -17,6 +20,51 @@ const listProducts = async (req,res) => {
         console.log(error);
     }
 }
+
+const searchProduct = async (req,res) => {
+  try {
+      const selectedItem = req.body.searchedItems;
+
+      const filterQuery = {
+        $or: [
+          { category: { $regex: new RegExp(selectedItem, "i") } },
+          { name: { $regex: new RegExp(selectedItem, "i") } },
+        ]
+      };
+
+      const cartProducts = await Cart.findOne({user: req.session.user});
+
+      const products = await Products.find(filterQuery);
+
+      console.log(products);
+
+      res.render("products",{products,cartProducts});
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+const filterProducts = async (req,res) => {
+  try {
+    const selectedItems = req.body.selectedItems.split(',');
+    const maxPrice = req.body.maxPrice+1;
+    console.log(maxPrice);
+      const filterQuery = {
+          $and: [{category: { $in: selectedItems }},{ price: { $lt: maxPrice}}]
+      };
+      const products = await Products.find(filterQuery);
+      const cartProducts = await Cart.findOne({user: req.session.user});
+
+      console.log(products);
+      res.render("products",{products,cartProducts});
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+
+
+
 
 const listInAdminside = async (req,res) => {
   try {
@@ -175,46 +223,9 @@ const addProduct = async (req, res) => {
   };
   
 
-  const filterProducts = async (req,res) => {
-    try {
-      const selectedItems = req.body.selectedItems.split(',');
-      const maxPrice = req.body.maxPrice+1;
-      console.log(maxPrice);
-        const filterQuery = {
-            $and: [{category: { $in: selectedItems }},{ price: { $lt: maxPrice}}]
-        };
-        const products = await Products.find(filterQuery);
-        const cartProducts = await Cart.findOne({user: req.session.user});
+  
 
-        console.log(products);
-        res.render("products",{products,cartProducts});
-    } catch (error) {
-        console.log(error);
-    }
-  }
-
-  const searchProduct = async (req,res) => {
-    try {
-        const selectedItem = req.body.searchedItems;
-
-        const filterQuery = {
-          $or: [
-            { category: { $regex: new RegExp(selectedItem, "i") } },
-            { name: { $regex: new RegExp(selectedItem, "i") } },
-          ]
-        };
-
-        const cartProducts = await Cart.findOne({user: req.session.user});
-
-        const products = await Products.find(filterQuery);
-
-        console.log(products);
-
-        res.render("products",{products,cartProducts});
-    } catch (error) {
-        console.log(error);
-    }
-  }
+  
 
   const deleteProduct = async (req,res) => {
     try {
