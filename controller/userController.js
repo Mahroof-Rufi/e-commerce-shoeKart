@@ -125,7 +125,7 @@ const validateEmail = async (req,res) => {
               
               const generatedOtp = generateOTP();
                 const data = {
-                    email: email,
+                    email: bodyMail,
                     otp: generatedOtp,
                     expiration: Date.now(),
                 };
@@ -698,7 +698,7 @@ const addMonetToWallet = async (req,res) => {
             confirm: false
         }
 
-        const result = await User.updateOne(
+        const result = await User.findOneAndUpdate(
             { _id: userId },
             {
               $push: {
@@ -708,7 +708,7 @@ const addMonetToWallet = async (req,res) => {
             { upsert: true, new: true }
         );
 
-        if (result.modifiedCount > 0) {
+        if (result) {
             const recentlyAddedTransaction = result.wallet.transactionHistory[result.wallet.transactionHistory.length - 1];
             const options = {
                 amount: recentlyAddedTransaction.amount*100,

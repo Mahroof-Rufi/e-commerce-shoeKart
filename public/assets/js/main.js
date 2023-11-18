@@ -1192,38 +1192,43 @@ function addShipcharge(charge) {
 }
 
 // check the address
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#checkout-form'); 
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Get the form element
-    const form = document.querySelector("#checkout-form");
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            const selectedAddress = document.querySelector("input[name='selectedAddress']:checked");
 
-    // Add a submit event listener to the form
-    form.addEventListener("submit", function (event) {
-        const selectedAddress = document.querySelector("input[name='selectedAddress']:checked");
-
-        if (!selectedAddress) {
-            document.querySelector('#address-error').textContent = "you must select a valid Delivery address"
-            event.preventDefault(); // Prevent the form from submitting
-        }
-    });
+            if (!selectedAddress) {
+                document.querySelector('#address-error').textContent = "You must select a valid Delivery address";
+                event.preventDefault(); // Prevent the form from submitting
+            }
+        });
+    } else {
+        console.error("Form element not found");
+    }
 });
+
 
 // check the shipping method
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Get the form element
     const form = document.querySelector("#cart-form");
 
-    // Add a submit event listener to the form
-    form.addEventListener("submit", function (event) {
-        const selectedAddress = document.querySelector("input[name='shipping']:checked");
+    if (form) {
+        form.addEventListener("submit", function (event) {
+            const selectedAddress = document.querySelector("input[name='shipping']:checked");
 
-        if (!selectedAddress) {
-            document.querySelector('#shipping-error').textContent = "you must select a shipping method to continue"
-            event.preventDefault(); // Prevent the form from submitting
-        }
-    });
+            if (!selectedAddress) {
+                document.querySelector('#shipping-error').textContent = "You must select a shipping method to continue";
+                event.preventDefault();
+            }
+        });
+    } else {
+        console.error("Form element not found");
+    }
 });
+
 
 // set the payment method
 function setPaymentMethod(val) {
@@ -1280,7 +1285,7 @@ $(document).ready(function(){
 function openRazorPay (order) {
     console.log(order);
     var options = {
-        "key": ""+'rzp_test_I7JDTKOKb7OQLY',
+        "key": ""+'rzp_test_OVwm8vSjjV54PO',
         "amount": order.amount,
         "currency": "INR",
         "name": "SheoKart",
@@ -1445,9 +1450,12 @@ function couponChange () {
     }
 }
 
-document.querySelector('#deleteButton').addEventListener('click', () => {
-    window.location.reload();
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#deleteButton').addEventListener('click', () => {
+        window.location.reload();
+    });
 });
+
 
 
 function addAmount (event) {
@@ -1478,6 +1486,7 @@ $(document).ready(function(){
 		e.preventDefault();
 
 		let formData = $(this).serialize();
+        console.log('this is the add- amount form submition function');
 
 		$.ajax({
 			url:"/add_amount",
@@ -1495,12 +1504,8 @@ $(document).ready(function(){
                         icon: 'error',
                         confirmButtonText: 'OK'
                       }).then(() => window.location.href = '/profile')
-                } else if ( response.cod === true ) {
-                    window.location.href = '/order_sucess'
-                } else if ( response.wallet === true ) {
-                    window.location.href = '/order_sucess'
                 } else {
-					alert(res.msg);
+					alert(response.msg);
 				}
 			}
 		})
@@ -1511,7 +1516,7 @@ $(document).ready(function(){
 function openRazorPay2 (addMoney,actualMoney) {
     console.log(addMoney);
         var options = {
-        "key": "rzp_test_I7JDTKOKb7OQLY",
+        "key": "rzp_test_OVwm8vSjjV54PO",
         "amount": addMoney.amount, 
         "currency": "INR",
         "name": "Fashion Arclight",
