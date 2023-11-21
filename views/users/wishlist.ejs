@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>ShoeKart - Wishlist</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -66,6 +66,7 @@
 						</thead>
 
 						<tbody>
+                            <% if (wishlistProducts) { %>
                             <% for (let i = 0; i < wishlistProducts.length; i++) { %>
                                 <tr>
                                     <td class="product-col">
@@ -99,8 +100,12 @@
                                     <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
                                 </tr>
                             <% } %>
+                            
 						</tbody>
 					</table><!-- End .table table-wishlist -->
+                    <% } else { %>
+                        <h3>Wishlist is empty</h3>
+                    <% } %>
 	            	<div class="wishlist-share">
 	            		<div class="social-icons social-icons-sm mb-2">
 	            			<label class="social-label">Share on:</label>

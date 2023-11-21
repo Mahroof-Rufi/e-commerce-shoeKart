@@ -9,17 +9,78 @@ const ejs = require('ejs');
 const path = require('path');
 const fs = require('fs');
 
+
+//<================================== login(admin) ==========================================>
+
 const loadLogin = async (req,res) => {
     try {
         res.render("login");
     } catch (error) {
-        console.log(error);
+        res.render('error',{errorMessage:error.message});
     }
 }
 
+const validateLogin = async (req,res) => {
+  try {
+      // console.log("on admin logincheck section");
+      const adminMail = req.body.email;
+      const adminData = await Admin.findOne({email:adminMail});
+
+      if(!adminData){
+          res.render("login",{message : "invalid mail"});
+      } else {
+          if(adminData.password === req.body.password){
+              req.session.admin = adminData._id
+              res.redirect('/admin');
+          } else {
+              res.render("login",{message : "invalid password"});
+          }
+      }
+  } catch (error) {
+      res.render('error',{errorMessage:error.message});
+  }
+}
+
+//<==========================================================================================>
+
+//<================================== users(admin) ==========================================>
+
+const listUsers = async (req,res) => {
+  try {
+      const users = await User.find();
+      res.render('users',{users});
+  } catch (error) {
+      res.render('error',{errorMessage:error.message});
+  }
+}
+
+const userAction = async (req, res) => {
+  try {
+      const userId = req.body.id;
+      const user = await User.findOne({ _id: userId });
+      if (user) {
+        if(user.status === true){
+          user.status = false
+          req.session.user = null
+        } else {
+            user.status = true
+        }
+      } else {
+        throw new Error('User not found')
+      }
+      const userData = await user.save();
+      res.redirect('/admin/users');
+  } catch (error) {
+      res.render('error',{errorMessage:error.message});
+  }
+}
+
+//<==========================================================================================>
+
+//<================================== dashboard(admin) ======================================>
+
 const Login = async (req,res) => {
     try {
-        console.log('on the dashboard fn');
         let orders = await Order.find({ status: 'delivered'  });
         let totalOrders = orders.length;
         let users = await User.find({});
@@ -115,21 +176,26 @@ const Login = async (req,res) => {
           let indx2 = 0;
           const deliveredData = [];
 
-          if(monthlyDeliveredOrderCounts.length !=0){
-            for(let i=0;i<12;i++){
-    
-              if(i+1<monthlyDeliveredOrderCounts[0]._id){
-                deliveredData.push(0)
-              }else{
-                if( monthlyDeliveredOrderCounts[indx2]){
-                  let count = monthlyDeliveredOrderCounts[indx2].count
-                  deliveredData.push(count)
-                }else{
-                  deliveredData.push(0)
-                }
-                indx2++
+          if (monthlyDeliveredOrderCounts.length !=0) {
+              for (let i = 0; i < 12;i++ ){
+      
+                  if(i+1 < monthlyDeliveredOrderCounts[0]._id){
+
+                    deliveredData.push(0)
+
+                    }else{
+
+                      if( monthlyDeliveredOrderCounts[indx2] ){
+                          let count = monthlyDeliveredOrderCounts[indx2].count
+                          deliveredData.push(count)
+
+                      }else{
+
+                          deliveredData.push(0)
+                    }
+                    indx2++
+                  }
               }
-            }
           }
 
         // correct the total cancelled orders count on every month 
@@ -201,147 +267,32 @@ const Login = async (req,res) => {
         const returnedOrdersCount = returnedOrders.length;
 
         const deliveryMethods = [deliveredOrdersCount,cancelledOrdersCount,returnedOrdersCount];
-        console.log('here the delivery methods');
-        console.log(deliveryMethods);
-
+        
         const jsonData = {
             totalOrders: totalOrders,
             totalUsers: totalUsers,
             totalRevenue: totalRevenue,
             totalSoldProduct: totalSoldProduct,
           };
-          console.log('here the aggregated data');
-          console.log(monthlyOrderCounts);
-          console.log('here the edited data');
-          console.log(monthlyData);
           
         const datas = JSON.stringify(jsonData);
         res.render('dashboard',{datas,monthlyData,deliveredData,cancelledData,returnedData,paymentMethods,deliveryMethods});
     } catch (error) {
-        console.log(error);
+        res.render('error',{errorMessage:error.message});
     }
 }
 
-const validateLogin = async (req,res) => {
-    try {
-        // console.log("on admin logincheck section");
-        const adminData = await Admin.findOne({email:req.body.email});
+//<==========================================================================================>
 
-        if(!adminData){
-            // console.log(req.query.email);
-            // console.log(adminData);
-            res.render("login",{message : "invalid mail"});
-        } else {
-            if(adminData.password === req.body.password){
-                req.session.admin = adminData._id
-                res.redirect('/admin');
-            } else {
-                res.render("login",{message : "invalid password"});
-            }
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
+// const loadDashboard = async (req,res) => {
+//     try {
+//         res.render('dashboard');
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
-const loadDashboard = async (req,res) => {
-    try {
-        res.render('dashboard');
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const logOut = async (req,res) => {
-    try {
-        req.session.admin = null
-        res.redirect('/admin');
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const renderOrderDetails = async (req,res) => {
-    try {
-        const orders = await Order.find({_id:req.query.id});
-        console.log("the query id is:"+req.query.id);
-        console.log("order details is :"+orders);
-        const orderProducts = await Order.find({user_Id:req.session.user});
-        res.render('orderDetails',{orders,orderProducts});
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const updateOrderStatus = async (req,res) => {
-    try {
-        const newStatus = req.body.data;
-        const orderId = req.body.id;
-        const order = await Order.findOne({_id:orderId});
-        if (newStatus == 'cancelled') {
-            const products = order.products
-            for (let i = 0; i < products.length; i++) {
-                await Products.findOneAndUpdate(
-    
-                    { _id: products[i].product_id },
-                    {
-                        $inc: { stock: products[i].count } 
-                    }
-                );
-                await Order.findOneAndUpdate(
-                  { _id:orderId },
-                  { $set: { status: newStatus, paymentStatus: 'cancelled' } },
-                );
-            }
-        } else if (newStatus == 'delivered') {
-          await Order.findOneAndUpdate(
-            { _id: orderId },
-            { $set: { status: newStatus, paymentStatus: 'paid', deliveredDate: Date.now() } },
-            { upsert: true },
-          );
-        } else if(newStatus == 'returned'){
-          const orderdetails = await Order.findOneAndUpdate(
-            { _id:orderId },
-            { $set: { status:newStatus, returnedDate:Date.now() } },
-            { new:true },
-          );
-          const userId = req.session.user;
-          const newTransactionHistory = {
-            amount: orderdetails.totalAmount,
-            direction: 'received',
-            transactionDate: Date.now()
-          }
-
-          await User.findOneAndUpdate(
-            { _id: userId },
-            {
-              $inc: { 'wallet.balance': orderdetails.totalAmount },
-              $push: { 'wallet.transactionHistory': newTransactionHistory },
-            }
-          );
-          
-        } else {
-          await Order.findOneAndUpdate(
-            { _id:orderId },
-            { $set: { status: newStatus} },
-          );
-        }
-        res.json({result:true});  
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-const cancelOrder = async (req,res) => {
-    try {
-        const order = await Order.findOne({_id:req.body.id});
-        order.status = 'cancelled'
-        await order.save();
-        res.json({result:true});
-    } catch (error) {
-        console.log(error);
-    }
-}
+//<================================== sales(admin) ==========================================>
 
 const renderSales = async (req,res) => {
     try {
@@ -358,11 +309,9 @@ const renderSales = async (req,res) => {
                 $sort: { purchaseDate: -1 },
             },
         ]);
-        console.log('here the unwinded data');
-        console.log(data);
         res.render('sales',{data});
     } catch (error) {
-        console.log(error);
+      res.render('error',{ errorMessage:error.message })
     }
 }
 
@@ -386,13 +335,10 @@ const filterSales = async (req,res) => {
                 $sort: { purchaseDate: -1 },
             },
         ]);
-
-        console.log('here the report data');
-        console.log(report);
       
-          res.render('sales', { data:report, startDate });
+        res.render('sales', { data:report, startDate });
     } catch (error) {
-        console.log(error);
+      res.render('error',{ errorMessage:error.message })
     }
 }
 
@@ -435,15 +381,12 @@ const downloadSalesReport = async (req,res) => {
     ]);
     }
   
-    console.log('here the data to download');
-    console.log(orders);
-  
-  
     const date = new Date()
+
     reportData = {
           orders,
           date,
-    }
+        }
 
     if (format === 'pdf') {
           const filepathName = path.resolve(__dirname, "../views/admin/downloadSales.ejs");
@@ -464,11 +407,9 @@ const downloadSalesReport = async (req,res) => {
           );
           res.send(pdfBytes);
     } else if (format === 'excel') {
-          // Generate and send an Excel report
           const workbook = new excelJs.Workbook();
           const worksheet = workbook.addWorksheet('Sales Report');
 
-          // Add data to the Excel worksheet (customize as needed)
           worksheet.columns = [
                 { header: 'Order ID', key: 'orderId', width: 8 },
                 { header: 'Product Name', key: 'productName', width: 50 },
@@ -477,7 +418,7 @@ const downloadSalesReport = async (req,res) => {
                 { header: 'Customer', key: 'customer', width: 15 },
                 { header: 'Total Amount', key: 'totalAmount', width: 12 },
           ];
-          // Add rows from the reportData to the worksheet
+          
           orders.forEach((data) => {
                 worksheet.addRow({
                       orderId: data._id,
@@ -498,22 +439,38 @@ const downloadSalesReport = async (req,res) => {
           const excelBuffer = await workbook.xlsx.writeBuffer();
           res.end(excelBuffer);
     } else {
-          // Handle invalid format
-          res.status(400).send('Invalid format specified');
+        res.render('error',{ errorMessage:"invalid input" })
     }
   } catch (error) {
-    console.log(error);
+    res.render('error',{ errorMessage:error.message })
   }
 }
+
+//<==========================================================================================>
+
+//<================================== logout(admin) =========================================>
+
+const logOut = async (req,res) => {
+  try {
+      req.session.admin = null
+      res.redirect('/admin');
+  } catch (error) {
+    res.render('error',{ errorMessage:error.message })
+  }
+}
+
+//<==========================================================================================>
 
 module.exports = {
     Login,
     loadLogin,
+    listUsers,
+    userAction,
     validateLogin,
-    loadDashboard,
-    renderOrderDetails,
-    updateOrderStatus,
-    cancelOrder,
+    // loadDashboard,
+    // renderOrderDetails,
+    // updateOrderStatus,
+    // cancelOrder,
     renderSales,
     filterSales,
     downloadSalesReport,

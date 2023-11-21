@@ -54,6 +54,9 @@ sup {
   line-height: 0;
   vertical-align: baseline;
 }
+.pay-form {
+  display: flex;
+}
 sup {
   top: -0.5em;
 }
@@ -396,6 +399,7 @@ blockquote.text-white cite span {
 }
 .page-content {
   padding-bottom: 5rem;
+  max-width: 100%;
 }
 @media screen and (min-width: 992px) {
   .col-5col {
@@ -570,6 +574,19 @@ blockquote.text-white cite span {
     margin-right: auto;
   }
 }
+
+@media (max-width: 520px) {
+  .addressSide {
+      width: 100%;
+  }
+  .proceedSide {
+    width: 100%;
+  }
+  .pay-form {
+    display: block;
+  }
+}
+
 .header {
   width: 100%;
   background-color: #fff;
@@ -8510,7 +8527,7 @@ p {
   line-height: 1.5;
   font-weight: 300;
   color: #777;
-  background-color: #fafafa;
+  background-color: white;
   border: 1px solid #ebebeb;
   border-radius: 0;
   margin-bottom: 2rem;

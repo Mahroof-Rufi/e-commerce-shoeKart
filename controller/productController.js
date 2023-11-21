@@ -1,23 +1,37 @@
 // require models
 const Products = require('../model/productsModel');
 const Cart = require('../model/cartModel');
+const Category = require('../model/categoryModel');
 const Sharp = require('sharp');
 const fs = require('fs').promises;
 
-//<================================== viewmore products ==================================>
+//<================================== viewmore products(users) ==============================>
 
 const listProducts = async (req,res) => {
     try {
+        const category = req.query.category || undefined
+        const username = req.session.username
+      
         const currentPage = req.query.page || 1;
         const itemsPerPage = 9;
         const totalDoc = await Products.countDocuments();
         const skip = (currentPage - 1) * itemsPerPage;
 
-        const products = await Products.find().skip(skip).limit(itemsPerPage);
+        const categoryRegex = new RegExp(`\\b${category}\\b`, 'i');
+        let products;
+
+        if (category) {
+          console.log('it is the product fetch if case');
+          products = await Products.find({ category: { $regex: categoryRegex } }).skip(skip).limit(itemsPerPage);
+        } else {
+          console.log('it is the product fetch else case');
+          products = await Products.find().skip(skip).limit(itemsPerPage);
+        }
+
         const cartProducts = await Cart.findOne({user:req.session.user});
-        res.render('products',{products,cartProducts,currentPage: parseInt(currentPage),totalPages: Math.ceil(totalDoc / itemsPerPage),});
+        res.render('products',{username,products,cartProducts,currentPage: parseInt(currentPage),totalPages: Math.ceil(totalDoc / itemsPerPage),});
     } catch (error) {
-        console.log(error);
+        res.render('error',{ errorMessage:error.message });
     }
 }
 
@@ -36,11 +50,9 @@ const searchProduct = async (req,res) => {
 
       const products = await Products.find(filterQuery);
 
-      console.log(products);
-
       res.render("products",{products,cartProducts});
   } catch (error) {
-      console.log(error);
+      res.render('error',{ errorMessage:error.message });
   }
 }
 
@@ -48,23 +60,20 @@ const filterProducts = async (req,res) => {
   try {
     const selectedItems = req.body.selectedItems.split(',');
     const maxPrice = req.body.maxPrice+1;
-    console.log(maxPrice);
       const filterQuery = {
           $and: [{category: { $in: selectedItems }},{ price: { $lt: maxPrice}}]
       };
       const products = await Products.find(filterQuery);
       const cartProducts = await Cart.findOne({user: req.session.user});
-
-      console.log(products);
       res.render("products",{products,cartProducts});
   } catch (error) {
-      console.log(error);
+      res.render('error',{ errorMessage:error.message });
   }
 }
 
+//<==========================================================================================>
 
-
-
+//<================================== products(admin) =======================================>
 
 const listInAdminside = async (req,res) => {
   try {
@@ -72,15 +81,16 @@ const listInAdminside = async (req,res) => {
       res.render('products',{products});
 
   } catch (error) {
-    
+      res.render('error',{ errorMessage:error.message });
   }
 }
 
 const loadAddProduct = async (req,res) => {
     try {
-        res.render('addProduct');
+        const categories = await Category.find({});
+        res.render('addProduct',{categories});
     } catch (error) {
-        console.log(error);
+        res.render('error',{ errorMessage:error.message });
     }
 }
 
@@ -117,33 +127,27 @@ const addProduct = async (req, res) => {
       });
   
       let result = await product.save();
-      console.log(result);
       res.redirect("/admin/products");
     } catch (error) {
-      console.log(error);
+      res.render('error',{ errorMessage:error.message });
     }
   };
 
   const loadEditProduct = async (req,res) => {
     try {
       const product = await Products.findOne({_id:req.query.id});
-      console.log(product);
       if (!product) {
-        // Handle the case where the product is not found
-        res.status(404).send('Product not found');
-        return;
+        throw new Error('product not found');
       }
       res.render('editProduct',{product});
     } catch (error) {
-      console.log(error);
+      res.render('error',{ errorMessage:error.message });
     }
   }
 
   const editProduct = async (req,res) => {
     try {
-      console.log("on product editing section");
       const productData = await Products.findOne({_id:req.body.id});
-      console.log(productData);
       const imagesFiles = await req.files;
 
         const img = [
@@ -183,13 +187,12 @@ const addProduct = async (req, res) => {
 
       res.redirect("/admin/products");
     } catch (error) {
-      console.log(error);
+      res.render('error',{ errorMessage:error.message });
     }
   }
 
   const deleteProductImage = async (req, res) => {
     try {
-      console.log('start');
       const productId = req.params.id;
       const imageToDelete = req.params.img;
 
@@ -205,36 +208,56 @@ const addProduct = async (req, res) => {
       await Promise.all([
         fs.unlink(filePath1).catch((err) => {
           throw new Error('image delete from the path 1 is failed' + err);
-        }).then(() => {
-          console.log('image succefully deleted from path 1');
         }),
         fs.unlink(filePath2).catch((err) => {
           throw new Error('image delete from the path 2 is failed' + err);
-        }).then(() => {
-          console.log('image succefully deleted from path 2');
-        }),
-      ]);
+        })
+      ]).catch(() => {
+        throw new Error('operation failed, Please try again')
+      })
       
       res.json({ success: true, message: 'Image deleted successfully' });
     } catch (error) {
+      res.render('error',{ errorMessage:error.message });
+    }
+  };
+
+  const deleteProduct = async (req, res) => {
+    try {
+      const product = await Products.findByIdAndDelete({ _id: req.query.id });
+  
+      const images = product.images;
+  
+      // Create an array to store promises for fs.unlink operations
+      const unlinkPromises = [];
+  
+      for (const key in images) {
+        const filename = images[key];
+        const filePath1 = `./public/products/images/${filename}`;
+        const filePath2 = `./public/products/croped/${filename}`;
+  
+        // Push promises to the array
+        unlinkPromises.push(
+          fs.unlink(filePath1).catch((err) => {
+            console.error(`Image delete from path 1 failed for ${filename}:`, err);
+          }),
+          fs.unlink(filePath2).catch((err) => {
+            console.error(`Image delete from path 2 failed for ${filename}:`, err);
+          })
+        );
+      }
+
+      await Promise.all(unlinkPromises).then(() => {
+        res.redirect('/admin/products');
+      })
+  
+    } catch (error) {
       console.error(error);
-      res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
   };
   
 
-  
-
-  
-
-  const deleteProduct = async (req,res) => {
-    try {
-      const product = await Products.findByIdAndDelete({_id:req.query.id});
-      res.redirect('/admin/products');
-    } catch (error) {
-      console.log(error);
-    }
-  }
+//<==========================================================================================>
 
 module.exports = {
     listProducts,

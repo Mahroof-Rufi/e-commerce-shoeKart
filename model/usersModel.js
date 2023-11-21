@@ -85,9 +85,6 @@ const userSchema = mongoose.Schema({
                 type:Date,
                 require:true
             },
-            confirm: {
-                type:Boolean
-            }
         }]
     },
     password:{

@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Connect Plus</title>
+    <title>ShoeKart - Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
@@ -56,6 +56,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                        <% if (products.length > 0) { %>
                         <% for (let i = 0; i < products.length; i++) { %>
                           <% const product = products[i]; %>
                           <form action="/admin/edit_product" method="get">
@@ -74,6 +75,9 @@
                         </tr>
                         </form>
                         <% } %> 
+                        <% } else { %>
+                          <h3>products are empty</h3>
+                      <% } %>
                       </tbody>
                     </table>
                 </div>

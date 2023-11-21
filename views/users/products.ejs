@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>ShoeKart - Products</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -120,58 +120,40 @@
 
                             <div class="products mb-3">
                                 <div class="row justify-content-center">
-                                    <% for (let i = 0; i < products.length; i++) { %>
-                                        <% const product = products[i]; %>
-                                    <div class="col-6 col-md-4 col-lg-4" id="filtered-results">
-                                        <div class="product product-7 text-center">
-                                            <figure class="product-media">
-                                                <!-- <span class="product-label label-new">New</span> -->
-                                                <a href="#">
-                                                    <img src="/products/croped/<%= product && product.images && product.images.image1 %>" alt="Product image" class="product-image">
-                                                </a>
-
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                                    <a href="#" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
-                                                    <!-- <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a> -->
-                                                </div><!-- End .product-action-vertical -->
-
-                                                <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                                </div><!-- End .product-action -->
-                                            </figure><!-- End .product-media -->
-
-                                            <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#"><%= product.category %></a>
-                                                </div><!-- End .product-cat -->
-                                                <h3 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name %></a></h3><!-- End .product-title -->
-                                                <div class="product-price">₹
-                                                    <%= product.price %>
-                                                </div><!-- End .product-price -->
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 2 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-
-                                                <!-- <div class="product-nav product-nav-thumbs">
-                                                    <a href="#" class="active">
-                                                        <img src="/assets/images/products/product-4-thumb.jpg" alt="product desc">
-                                                    </a>
-                                                    <a href="#">
-                                                        <img src="/assets/images/products/product-4-2-thumb.jpg" alt="product desc">
-                                                    </a>
-
-                                                    <a href="#">
-                                                        <img src="/assets/images/products/product-4-3-thumb.jpg" alt="product desc">
-                                                    </a>
-                                                </div>End .product-nav -->
-                                            </div><!-- End .product-body -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-sm-6 col-lg-4 -->
-                                    <% } %>
+									<% if (products.length > 0) { %>
+										<% for (let i = 0; i < products.length; i++) { %>
+											<% const product = products[i]; %>
+											<div class="col-6 col-md-4 col-lg-4" id="filtered-results">
+												<div class="product product-7 text-center">
+													<figure class="product-media">
+														<!-- <span class="product-label label-new">New</span> -->
+														<a href="#">
+															<img src="/products/croped/<%= product && product.images && product.images.image1 %>" alt="Product image" class="product-image">
+														</a>
+									
+														<div class="product-action-vertical">
+															<a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+														</div><!-- End .product-action-vertical -->
+									
+														<div class="product-action">
+															<a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+														</div><!-- End .product-action -->
+													</figure><!-- End .product-media -->
+									
+													<div class="product-body">
+														<div class="product-cat">
+															<a href="#"><%= product.category %></a>
+														</div><!-- End .product-cat -->
+														<h3 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name %></a></h3><!-- End .product-title -->
+														<div class="product-price">₹<%= product.price %></div><!-- End .product-price -->
+														
+													</div><!-- End .product-body -->
+												</div><!-- End .product -->
+											</div><!-- End .col-6 col-md-4 col-lg-4 -->
+										<% } %>
+									<% } else { %>
+										<h3 style="color: red;">products not available!</h3>
+									<% } %>									
                                 </div><!-- End .row -->
                             </div><!-- End .products -->
 							

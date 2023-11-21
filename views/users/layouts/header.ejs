@@ -4,36 +4,13 @@
         <header class="header header-8">
             <div class="header-top">
                 <div class="container">
-                    <div class="header-left">
-                        <div class="header-dropdown">
-                            <a href="#">USD</a>
-                            <div class="header-menu">
-                                <ul>
-                                    <li><a href="#">Eur</a></li>
-                                    <li><a href="#">Usd</a></li>
-                                </ul>
-                            </div><!-- End .header-menu -->
-                        </div><!-- End .header-dropdown -->
 
-                        <div class="header-dropdown">
-                            <a href="#">Eng</a>
-                            <div class="header-menu">
-                                <ul>
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">French</a></li>
-                                    <li><a href="#">Spanish</a></li>
-                                </ul>
-                            </div><!-- End .header-menu -->
-                        </div><!-- End .header-dropdown -->
-                    </div><!-- End .header-left -->
-
-                    <div class="header-right">
+                    <div class="header-right" style="margin-top: 1rem;">
                         <ul class="top-menu">
                             <li>
                                 <a href="#">Links</a>
                                 <ul>
-                                    <li><a href="/logout">Logout</a></li>
-                                    <li><a href="/wishlist"><i class="icon-heart-o"></i>My Wishlist <span>(3)</span></a></li>
+                                    <li><a href="/wishlist"><i class="icon-heart-o"></i>My Wishlist</a></li>
                                     <li><a href="">About Us</a></li>
                                     <li><a href="">Contact Us</a></li>
                                     <li>
@@ -60,8 +37,8 @@
                             <i class="icon-bars"></i>
                         </button>
 
-                        <a href="index.html" class="logo">
-                            <img src="/assets/images/demos/demo-10/FeetUp.png" alt="FeetUp Logo" width="105" height="25">
+                        <a href="/" class="logo">
+                            <img src="/assets/images/demos/demo-10/sheokartlogo.jpeg" alt="shoekart Logo" width="105" height="25">
                         </a>
                     </div><!-- End .header-left -->
 
@@ -96,7 +73,7 @@
                         <div class="dropdown cart-dropdown" id="headerCart">
                             <% let count = 0; %>
                             <% let total = 0; %>
-                            <% if (cartProducts && cartProducts.products) { %>
+                            <% if (cartProducts) { %>
                                 <% count = cartProducts.products.length; %>
                             <% } %>
                             <a href="/cart" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">

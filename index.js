@@ -16,10 +16,15 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING)
 const userRoute = require("./routes/userRoute");
 const adminRoute = require("./routes/adminRoute");
 
+const Cart = require('./model/cartModel');
 
 //set routes
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
+app.use( async (req, res) => {
+    const cartProducts = await Cart.findOne({ user:req.session.user });
+    res.status(404).render(__dirname+'/views/users/error.ejs',{ cartProducts:cartProducts });
+  });
 
 
 // set the port

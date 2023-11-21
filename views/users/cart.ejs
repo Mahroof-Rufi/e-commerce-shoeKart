@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>ShoeKart - Cart</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -114,11 +114,11 @@
 										</tr>
                                     </tbody>
                                         <% }); %>
-                                    <% } else { %>
+                                        <% } else { %>
                                             <h1>cart is empty</h1>
                                         <% } %>
-									
 								</table><!-- End .table table-wishlist -->
+                                
 
                                 
                                 
@@ -131,7 +131,7 @@
 													<button id="couponButton" class="btn btn-outline-primary-2" type="button"><i class="icon-long-arrow-down"></i></button>
 												</div><!-- .End .input-group-append -->
                                                 <div style="max-height: 300px; overflow-y: auto; max-width: max-content;" class="dropdown-menu">	
-                                            	  	
+                                                    <% if (coupons) { %>
                                                     <% coupons.forEach(function(coupon) { %>
                                                         <% var currentDate = new Date(); %>
                                                         <% var activationDate = new Date(coupon.activationDate); %>
@@ -162,7 +162,9 @@
                                                             </fieldset>
                                                         <% } %>
                                                     <% }); %>
-                                                    
+                                                    <% } else { %>
+                                                        <p>coupons is empty</p>
+                                                      <% } %>
                                                 </div>
 			        						</div><!-- End .input-group -->
 			            			</div><!-- End .cart-discount -->
@@ -221,14 +223,19 @@
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
-	                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button>
+                                    
+                                    <% if (cartProducts.products.length > 0) { %>
+                                        <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button>
+                                    <% } else { %>
+                                        <p style="color: red;">Please select atleast one product to continue</p>
+                                    <% } %>
                                     <p id="shipping-error" style="color: red;"></p>
                                     <input type="hidden" name="discount" id="discount" value="0">
 				        			<input type="hidden" name="couponDetail" id="couponDetail">
                                 </form>
 	                			</div><!-- End .summary -->
 
-		            			<a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+		            			<a href="/products" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
 	                		</aside><!-- End .col-lg-3 -->
 	                	</div><!-- End .row -->
 	                </div><!-- End .container -->

@@ -98,13 +98,15 @@ user_route.patch('/return_order',userAuth.isAuth,orderController.returnOrder);
 
 //<================================== profile wallet ==================================>
 user_route.post('/add_amount',userAuth.isAuth,userController.addMonetToWallet);
+user_route.post('/rmv_trsctn',userAuth.isAuth,userController.deleteFailedTransaction);
 
 //<================================== checkout ==================================>
 user_route.post('/checkout',userAuth.isAuth,userController.renderCheckout);
 user_route.post('/place_order',userAuth.isAuth,orderController.addOrder);
 user_route.post('/verify_payment',userAuth.isAuth,orderController.verifyPayment);
 user_route.post('/comfirm-payment',userAuth.isAuth,orderController.comfirmPayment);
-user_route.get('/order_sucess',userAuth.isAuth,userController.renderOrderSuccess);
+user_route.post('/delete_order',userAuth.isAuth,orderController.deleteFailedOrder);
+user_route.get('/order_sucess',userAuth.isAuth,orderController.renderOrderSuccess);
 user_route.post('/new_address',userAuth.isAuth,userController.addNewAddressFromCheckout);
 
 //<================================== viewmore products ==================================>
@@ -115,12 +117,6 @@ user_route.get('/clear_all',productController.listProducts);
 
 //<================================== logout ==================================>
 user_route.get('/logout',userController.logOut);
-
-//<================================== undefined routes ==================================>
-user_route.get("*", async (req,res) => {
-    const cartProducts = await Cart.findOne({ user:req.session.user });
-    res.render('error',{cartProducts});
-});
 
 
 // export modules

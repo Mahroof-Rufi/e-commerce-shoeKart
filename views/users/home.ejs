@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>ShoeKart - Home</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -79,7 +79,7 @@
 
                                 <div class="icon-box-content">
                                     <h3 class="icon-box-title">Free Shipping</h3><!-- End .icon-box-title -->
-                                    <p>Orders $50 or more</p>
+                                    <p>is available</p>
                                 </div><!-- End .icon-box-content -->
                             </div><!-- End .icon-box -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
@@ -92,7 +92,7 @@
 
                                 <div class="icon-box-content">
                                     <h3 class="icon-box-title">Free Returns</h3><!-- End .icon-box-title -->
-                                    <p>Within 30 days</p>
+                                    <p>Within 7 days</p>
                                 </div><!-- End .icon-box-content -->
                             </div><!-- End .icon-box -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
@@ -104,8 +104,8 @@
                                 </span>
 
                                 <div class="icon-box-content">
-                                    <h3 class="icon-box-title">Get 20% Off 1 Item</h3><!-- End .icon-box-title -->
-                                    <p>when you sign up</p>
+                                    <h3 class="icon-box-title">Get 20% Off</h3><!-- End .icon-box-title -->
+                                    <p>on first the order</p>
                                 </div><!-- End .icon-box-content -->
                             </div><!-- End .icon-box -->
                         </div><!-- End .col-sm-6 col-lg-3 -->
@@ -171,8 +171,10 @@
                                         }
                                     }
                                 }'>
+                                <% if (typeof mens !== 'undefined') { %>
                                 <% for (let i = 0; i < 6; i++) { %>
-                                    <% const product = products[i]; %>
+                                    <% const product = mens[i]; %>
+                                    <% if (product) { %>
                                 <div class="product product-3 text-center">
                                     <figure class="product-media">
                                         <!-- <span class="product-label label-primary">Sale</span>
@@ -198,12 +200,6 @@
                                     </div><!-- End .product-body -->
 
                                     <div class="product-footer">
-                                        <div class="ratings-container">
-                                            <div class="ratings">
-                                                <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                            </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 4 Reviews )</span>
-                                        </div><!-- End .rating-container -->
 
                                         <div class="product-nav product-nav-dots">
                                             <a href="#" class="active" style="background: #5f554b;"><span class="sr-only">Color name</span></a>
@@ -212,10 +208,13 @@
 
                                         <div class="product-action">
                                             <p class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
-                                            <a href="popup/quickView.html" class="btn-product btn-quickview"><span>quick view</span></a>
                                         </div><!-- End .product-action -->
                                     </div><!-- End .product-footer -->
                                 </div><!-- End .product -->
+                                <% } %>
+                                <% } %>
+                                <% } else { %>
+                                    <h5>Products not found</h5>
                                 <% } %>
                             </div><!-- End .owl-carousel -->
                         </div><!-- .End .tab-pane -->
@@ -245,52 +244,45 @@
                                         }
                                     }
                                 }'>
-                                <% for (let i = 0; i < 6; i++) { %>
-                                    <% const product = products[i]; %>
-                                <div class="product product-3 text-center">
-                                    <figure class="product-media">
-                                        <!-- <span class="product-label label-primary">Sale</span>
-                                        <span class="product-label label-sale">30% off</span> -->
-                                        <a href="">
-                                            <img src="/products/croped/<%= product.images.image1 %>" alt="Product image" class="product-image">
-                                        </a>
-
-                                        <div class="product-action-vertical">
-                                            <p onclick="addToWishlist('<%= product._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></p>
-                                        </div><!-- End .product-action-vertical -->
-                                    </figure><!-- End .product-media -->
-
-                                    <div class="product-body">
-                                        <div class="product-cat">
-                                            <a href="#"><%= product.category %></a>
-                                        </div><!-- End .product-cat -->
-                                        <h3 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name %></a></h3><!-- End .product-title -->
-                                        <div class="product-price">
-                                            <span class="new-price">₹<%= product.price %></span>
-                                            <!-- <span class="old-price">$84.00</span> -->
-                                        </div><!-- End .product-price -->
-                                    </div><!-- End .product-body -->
-
-                                    <div class="product-footer">
-                                        <div class="ratings-container">
-                                            <div class="ratings">
-                                                <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                            </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 4 Reviews )</span>
-                                        </div><!-- End .rating-container -->
-
-                                        <div class="product-nav product-nav-dots">
-                                            <a href="#" class="active" style="background: #5f554b;"><span class="sr-only">Color name</span></a>
-                                            <a href="#" style="background: #806f55;"><span class="sr-only">Color name</span></a>
-                                        </div><!-- End .product-nav -->
-
-                                        <div class="product-action">
-                                            <p class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
-                                            <a href="popup/quickView.html" class="btn-product btn-quickview"><span>quick view</span></a>
-                                        </div><!-- End .product-action -->
-                                    </div><!-- End .product-footer -->
-                                </div><!-- End .product -->
+                                <% if (womens && womens.length > 0) { %>
+                                    <% for (let i = 0; i < Math.min(womens.length, 6); i++) { %>
+                                        <% const product = womens[i]; %>
+                                        <% if (product) { %>
+                                        <div class="product product-3 text-center">
+                                            <figure class="product-media">
+                                                <!-- Add your sale labels or other elements here -->
+                                                <a href="">
+                                                    <img src="/products/croped/<%= product.images.image1 %>" alt="Product image" class="product-image">
+                                                </a>
+                                
+                                                <div class="product-action-vertical">
+                                                    <p onclick="addToWishlist('<%= product._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></p>
+                                                </div><!-- End .product-action-vertical -->
+                                            </figure><!-- End .product-media -->
+                                
+                                            <div class="product-body">
+                                                <div class="product-cat">
+                                                    <a href="#"><%= product.category %></a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name %></a></h3><!-- End .product-title -->
+                                                <div class="product-price">
+                                                    <span class="new-price">₹<%= product.price %></span>
+                                                </div><!-- End .product-price -->
+                                            </div><!-- End .product-body -->
+                                
+                                            <div class="product-footer">
+                                                <!-- Add your ratings and other elements here -->
+                                                <div class="product-action">
+                                                    <p class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
+                                                </div><!-- End .product-action -->
+                                            </div><!-- End .product-footer -->
+                                        </div><!-- End .product -->
+                                    <% } %>
+                                    <% } %>
+                                <% } else { %>
+                                    <h5>Products not found</h5>
                                 <% } %>
+                                
                             </div><!-- End .owl-carousel -->
                         </div><!-- .End .tab-pane -->
                         <div class="tab-pane tab-pane-shadow p-0 fade" id="new-men-tab" role="tabpanel" aria-labelledby="new-men-link">
@@ -319,52 +311,45 @@
                                         }
                                     }
                                 }'>
-                                <% for (let i = 0; i < 6; i++) { %>
-                                    <% const product = products[i]; %>
-                                <div class="product product-3 text-center">
-                                    <figure class="product-media">
-                                        <!-- <span class="product-label label-primary">Sale</span>
-                                        <span class="product-label label-sale">30% off</span> -->
-                                        <a href="">
-                                            <img src="/products/croped/<%= product.images.image1 %>" alt="Product image" class="product-image">
-                                        </a>
-
-                                        <div class="product-action-vertical">
-                                            <p onclick="addToWishlist('<%= product._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></p>
-                                        </div><!-- End .product-action-vertical -->
-                                    </figure><!-- End .product-media -->
-
-                                    <div class="product-body">
-                                        <div class="product-cat">
-                                            <a href="#"><%= product.category %></a>
-                                        </div><!-- End .product-cat -->
-                                        <h3 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name %></a></h3><!-- End .product-title -->
-                                        <div class="product-price">
-                                            <span class="new-price">₹<%= product.price %></span>
-                                            <!-- <span class="old-price">$84.00</span> -->
-                                        </div><!-- End .product-price -->
-                                    </div><!-- End .product-body -->
-
-                                    <div class="product-footer">
-                                        <div class="ratings-container">
-                                            <div class="ratings">
-                                                <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                            </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 4 Reviews )</span>
-                                        </div><!-- End .rating-container -->
-
-                                        <div class="product-nav product-nav-dots">
-                                            <a href="#" class="active" style="background: #5f554b;"><span class="sr-only">Color name</span></a>
-                                            <a href="#" style="background: #806f55;"><span class="sr-only">Color name</span></a>
-                                        </div><!-- End .product-nav -->
-
-                                        <div class="product-action">
-                                            <p class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
-                                            <a href="popup/quickView.html" class="btn-product btn-quickview"><span>quick view</span></a>
-                                        </div><!-- End .product-action -->
-                                    </div><!-- End .product-footer -->
-                                </div><!-- End .product -->
+                                <% if (kids && kids.length > 0) { %>
+                                    <% for (let i = 0; i < Math.min(kids.length, 6); i++) { %>
+                                        <% const product = kids[i]; %>
+                                        <% if (product) { %>
+                                        <div class="product product-3 text-center">
+                                            <figure class="product-media">
+                                                <!-- Add your sale labels or other elements here -->
+                                                <a href="">
+                                                    <img src="/products/cropped/<%= product.images.image1 %>" alt="Product image" class="product-image">
+                                                </a>
+                                
+                                                <div class="product-action-vertical">
+                                                    <p onclick="addToWishlist('<%= product._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></p>
+                                                </div><!-- End .product-action-vertical -->
+                                            </figure><!-- End .product-media -->
+                                
+                                            <div class="product-body">
+                                                <div class="product-cat">
+                                                    <a href="#"><%= product.category %></a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name %></a></h3><!-- End .product-title -->
+                                                <div class="product-price">
+                                                    <span class="new-price">₹<%= product.price %></span>
+                                                </div><!-- End .product-price -->
+                                            </div><!-- End .product-body -->
+                                
+                                            <div class="product-footer">
+                                                <!-- Add your ratings and other elements here -->
+                                                <div class="product-action">
+                                                    <p class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
+                                                </div><!-- End .product-action -->
+                                            </div><!-- End .product-footer -->
+                                        </div><!-- End .product -->
+                                    <% } %>
+                                    <% } %>
+                                <% } else { %>
+                                    <h5>Products not found</h5>
                                 <% } %>
+                                
                             </div><!-- End .owl-carousel -->
                         </div><!-- .End .tab-pane -->
                     </div><!-- End .tab-content -->
@@ -381,8 +366,8 @@
 
                             <div class="banner-content banner-content-overlay text-center">
                                 <h3 class="banner-title font-weight-normal">Women's</h3><!-- End .banner-title -->
-                                <h4 class="banner-subtitle">125 Products</h4><!-- End .banner-subtitle -->
-                                <a href="category.html" class="banner-link">SHOP NOW</a>
+                                <h4 class="banner-subtitle"><%= womens.length || 0 %> Products</h4><!-- End .banner-subtitle -->
+                                <a href="/products?category=women" class="banner-link">SHOP NOW</a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-md-4 -->
@@ -395,8 +380,8 @@
 
                             <div class="banner-content banner-content-overlay text-center">
                                 <h3 class="banner-title font-weight-normal">Men's</h3><!-- End .banner-title -->
-                                <h4 class="banner-subtitle">97 Products</h4><!-- End .banner-subtitle -->
-                                <a href="category.html" class="banner-link">SHOP NOW</a>
+                                <h4 class="banner-subtitle"><%= mens.length || 0 %> Products</h4><!-- End .banner-subtitle -->
+                                <a href="/products?category=men" class="banner-link">SHOP NOW</a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-md-4 -->
@@ -409,8 +394,8 @@
 
                             <div class="banner-content banner-content-overlay text-center">
                                 <h3 class="banner-title font-weight-normal">Kid's</h3><!-- End .banner-title -->
-                                <h4 class="banner-subtitle">48 Products</h4><!-- End .banner-subtitle -->
-                                <a href="category.html" class="banner-link">SHOP NOW</a>
+                                <h4 class="banner-subtitle"><%= kids.length || 0  %> Products</h4><!-- End .banner-subtitle -->
+                                <a href="/products?category=kid" class="banner-link">SHOP NOW</a>
                             </div><!-- End .banner-content -->
                         </div><!-- End .banner -->
                     </div><!-- End .col-md-4 -->
@@ -425,23 +410,25 @@
 
                     <ul class="nav nav-pills justify-content-center" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="top-all-link" data-toggle="tab" href="#top-all-tab" role="tab" aria-controls="top-all-tab" aria-selected="true">Women's</a>
+                            <a class="nav-link active" id="top-women-link" data-toggle="tab" href="#top-women-tab" role="tab" aria-controls="top-women-tab" aria-selected="true">Women's</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="top-women-link" data-toggle="tab" href="#top-women-tab" role="tab" aria-controls="top-women-tab" aria-selected="false">Men's</a>
+                            <a class="nav-link" id="top-men-link" data-toggle="tab" href="#top-men-tab" role="tab" aria-controls="top-men-tab" aria-selected="false">Men's</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="top-men-link" data-toggle="tab" href="#top-men-tab" role="tab" aria-controls="top-men-tab" aria-selected="false">Kid's</a>
+                            <a class="nav-link" id="top-kid-link" data-toggle="tab" href="#top-kid-tab" role="tab" aria-controls="top-kid-tab" aria-selected="false">Kid's</a>
                         </li>
                     </ul>
                 </div><!-- End .heading -->
 
                 <div class="tab-content">
-                    <div class="tab-pane p-0 fade show active" id="top-all-tab" role="tabpanel" aria-labelledby="top-all-link">
+                    <div class="tab-pane p-0 fade show active" id="top-women-tab" role="tabpanel" aria-labelledby="top-women-link">
                         <div class="products just-action-icons-sm">
                             <div class="row">
+                                <% if (womens && womens.length > 0) { %>
                                 <% for (let i = 0; i < 10; i++) { %>
-                                    <% const product = products[i]; %>
+                                    <% const product = womens[i]; %>
+                                    <% if (product && product._id) { %>
                                 <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
                                     <div class="product product-3 text-center">
                                         <figure class="product-media">
@@ -473,12 +460,6 @@
                                         </div><!-- End .product-body -->
 
                                         <div class="product-footer">
-                                            <div class="ratings-container">
-                                                <div class="ratings">
-                                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                                </div><!-- End .ratings -->
-                                                <span class="ratings-text">( 4 Reviews )</span>
-                                            </div><!-- End .rating-container -->
 
                                             <div class="product-nav product-nav-dots">
                                                 <a href="#" class="active" style="background: #af5f23;"><span class="sr-only">Color name</span></a>
@@ -488,20 +469,25 @@
 
                                             <div class="product-action">
                                                 <p class="btn-product btn-cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
-                                                <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
                                             </div><!-- End .product-action -->
                                         </div><!-- End .product-footer -->
                                     </div><!-- End .product -->
                                 </div><!-- End .col-6 col-md-4 col-lg-3 -->
                                 <% } %>
+                                <% } %>
+                                <% } else { %>
+                                    <h5>Products not found</h5>
+                                <% } %>
                             </div><!-- End .row -->
                         </div><!-- End .products -->
                     </div><!-- .End .tab-pane -->
-                    <div class="tab-pane p-0 fade" id="top-women-tab" role="tabpanel" aria-labelledby="top-women-link">
+                    <div class="tab-pane p-0 fade" id="top-men-tab" role="tabpanel" aria-labelledby="top-men-link">
                         <div class="products just-action-icons-sm">
                             <div class="row">
+                                <% if (mens && mens.length > 0) { %>
                                 <% for (let i = 0; i < 10; i++) { %>
-                                    <% const product = products[i]; %>
+                                    <% const product = mens[i]; %>
+                                    <% if (product && product._id) { %>
                                 <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
                                     <div class="product product-3 text-center">
                                         <figure class="product-media">
@@ -534,12 +520,6 @@
                                         </div><!-- End .product-body -->
 
                                         <div class="product-footer">
-                                            <div class="ratings-container">
-                                                <div class="ratings">
-                                                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                                                </div><!-- End .ratings -->
-                                                <span class="ratings-text">( 4 Reviews )</span>
-                                            </div><!-- End .rating-container -->
 
                                             <div class="product-nav product-nav-dots">
                                                 <a href="#" class="active" style="background: #af5f23;"><span class="sr-only">Color name</span></a>
@@ -549,11 +529,75 @@
 
                                             <div class="product-action">
                                                 <p class="btn-product btn-cart" title="Add to cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
-                                                <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
                                             </div><!-- End .product-action -->
                                         </div><!-- End .product-footer -->
                                     </div><!-- End .product -->
                                 </div><!-- End .col-6 col-md-4 col-lg-3 -->
+                                <% } %>
+                                <% } %>
+                                <% } else { %>
+                                    <h5>Products not found</h5>
+                                <% } %>
+                            </div><!-- End .row -->
+                        </div><!-- End .products -->
+                    </div><!-- .End .tab-pane -->
+
+                    <div class="tab-pane p-0 fade" id="top-kid-tab" role="tabpanel" aria-labelledby="top-kid-link">
+                        <div class="products just-action-icons-sm">
+                            <div class="row">
+                                <% if (kids && kids.length > 0) { %>
+                                <% for (let i = 0; i < 10; i++) { %>
+                                    <% const product = kids[i]; %>
+                                    <% if (product && product._id) { %>
+                                <div class="col-6 col-md-4 col-lg-3 col-xl-5col">
+                                    <div class="product product-3 text-center">
+                                        <figure class="product-media">
+                                            <input type="hidden" name="id" value="<%= product._id %>">
+                                            <!-- <span class="product-label label-primary">Sale</span>
+                                            <span class="product-label label-sale">30% off</span> -->
+                                            <a href="/product?id=<%= product._id %>">
+                                                <img src="/products/croped/<%= product.images.image1 %>" alt="Product image" class="product-image">
+                                            </a>
+
+                                            <!-- <div class="product-countdown-container">
+                                                <span class="product-contdown-title">offer ends in:</span>
+                                                <div class="product-countdown countdown-compact" data-until="2019, 11, 3" data-compact="true"></div>End .product-countdown
+                                            </div>End .product-countdown-container -->
+
+                                            <div class="product-action-vertical">
+                                                <p onclick="addToWishlist('<%= product._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></p>
+                                            </div><!-- End .product-action-vertical -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><%= product.category %></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name%></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                <span class="new-price">₹<%= product.price %></span>
+                                                <!-- <span class="old-price">$130.00</span> -->
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+
+                                        <div class="product-footer">
+
+                                            <div class="product-nav product-nav-dots">
+                                                <a href="#" class="active" style="background: #af5f23;"><span class="sr-only">Color name</span></a>
+                                                <a href="#" style="background: #806f55;"><span class="sr-only">Color name</span></a>
+                                                <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
+                                            </div><!-- End .product-nav -->
+
+                                            <div class="product-action">
+                                                <p class="btn-product btn-cart" title="Add to cart" onclick="addToCart('<%= product._id %>')"><span>add to cart</span></p>
+                                            </div><!-- End .product-action -->
+                                        </div><!-- End .product-footer -->
+                                    </div><!-- End .product -->
+                                </div><!-- End .col-6 col-md-4 col-lg-3 -->
+                                <% } %>
+                                <% } %>
+                                <% } else { %>
+                                    <h5>Products not found</h5>
                                 <% } %>
                             </div><!-- End .row -->
                         </div><!-- End .products -->
@@ -565,49 +609,47 @@
                 </div><!-- End .more-container -->
             </div><!-- End .container -->
 
-            <div class="mb-5" id="contact_div">
-                <div class="contact1">
-                    <div class="container-contact1">
-                        <div class="contact1-pic js-tilt" data-tilt>
-                            <img src="/assets/images/demos/demo-10/contact.png" alt="IMG">
-                        </div>
-            
-                        <form class="contact1-form validate-form">
-                            <span class="contact1-form-title">
-                                Get in touch
-                            </span>
-            
-                            <div class="wrap-input1 validate-input" data-validate = "Name is required">
-                                <input class="input1" type="text" name="name" placeholder="Name">
-                                <span class="shadow-input1"></span>
-                            </div>
-            
-                            <div class="wrap-input1 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-                                <input class="input1" type="text" name="email" placeholder="Email">
-                                <span class="shadow-input1"></span>
-                            </div>
-            
-                            <div class="wrap-input1 validate-input" data-validate = "Subject is required">
-                                <input class="input1" type="text" name="subject" placeholder="Subject">
-                                <span class="shadow-input1"></span>
-                            </div>
-            
-                            <div class="wrap-input1 validate-input" data-validate = "Message is required">
-                                <textarea class="input1" name="message" placeholder="Message"></textarea>
-                                <span class="shadow-input1"></span>
-                            </div>
-            
-                            <div class="container-contact1-form-btn">
-                                <button class="contact1-form-btn">
-                                    <span>
-                                        Send Email
-                                        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-                                    </span>
+            <div class="mb-5" id="contact_div" style="background: #f8f8f8 ;">
+                <div class="touch-container row justify-content-center">
+                    <div class="col-md-9 col-lg-7">
+                        <div class="text-center" style="margin-top: 2rem;">
+                        <h2 class="title mb-1">Get In Touch</h2><!-- End .title mb-2 -->
+                        
+                        </div><!-- End .text-center -->
+
+                        <form action="#" class="contact-form mb-2">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="cname" class="sr-only">Name</label>
+                                    <input type="text" class="form-control" id="cname" placeholder="Name *" required>
+                                </div><!-- End .col-sm-4 -->
+
+                                <div class="col-sm-4">
+                                    <label for="cemail" class="sr-only">Name</label>
+                                    <input type="email" class="form-control" id="cemail" placeholder="Email *" required>
+                                </div><!-- End .col-sm-4 -->
+
+                                <div class="col-sm-4">
+                                    <label for="cphone" class="sr-only">Phone</label>
+                                    <input type="tel" class="form-control" id="cphone" placeholder="Phone">
+                                </div><!-- End .col-sm-4 -->
+                            </div><!-- End .row -->
+
+                            <label for="csubject" class="sr-only">Subject</label>
+                            <input type="text" class="form-control" id="csubject" placeholder="Subject">
+
+                            <label for="cmessage" class="sr-only">Message</label>
+                            <textarea class="form-control" cols="30" rows="4" id="cmessage" required placeholder="Message *"></textarea>
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                                    <span>SUBMIT</span>
+                                    <i class="icon-long-arrow-right"></i>
                                 </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                            </div><!-- End .text-center -->
+                        </form><!-- End .contact-form -->
+                    </div><!-- End .col-md-9 col-lg-7 -->
+                </div><!-- End .row -->
             </div><!-- End .mb5 -->
         </main><!-- End .main -->
 

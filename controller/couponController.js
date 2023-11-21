@@ -1,36 +1,26 @@
 const Coupon = require('../model/couponModel');
 
+//<================================== coupons(admin) ========================================>
+
 const renderCoupons = async (req,res) => {
     try {
         const coupons = await Coupon.find({});
         res.render('coupons',{coupons});
     } catch (error){
-        console.log(error);
+        res.render('error',{ errorMessage:error.message });
     }
   }
-
-const deleteCoupon = async (req,res) => {
-    try {
-        console.log('this is the coupon delete function');
-        const couponId = req.body.id;
-        await Coupon.deleteOne({ _id:couponId });
-        res.redirect('/admin/coupons');
-    } catch (error) {
-        console.log(error);
-    }
-}
   
   const renderAddCoupon = async (req,res) => {
     try {
-      res.render('addCoupon');
+        res.render('addCoupon');
     } catch (error) {
-      console.log(error);
+        res.render('error',{ errorMessage:error.message });
     }
   }
   
   const addCoupon = async (req,res) => {
     try {
-        console.log('this is the coupon inserting function');
         const newCoupon = Coupon({
             code: req.body.couponCode,
             discountValue: req.body.discountValue,
@@ -41,13 +31,12 @@ const deleteCoupon = async (req,res) => {
             totalUsageLimit: req.body.totalUsageLimit,
             maxDiscountAmount: req.body.maxDiscountAmount
       })
-        
 
       await newCoupon.save();
       res.redirect('/admin/coupons');
 
     } catch (error) {
-      console.log(error);
+      res.render('error',{ errorMessage:error.message });
     }
   }
 
@@ -58,7 +47,7 @@ const renderEditCoupon = async (req,res) => {
         const coupon = await Coupon.findOne({ _id:couponId });
         res.render('editCoupon',{coupon});
     } catch (error) {
-        console.log(error);
+        res.render('error',{ errorMessage:error.message });
     }
 }
 
@@ -84,14 +73,28 @@ const updateCoupon = async (req,res) => {
         );
 
         if (result) {
-            console.log('here the updated data');
-            console.log(result);
             res.redirect('/admin/coupons');
+        } else {
+            throw new Error('something went wrong, try again later');
         }
     } catch (error) {
-        console.log(error);
+        res.render('error',{ errorMessage:error.message });
     }
 }
+
+const deleteCoupon = async (req,res) => {
+    try {
+        const couponId = req.body.id;
+        await Coupon.deleteOne({ _id:couponId });
+        res.redirect('/admin/coupons');
+    } catch (error) {
+        res.render('error',{ errorMessage:error.message });
+    }
+}
+
+//<==========================================================================================>
+
+//<================================== cart(users) ===========================================>
 
 const addDiscount = async (req,res) => {
     try {
@@ -120,9 +123,11 @@ const addDiscount = async (req,res) => {
 
 
     } catch (error) {
-        console.log(error);
+        res.render('error',{ errorMessage:error.message });
     }
 }
+
+//<==========================================================================================>
 
 module.exports = {
     renderCoupons,

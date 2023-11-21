@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>ShoeKart - Checkout</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -53,12 +53,6 @@
             	<div class="checkout">
 	                <div class="container">
             			<div class="checkout-container" style="display: flex;">
-							<div class="checkout-discount">
-								<form action="#">
-									<input type="text" class="form-control" required id="checkout-discount-input">
-									<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-								</form>
-							</div><!-- End .checkout-discount -->
 						
 							<div class="add-new-address" data-toggle="modal" data-target="#exampleModal" style="margin-left: auto; margin-top: 2rem;">
 								<a href="#">Add New Address</a>
@@ -134,9 +128,9 @@
 							  </div>
 						</div>
 						
-            			<form class="pay-form"  style="display: flex;" id="checkout-form">
-							<div class="col-lg-9" id="addressSection">
-								<h6>Choose your Delivery address</h6>
+            			<form class="pay-form" id="checkout-form">
+							<div class="col-lg-9 addressSide" id="addressSection">
+								<h6 style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap ;">Choose your Delivery address</h6>
 								<p id="address-error" style="color: red;"></p>
 								<div class="row">
 									<% if (addresses) { %>
@@ -169,7 +163,7 @@
 								<% } %>
 							</div><!-- End .col-lg-9 -->
 
-		                		<aside class="col-lg-3" style="margin-right: auto;">
+		                		<aside class="col-lg-3 proceedSide" style="margin-right: auto;">
 		                			<div class="summary" style="margin-top: 3rem;">
 		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
@@ -250,7 +244,6 @@
 										            <h2 class="card-title">
 										                <a onclick="setPaymentMethod('Online payment')" class="collapsed" role="radio" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
 										                    Online payments
-										                    <img src="assets/images/payments-summary.png" alt="payments cards">
 										                </a>
 										            </h2>
 										        </div><!-- End .card-header -->

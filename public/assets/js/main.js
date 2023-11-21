@@ -795,7 +795,7 @@ function addToCart(id) {
             withCredentials: true // Include session cookies
         },
         success: function (response) {
-            if(response.result===true){
+            if(response.result === true){
                 $('#headerCart').load('/ #headerCart'); 
                 Swal.fire({
                     title: 'success',
@@ -803,13 +803,15 @@ function addToCart(id) {
                     icon: 'success',
                     confirmButtonText: 'OK'
                   });
-            }else{
+            } else if (response.result === false) {
                 Swal.fire({
                     title: 'Error',
                     text: 'Product is out of stock',
                     icon: 'error', // Use 'error' for an error message
                     confirmButtonText: 'OK'
                 });
+            } else {
+                window.location.href = '/login';
             }
         },
         error: function (error) {
@@ -1210,7 +1212,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// check the shipping method
 
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("#cart-form");
@@ -1304,9 +1305,36 @@ function openRazorPay (order) {
     };
     var razorpayObject = new Razorpay(options);
     razorpayObject.on('payment.failed', function (response){
-            alert("Payment Failed");
+        if (deleteFailedOrder(order.receipt)) {
+            setTimeout(() => {
+                alert('Payment failed, try again');
+                window.location.reload();
+            }, 1000);
+        }
     });
     razorpayObject.open();
+}
+
+function deleteFailedOrder (orderId) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: "/delete_order",
+            type: "POST",
+            data: { orderId },
+            success: function (response) {
+                if (response.success === true) {
+                    resolve(true);
+                } else if (response.success === false) {
+                    resolve(false);
+                } else {
+                    reject(new Error('Something went wrong'));
+                }
+            },
+            error: function (xhr, status, error) {
+                reject(error);
+            }
+        });
+    });
 }
 
 function verifyOrderPayment (res,order) {
@@ -1322,19 +1350,21 @@ function verifyOrderPayment (res,order) {
                     icon: 'success',
                     confirmButtonText: 'OK'
                   }).then(() => window.location.href = '/order_sucess');
-            } else {
+            } else  if (response.success === false ) {
                 Swal.fire({
                     title: 'Error',
                     text: 'Payment Failed',
                     icon: 'error', 
                     confirmButtonText: 'OK'
-                });
+                })
+            } else {
+                throw new Error('something went wrong');
             }
         },
         error: function (xhr, status, error) {
             console.error("Error in verify_payment request: " + error);
         }
-    })
+    });
 }
 
 function returnOrder (orderId) {
@@ -1531,7 +1561,35 @@ function openRazorPay2 (addMoney,actualMoney) {
         }
     };
     var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+        if (deleteFailedAmount(addMoney.receipt)) {
+            setTimeout(() => {
+                alert('Payment failed, try again');
+                window.location.reload();
+            }, 1000);
+        }
+    });
     rzp1.open();
+}
+
+function deleteFailedAmount (id) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: "/rmv_trsctn",
+            type: "POST",
+            data: { id },
+            success: function (response) {
+                if (response.success === true) {
+                    resolve(true);
+                } else {
+                    reject(new Error('Something went wrong'));
+                }
+            },
+            error: function (xhr, status, error) {
+                reject(error);
+            }
+        });
+    });
 }
 
 function verifyPayment(payment, order,actualMoney) {

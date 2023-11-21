@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Connect Plus</title>
+    <title>ShoeKart - Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="/admin/assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="/admin/assets/vendors/flag-icon-css/css/flag-icon.min.css">
@@ -46,6 +46,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                        <% if (users.length > 0) { %>
                         <% users.forEach((user,inx) => { %>
                           <% if (user.status === false) { %>
                             <form action="/admin/user_action" method="post">
@@ -81,6 +82,9 @@
                             </form>
                           <% } %>
                         <% }); %>
+                        <% } else { %>
+                          <h3>users not found</h3>
+                          <% } %>
                       </tbody>
                     </table>
                   </div>

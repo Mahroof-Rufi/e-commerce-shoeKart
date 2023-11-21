@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Molla - Bootstrap eCommerce Template</title>
+    <title>ShoeKart - Order</title>
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
@@ -50,7 +50,6 @@
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Total</th>
-                            <th>Cancel</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,7 +76,6 @@
                                     <td class="price-col">₹<%= product.price %></td>
                                     <td class="price-col"><%= product.count %></td>
                                     <td class="price-col">₹<%= product.price * product.count %></td>
-                                    <td class="action-col"><button class="btn-remove">cancel</button></td>
                                 </tr>
                             <% } %>
                         <% } %>
@@ -128,29 +126,43 @@
                 </div>
                 
                 <% let currentDate = Date.now(); %>
-            <% let daysPassed = Math.floor((currentDate - orders[0].purchaseDate) / (1000 * 60 * 60 * 24)); %>
+<% let daysPassed = Math.floor((currentDate - orders[0].purchaseDate) / (1000 * 60 * 60 * 24)); %>
 
-            <% if (orders[0].status === 'cancelled' || (orders[0].status === 'delivered' && daysPassed >= 7) || orders[0].status === 'return requested') { %>
-                <div class="col-md-12">
-                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
-                </div>
-            <% } else if (orders[0].status === 'delivered' || 'return request rejected' && daysPassed <= 7) { %>
-                <div class="col-md-6">
-                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
-                </div>
-                <div class="col-md-6 text-right">
-                    <button class="btn btn-primary btn-block" onclick="if (confirm('Are you sure? Do you want to Return the product')) { returnOrder('<%= orders[0]._id %>'); }">Return Order</button>
-                </div>
-            <% } else { %>
-                <div class="col-md-6">
-                    <a href="/profile"><button class="btn btn-primary btn-block">Go Back</button></a>
-                </div>
-                <div class="col-md-6 text-right">
-                    <a href="/cancel_order?id=<%= orders[0]._id %>" onclick="return confirm('Are you sure? Do you want to Cancel')">
-                        <button class="btn btn-primary btn-block">Cancel Order</button>
-                    </a>
-                </div>
-            <% } %>               
+<% if (
+  orders[0].status === 'cancelled' ||
+  (orders[0].status === 'delivered' && daysPassed >= 7) ||
+  orders[0].status === 'return requested'
+) { %>
+  <div class="col-md-12">
+    <a href="/profile">
+      <button class="btn btn-primary btn-block">Go Back</button>
+    </a>
+  </div>
+<% } else if (
+  (orders[0].status === 'delivered' || orders[0].status === 'return request rejected') &&
+  daysPassed <= 7
+) { %>
+  <div class="col-md-6">
+    <a href="/profile">
+      <button class="btn btn-primary btn-block">Go Back</button>
+    </a>
+  </div>
+  <div class="col-md-6 text-right">
+    <button class="btn btn-primary btn-block" onclick="if (confirm('Are you sure? Do you want to Return the product')) { returnOrder('<%= orders[0]._id %>'); }">Return Order</button>
+  </div>
+<% } else { %>
+  <div class="col-md-6">
+    <a href="/profile">
+      <button class="btn btn-primary btn-block">Go Back</button>
+    </a>
+  </div>
+  <div class="col-md-6 text-right">
+    <a href="/cancel_order?id=<%= orders[0]._id %>" onclick="return confirm('Are you sure? Do you want to Cancel')">
+      <button class="btn btn-primary btn-block">Cancel Order</button>
+    </a>
+  </div>
+<% } %>
+              
             </div>
         </div>
     </main><!-- End .main -->
