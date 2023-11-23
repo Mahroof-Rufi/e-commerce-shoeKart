@@ -11,6 +11,7 @@ const listProducts = async (req,res) => {
     try {
         const category = req.query.category || undefined
         const username = req.session.username
+        const userId = req.session.user;
       
         const currentPage = req.query.page || 1;
         const itemsPerPage = 9;
@@ -28,9 +29,16 @@ const listProducts = async (req,res) => {
           products = await Products.find().skip(skip).limit(itemsPerPage);
         }
 
-        const cartProducts = await Cart.findOne({user:req.session.user});
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
         res.render('products',{username,products,cartProducts,currentPage: parseInt(currentPage),totalPages: Math.ceil(totalDoc / itemsPerPage),});
     } catch (error) {
+        console.error(error);
         res.render('error',{ errorMessage:error.message });
     }
 }

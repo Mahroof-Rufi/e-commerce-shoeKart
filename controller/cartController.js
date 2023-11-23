@@ -10,9 +10,15 @@ const loadCart = async (req,res) => {
     try {
         const userId = req.session.user
         const coupons = await Coupon.find({});
-        const products = await Cart.findOne({ user:userId });
         const username = req.session.username
-        res.render("cart",{ cartProducts:products,coupons,stockError:"",username });
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
+        res.render("cart",{ cartProducts,coupons,stockError:"",username });
     } catch (error) {
         res.render('error',{ errorMessage:error.message });
     }

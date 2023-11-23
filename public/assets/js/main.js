@@ -957,7 +957,7 @@ function checkPhone() {
     const errorElement = document.querySelector('#mobileNumberError');
     const phonePattern = /^[0-9]/;
 
-    if (phonePattern.test(trimmedValue) && trimmedValue.length == 10) {
+    if (phonePattern.test(trimmedValue) && trimmedValue.length === 10) {
         errorElement.textContent = "";
         return true
     } else {

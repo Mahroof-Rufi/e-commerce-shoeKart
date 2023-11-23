@@ -17,10 +17,17 @@ const razorpayInstance = new Razorpay({
 
 const renderOrderDetails = async (req,res) => {
     try {
+        const userId = req.session.user;
         const fname = req.session.username
         const orders = await Order.find({_id:req.query._id});
         const orderProducts = await Order.find({user_Id:req.session.user});
-        const cartProducts = await Cart.findOne({user:req.session.user});
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
         res.render('orderDetails',{orders,cartProducts,orderProducts,fname});
     } catch (error) {
         res.render('error',{ errorMessage:error.message });
@@ -148,6 +155,13 @@ const addOrder = async (req,res) => {
             await Cart.deleteOne({ user: req.session.user });
             res.json({cod:true});
         } else if (req.body.paymentMethod == 'Wallet payment') {
+            for( let i=0;i<products.products.length;i++){
+                let product = products.products[i].product_id
+                let count = products.products[i].count
+            // console.log("product id and count is :"+product+" "+count);
+                await Product.updateOne({_id:product},{$inc:{stock:-count}});
+            }
+            await Cart.deleteOne({ user: req.session.user });
 
             const newTransactionHistory = {
                 amount: totalAmount,
@@ -285,7 +299,13 @@ const renderOrderSuccess = async (req,res) => {
     try {
         const userId = req.session.user;
         const username = req.session.username;
-        const cartProducts = await Cart.findOne({ user:userId });
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
         res.render('orderSuccess',{ cartProducts,username });
     } catch (error) {
         res.render('error',{ errorMessage:error.message });
@@ -323,7 +343,7 @@ const updateOrderStatus = async (req,res) => {
         if (newStatus == 'cancelled') {
             const products = order.products
             for (let i = 0; i < products.length; i++) {
-                await Products.findOneAndUpdate(
+                await Product.findOneAndUpdate(
     
                     { _id: products[i].product_id },
                     {
@@ -335,6 +355,20 @@ const updateOrderStatus = async (req,res) => {
                   { $set: { status: newStatus, paymentStatus: 'cancelled' } },
                 );
             }
+            const userId = req.session.user;
+            const newTransactionHistory = {
+              amount: order.totalAmount,
+              direction: 'received',
+              transactionDate: Date.now()
+            }
+  
+            await User.findOneAndUpdate(
+              { _id: userId },
+              {
+                $inc: { 'wallet.balance': order.totalAmount },
+                $push: { 'wallet.transactionHistory': newTransactionHistory },
+              },
+            );
         } else if (newStatus == 'delivered') {
           await Order.findOneAndUpdate(
             { _id: orderId },
@@ -342,14 +376,25 @@ const updateOrderStatus = async (req,res) => {
             { upsert: true },
           );
         } else if(newStatus == 'returned'){
-          const orderdetails = await Order.findOneAndUpdate(
-            { _id:orderId },
-            { $set: { status:newStatus, returnedDate:Date.now() } },
-            { new:true },
-          );
+
+            const products = order.products
+            for (let i = 0; i < products.length; i++) {
+                await Product.findOneAndUpdate(
+    
+                    { _id: products[i].product_id },
+                    {
+                        $inc: { stock: products[i].count } 
+                    }
+                );
+                await Order.findOneAndUpdate(
+                  { _id:orderId },
+                  { $set: { status: newStatus, paymentStatus: 'cancelled' } },
+                );
+            }
+          
           const userId = req.session.user;
           const newTransactionHistory = {
-            amount: orderdetails.totalAmount,
+            amount: order.totalAmount,
             direction: 'received',
             transactionDate: Date.now()
           }
@@ -357,7 +402,7 @@ const updateOrderStatus = async (req,res) => {
           await User.findOneAndUpdate(
             { _id: userId },
             {
-              $inc: { 'wallet.balance': orderdetails.totalAmount },
+              $inc: { 'wallet.balance': order.totalAmount },
               $push: { 'wallet.transactionHistory': newTransactionHistory },
             }
           );

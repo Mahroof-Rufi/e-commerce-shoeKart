@@ -73,7 +73,7 @@ const insertUser = async(req,res) => {
     try {
         const toCheck = await User.findOne({email:req.body.email});
         if( !toCheck || toCheck.isVerified === false){
-            console.log('tocheck empty or isvarified is false');
+            console.log('entered the if case');
             const hashedPass = await bcrypt.hash(req.body.password, 13);
             const user ={
                 fname:req.body.fname,
@@ -90,16 +90,17 @@ const insertUser = async(req,res) => {
                 }
             }
 
-
+            console.log('before the insert user');
             const userMail = req.body.email
             const userData = await User.updateOne(
                 { email: userMail }, 
                 { $set: user },      
                 { upsert: true, new: true }
             );
-
-            if (userData.modifiedCount > 0 || userData.upserted) {
-                console.log('data modified');
+            console.log('inserted user success');
+            console.log(userData);
+            if (userData.modifiedCount > 0 || userData.upsertedCount > 0) {
+                console.log('data modified or upserted');
                 let mailTransporter = nodemailer.createTransport({
                     service: "gmail",
                     auth: {
@@ -207,12 +208,20 @@ const loadHome = async (req,res) => {
         const womens = await Products.find({ category: { $regex: /\bwomen\b/i } });
         const kids = Products.find({ category: { $regex: /\bkid\b/i } });
         const products = await Products.find();
-        const cartProducts = await Cart.findOne({user:req.session.user});
+        const userId = req.session.user;
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
         const banners = await Banner.find({status:true});
         const username = req.session.username
-        res.render("home",{products:products,cartProducts:cartProducts,username,banners,mens,womens,kids});
+        res.render("home",{products:products,cartProducts,username,banners,mens,womens,kids});
 
     } catch (error) {
+        console.error(error);
         res.render('error',{ errorMessage:error.message });
     }
 }
@@ -224,9 +233,16 @@ const loadHome = async (req,res) => {
 const loadProduct = async (req,res) => {
     try {
         const product = await Products.findOne({_id:req.query.id});
-        const cartProducts = await Cart.findOne({user:req.session.user});
         const similarProducts = await Products.find({ category:product.category });
-        const username = req.session.username
+        const username = req.session.username;
+        const userId = req.session.user;
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
         res.render('productDetails',{product,cartProducts,similarProducts,username});
     } catch (error) {
         res.render('error',{ errorMessage:error.message });
@@ -365,8 +381,14 @@ const loadWishlist = async (req,res) => {
         const wishlist = await Wishlist.findOne({ userId: userId })
           .populate('products.product_id');
         const wishlistProducts = wishlist ? wishlist.products : 0;
-        const cartProducts = await Cart.findOne({ user: userId });
         const username = req.session.username 
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
         res.render('wishlist',{cartProducts,wishlistProducts,username});
 
     } catch (error) {
@@ -381,10 +403,16 @@ const loadWishlist = async (req,res) => {
 
 const loadProfile = async (req,res) => {
     try {
-        const cartProducts = await Cart.findOne({user:req.session.user});
-        const user = await User.findOne({_id:new mongoose.Types.ObjectId(req.session.user)});
-       
-        const username = req.session.username
+        const username = req.session.username;
+        const userId = req.session.user;
+        let cartProducts;
+        if (userId) {
+            cartProducts = await Cart.findOne({user:userId});
+            cartProducts = cartProducts === null ? undefined : cartProducts
+        } else {
+            cartProducts = undefined
+        }
+        const user = await User.findOne({_id:new mongoose.Types.ObjectId(userId)});
         const orders = await Order.find({user_Id:req.session.user}).sort({purchaseDate:-1});
 
         user.wallet.transactionHistory.sort((a, b) => b.transactionDate - a.transactionDate);
@@ -653,7 +681,7 @@ const renderCheckout = async (req,res) => {
         const shippingMethod = req.body.shipping;
         const couponDetail = req.body.couponDetail;
         const discount = req.body.discount;
-        const userName = req.session.username
+        const username = req.session.username
         const userData = await User.findOne({ _id:userId });
         const addresses = userData.addresses;
         const walletBalance = userData.wallet.balance;
@@ -680,7 +708,7 @@ const renderCheckout = async (req,res) => {
             stockError[errorIndex] = theErrorMess;
             res.render('cart', { stockError,cartProducts,coupons });
         } else {
-            res.render('checkout',{userName,cartProducts,addresses,shippingMethod,discount,couponDetail,walletBalance});
+            res.render('checkout',{username,cartProducts,addresses,shippingMethod,discount,couponDetail,walletBalance});
         }
     } catch (error) {
         console.log(error);

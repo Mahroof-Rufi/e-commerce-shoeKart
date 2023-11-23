@@ -35,9 +35,9 @@
 
         function validatePhone() {
             const phone = document.getElementById("phone").value;
-            const phonePattern = /^[0-9]{10,}$/;
-            if (!phone.match(phonePattern)) {
-                document.getElementById("phoneError").innerHTML = "Phone must contain at least 10 digits and only numbers.";
+            const phonePattern = /^[0-9]/;
+            if (!phone.match(phonePattern) || phone.length !== 10 ) {
+                document.getElementById("phoneError").innerHTML = "Enter a valid mobile number";
                 return false
             } else {
                 document.getElementById("phoneError").innerHTML = "";

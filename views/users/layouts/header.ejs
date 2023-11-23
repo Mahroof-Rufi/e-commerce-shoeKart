@@ -12,7 +12,7 @@
                                 <ul>
                                     <li><a href="/wishlist"><i class="icon-heart-o"></i>My Wishlist</a></li>
                                     <li><a href="">About Us</a></li>
-                                    <li><a href="">Contact Us</a></li>
+                                    <li><a href="#contact_div">Contact Us</a></li>
                                     <li>
                                         <li>
                                             <% if (typeof username !== 'undefined') { %>
@@ -73,7 +73,7 @@
                         <div class="dropdown cart-dropdown" id="headerCart">
                             <% let count = 0; %>
                             <% let total = 0; %>
-                            <% if (cartProducts) { %>
+                            <% if (typeof cartProducts !== 'undefined' && cartProducts.products !== 'null' && cartProducts.products.length > 0) { %>
                                 <% count = cartProducts.products.length; %>
                             <% } %>
                             <a href="/cart" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
@@ -82,7 +82,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" >
                                 <div class="dropdown-cart-products">
-                                    <% if (cartProducts && cartProducts.products && cartProducts.products.length > 0) { %>
+                                    <% if (typeof cartProducts !== 'undefined' && cartProducts.products !== 'null' && cartProducts.products.length > 0) { %>
                                         <% cartProducts.products.forEach(function(product, index) { %>
                                             <div class="product">
                                                 <div class="product-cart-details">
