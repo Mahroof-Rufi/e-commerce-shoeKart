@@ -14,12 +14,14 @@ mongoDb.mongoDB();
 const userRoute = require("./routes/userRoute");
 const adminRoute = require("./routes/adminRoute");
 
+const Cart = require("./model/cartModel");
+
 //set routes
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
 app.use( async (req, res) => {
     const userId = req.session.user;
-    let cartProducts;
+    var cartProducts;
     if (userId) {
       cartProducts = await Cart.findOne({ user:userId });
     } else {
