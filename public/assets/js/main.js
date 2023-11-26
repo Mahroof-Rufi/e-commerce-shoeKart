@@ -850,6 +850,36 @@ function addToWishlist (productId) {
     });
 }
 
+function deleteFromWishlist(id) {
+    console.log('here the id');
+    console.log(id);
+    $.ajax({
+        method: 'delete',
+        url: '/wishlist', 
+        data: JSON.stringify({id:id}),
+        contentType: 'application/json',
+        xhrFields: {
+            withCredentials: true // Include session cookies
+        },
+        success: function (response) {
+            if(response.result===true){
+                $('.table-wishlist').load('/wishlist .table-wishlist');
+            }else{
+                Swal.fire({
+                    title: 'Error',
+                    text: 'something went wrong',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  });
+            }
+        },
+        error: function (error) {
+
+            console.error(error);
+        }
+    });
+}
+
 function deleteFromCart(id) {
     console.log("on delete cart function");
     $.ajax({
@@ -866,9 +896,9 @@ function deleteFromCart(id) {
                 $('#productsData').load('/cart #productsData');
             }else{
                 Swal.fire({
-                    title: 'error',
+                    title: 'Error',
                     text: 'product is out of stock',
-                    icon: 'failed',
+                    icon: 'error',
                     confirmButtonText: 'OK'
                   });
             }
@@ -1078,7 +1108,6 @@ function validateNewAddressForm() {
     const checkPincodeResult = checkPincode();
 
     if (!checkFullNameResult || !checkHouseNameResult || !checkPhoneResult || !checkColonyResult || !checkCityResult || !checkStateResult || !checkPincodeResult) {
-        console.log(checkFullNameResult,checkHouseNameResult,checkPhoneResult,checkColonyResult,checkCityResult,checkStateResult,checkPincodeResult);
         
         return false;
     } else {
@@ -1146,6 +1175,115 @@ function newAddress (form) {
     });
 }
 
+function checkEditFullName(index) {
+    const trimmedValue = document.querySelector('.EditfullName'+index).value;
+    const errorElement = document.querySelector('.EditfullNameError'+index);
+    
+    if (trimmedValue === "") {
+        errorElement.textContent = "This field is required";
+        return false
+    } else {
+        errorElement.textContent = "";
+        return true
+    }
+}
+
+function checkEditPhone(index) {
+    const trimmedValue = document.querySelector('.EditPhone'+index).value;
+    console.log('here the number'+trimmedValue);
+    const errorElement = document.querySelector('.EditPhoneError' + index);
+  
+    if (trimmedValue.length === 10) {
+      errorElement.textContent = "";
+      return true;
+    } else {
+      errorElement.textContent = "Enter a valid 10-digit mobile number";
+      return false;
+    }
+  }
+  
+
+
+function checkEditHouseName(index) {
+    const trimmedValue = document.querySelector('.editHouseName'+index).value;
+    const errorElement = document.querySelector('.editHouseNameError'+index);
+
+    if (trimmedValue === "") {
+        errorElement.textContent = "This field is required"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function checkEditColony(index) {
+    const trimmedValue = document.querySelector('.editColonyName'+index).value;
+    const errorElement = document.querySelector('.editColonyNameError'+index);
+
+    if (trimmedValue === "") {
+        errorElement.textContent = "This field is required"
+        return false
+    } else {
+        errorElement.textContent = " "
+        return true
+    }
+} 
+
+function checkEditCity(index) {
+    const trimmedValue = document.querySelector('.EditCityName'+index).value;
+    const errorElement = document.querySelector('.EditCityNameError'+index);
+
+    if (trimmedValue == "") {
+        errorElement.textContent = "This field is required"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function checkEditState(index) {
+    const trimmedValue = document.querySelector('.EditStateName'+index).value;
+    const errorElement = document.querySelector('.EditStateNameError'+index);
+
+    if (trimmedValue === "") {
+        errorElement.textContent = "This is field is required"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function checkEditPincode(index) {
+    const trimmedValue = document.querySelector('.EditPincode'+index).value;
+    const errorElement = document.querySelector('.EditPincodeError'+index);
+
+    if (trimmedValue == "") {
+        errorElement.textContent = "This is field is required"
+        return false
+    } else if (trimmedValue.length < 6) {
+        errorElement.textContent = "Enter a valid pincode"
+        return false
+    } else {
+        errorElement.textContent = ""
+        return true
+    }
+}
+
+function handleEditAddress(event,index) {
+
+    if (!checkEditFullName(index) || !checkEditPhone(index) || !checkEditHouseName(index) || !checkEditColony(index) || !checkEditCity(index) || !checkEditState(index) || !checkEditPincode(index)) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Error',
+            text: 'something wrong',
+            icon: 'error', 
+            confirmButtonText: 'OK'
+        });
+    }
+}
 
 function deleteAddress(id) {
     const url = `/delete_address/${id}`

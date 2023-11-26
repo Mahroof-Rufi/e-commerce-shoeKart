@@ -92,12 +92,12 @@
                                     </td>
                                     <td class="action-col">
                                         <% if (wishlistProducts[i].product_id.stock > 0) { %>
-                                            <button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
+                                            <button onclick="addToCart('<%= wishlistProducts[i].product_id._id %>')" class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
                                         <% } else { %>
                                             <button class="btn btn-block btn-outline-primary-2 disabled">Out of Stock</button>
                                         <% } %>
                                     </td>
-                                    <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+                                    <td class="remove-col"><button onclick="deleteFromWishlist('<%= wishlistProducts[i].product_id._id %>')" class="btn-remove"><i class="icon-close"></i></button></td>
                                 </tr>
                             <% } %>
                             
@@ -107,14 +107,12 @@
                         <h3 style="color: red;">Wishlist is empty</h3>
                     <% } %>
 	            	<div class="wishlist-share">
-	            		<div class="social-icons social-icons-sm mb-2">
-	            			<label class="social-label">Share on:</label>
-	    					<a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-	    					<a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-	    					<a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-	    					<a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
-	    					<a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-	    				</div><!-- End .soial-icons -->
+	            		<div class="social-icons">
+                            <a href="https://www.facebook.com/" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                            <a href="https://twitter.com/" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                            <a href="https://www.instagram.com/" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                            <a href="https://www.youtube.com/" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                        </div><!-- End .soial-icons -->
 	            	</div><!-- End .wishlist-share -->
             	</div><!-- End .container -->
             </div><!-- End .page-content -->
@@ -161,10 +159,10 @@
             </nav>
 
             <div class="social-icons">
-                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                <a href="https://www.facebook.com/" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="https://twitter.com/" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="https://www.instagram.com/" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="https://www.youtube.com/" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
             </div><!-- End .social-icons -->
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->

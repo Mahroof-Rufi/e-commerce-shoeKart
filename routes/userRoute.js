@@ -77,6 +77,7 @@ user_route.patch('/add_discount',userAuth.isAuth,couponController.addDiscount);
 //<================================== wishlist ==================================>
 user_route.get('/wishlist',userAuth.isAuth,userController.loadWishlist);
 user_route.get('/add_to_wishlist',userAuth.isAuth,userController.addToWishlist);
+user_route.delete('/wishlist',userAuth.isAuth,userController.deleteFromWishlist);
 
 //<================================== profile ==================================>
 user_route.get('/profile',userAuth.isAuth,userController.loadProfile);
@@ -89,6 +90,7 @@ user_route.post('/verify_mail_otp',userController.verifyNewMailOtp);
 
 //<================================== profile address ==================================>
 user_route.post('/add_address',userAuth.isAuth,userController.addNewAddress);
+user_route.put('/address',userAuth.isAuth,userController.editAddress);
 user_route.delete('/delete_address/:id',userAuth.isAuth,userController.deleteAddress);
 
 //<================================== profile orders ==================================>

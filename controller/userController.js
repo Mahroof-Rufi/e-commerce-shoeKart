@@ -397,6 +397,28 @@ const loadWishlist = async (req,res) => {
     }
 }
 
+const deleteFromWishlist = async (req,res) => {
+    try {
+        const productId = req.body.id;
+
+        const wishlist = await Wishlist.findOne({ userId: req.session.user });
+        if (!wishlist) {
+            return res.json({ result: false});
+        }
+        const productIndex = wishlist.products.findIndex(product => product.product_id.toString() === productId.toString());
+
+    if (productIndex !== -1) {
+        wishlist.products.splice(productIndex, 1);
+        await wishlist.save();
+        res.json({result:true});
+    } else {
+            res.json({result:false});
+            }
+    } catch (error) {
+        res.render('error',{ errorMessage:error.message });
+    }
+}
+
 //<==========================================================================================>
 
 //<================================== profile(users) ========================================>
@@ -574,6 +596,35 @@ const addNewAddress = async (req,res) => {
                     throw new Error('something went wrong, try again later');
                 }
 
+        }
+    } catch (error) {
+        res.render('error',{ errorMessage:error.message });
+    }
+}
+
+const editAddress = async (req,res) => {
+    try {
+        console.log('here the body data');
+        const userId = req.session.user;
+        const addressId = req.body.id;
+        const newAddress = {
+            fullName: req.body.fullname,
+            mobile: parseInt(req.body.mobile),
+            houseName: req.body.housename,
+            colony: req.body.colony,
+            city: req.body.city,
+            state: req.body.state,
+            pin: parseInt(req.body.pincode),
+        }
+        console.log(newAddress);
+        const result = await User.updateOne(
+            { _id:userId , 'addresses._id': addressId },
+            { $set: { 'addresses.$': newAddress } },
+        );
+        if (result.modifiedCount > 0) {
+            res.redirect('/profile');
+        } else {
+            throw new Error('something went wrong');
         }
     } catch (error) {
         res.render('error',{ errorMessage:error.message });
@@ -785,6 +836,7 @@ module.exports = {
     updatePass,
     addToWishlist,
     loadWishlist,
+    deleteFromWishlist,
     insertUser,
     sendOTP,
     validateLogin,
@@ -798,6 +850,7 @@ module.exports = {
     verifyNewMailOtp,
     renderCheckout,
     addNewAddress,
+    editAddress,
     addNewAddressFromCheckout,
     addMonetToWallet,
     deleteFailedTransaction,

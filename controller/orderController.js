@@ -18,7 +18,7 @@ const razorpayInstance = new Razorpay({
 const renderOrderDetails = async (req,res) => {
     try {
         const userId = req.session.user;
-        const fname = req.session.username
+        const username = req.session.username
         const orders = await Order.find({_id:req.query._id});
         const orderProducts = await Order.find({user_Id:req.session.user});
         let cartProducts;
@@ -28,7 +28,7 @@ const renderOrderDetails = async (req,res) => {
         } else {
             cartProducts = undefined
         }
-        res.render('orderDetails',{orders,cartProducts,orderProducts,fname});
+        res.render('orderDetails',{orders,cartProducts,orderProducts,username});
     } catch (error) {
         res.render('error',{ errorMessage:error.message });
     }

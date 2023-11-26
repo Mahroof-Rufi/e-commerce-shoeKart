@@ -43,7 +43,7 @@
                 <div class="container d-flex align-items-center">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Products</a></li>
+                        <li class="breadcrumb-item"><a href="/#overview_div">Products</a></li>
                         <li class="breadcrumb-item active" aria-current="page">product</li>
                     </ol>
                 </div><!-- End .container -->
@@ -95,20 +95,7 @@
 
                                     <div class="product-content">
                                         <p><%= product.description %></p>
-                                    </div>End .product-content
-
-                                    <!-- <div class="details-filter-row details-row-size">
-                                        <label>Color:</label>
-
-                                        <div class="product-nav product-nav-thumbs">
-                                            <a href="#" class="active">
-                                                <img src="/products/croped/<%= product.images.image1 %>" alt="product desc">
-                                            </a>
-                                            <a href="#">
-                                                <img src="/products/croped/<%= product.images.image1 %>" alt="product desc">
-                                            </a>
-                                        </div> End .product-nav 
-                                    </div>End .details-filter-row -->
+                                    </div>
 
                                     <div class="details-filter-row details-row-size">
                                         <label for="size">Size:</label>
@@ -120,15 +107,13 @@
                                                 <option value="l">Large</option>
                                                 <option value="xl">Extra Large</option>
                                             </select>
-                                        </div><!-- End .select-custom -->
-
-                                        <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
+                                        </div>
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="details-filter-row details-row-size">
-                                        <label for="qty"><%= product.stock %></label>
+                                        <label for="qty">quantity</label>
                                         <div class="product-details-quantity">
-                                            <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                                            <input type="number" id="qty" class="form-control" value="1" min="1"  step="1" data-decimals="0" required>
                                         </div><!-- End .product-details-quantity -->
                                     </div><!-- End .details-filter-row -->
 
@@ -143,15 +128,14 @@
                                     <div class="product-details-footer">
                                         <div class="product-cat">
                                             <span>Category:</span>
-                                            <a href="#"><%= product.category %></a>
+                                            <p><%= product.category %></p>
                                         </div><!-- End .product-cat -->
 
-                                        <div class="social-icons social-icons-sm">
-                                            <span class="social-label">Share:</span>
-                                            <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                                            <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                                            <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                                            <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                                        <div class="social-icons">
+                                            <a href="https://www.facebook.com/" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                                            <a href="https://twitter.com/" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                                            <a href="https://www.instagram.com/" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                                            <a href="https://www.youtube.com/" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
                                         </div>
                                     </div><!-- End .product-details-footer -->
                                 </div><!-- End .product-details -->
@@ -234,7 +218,7 @@
 
                             <div class="product-body">
                                 <div class="product-cat">
-                                    <a href="#"><%= item.category %></a>
+                                    <p><%= item.category %></p>
                                 </div><!-- End .product-cat -->
                                 <h3 class="product-title"><a href="/product?id=<%= item._id %>"></a><%= item.name %></h3><!-- End .product-title -->
                                 <div class="product-price">
@@ -242,14 +226,14 @@
                                 </div><!-- End .product-price -->
 
                                 <div class="product-nav product-nav-thumbs">
-                                    <a href="#" class="active">
+                                    <a href="/product?id=<%= item._id %>" class="active">
                                         <img src="/products/croped/<%= item.images.image2 %>" alt="product desc">
                                     </a>
-                                    <a href="#">
+                                    <a href="/product?id=<%= item._id %>">
                                         <img src="/products/croped/<%= item.images.image3 %>" alt="product desc">
                                     </a>
 
-                                    <a href="#">
+                                    <a href="/product?id=<%= item._id %>">
                                         <img src="/products/croped/<%= item.images.image4 %>" alt="product desc">
                                     </a>
                                 </div><!-- End .product-nav -->
@@ -269,11 +253,11 @@
             <div class="row">
                 <div class="col-6">
                     <figure class="product-media">
-                        <a href="product.html">
+                        <a href="/product?id=<%= product._id %>">
                             <img src="/products/croped/<%= product.images.image1 %>" alt="Product image">
                         </a>
                     </figure><!-- End .product-media -->
-                    <h4 class="product-title"><a href="product.html"><%= product.name %></a></h4><!-- End .product-title -->
+                    <h4 class="product-title"><a href="/product?id=<%= product._id %>"><%= product.name %></a></h4><!-- End .product-title -->
                 </div><!-- End .col-6 -->
 
                 <div class="col-6 justify-content-end">
@@ -281,12 +265,12 @@
                         <%= product.price %>
                     </div><!-- End .product-price -->
                     <div class="product-details-quantity">
-                        <input type="number" id="sticky-cart-qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
+                        <input type="number" id="sticky-cart-qty" class="form-control" value="1" min="1"  step="1" data-decimals="0" required>
                     </div><!-- End .product-details-quantity -->
 
                     <div class="product-details-action">
-                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                        <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                        <p onclick="addToCart('<%= product._id %>')"  class="btn-product btn-cart"><span>add to cart</span></p>
+                        <p onclick="addToWishlist('<%= product._id %>')" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></p>
                     </div><!-- End .product-details-action -->
                 </div><!-- End .col-6 -->
             </div><!-- End .row -->
@@ -331,10 +315,10 @@
             </nav>
 
             <div class="social-icons">
-                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                <a href="https://www.facebook.com/" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="https://twitter.com/" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="https://www.instagram.com/" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="https://www.youtube.com/" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
             </div><!-- End .social-icons -->
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->

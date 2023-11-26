@@ -44,8 +44,8 @@
         <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
             <div class="container">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/#overview_div">Shop</a></li>
                     <li class="breadcrumb-item active" aria-current="page">My Account</li>
                 </ol>
             </div><!-- End .container -->
@@ -234,7 +234,7 @@
                                     <div class="row">
                                         <% if (user.addresses) { %>
                                             <% const address = user.addresses; %>
-                                            <% address.forEach((adrs) => { %>
+                                            <% address.forEach((adrs,index) => { %>
                                                 <div class="col-lg-6">
                                                     <div class="card card-dashboard">
                                                         <div class="card-body">
@@ -249,11 +249,81 @@
                                                                 <%- adrs.state %><br>
                                                                 <%- adrs.pin %><br>
                                                             <div style="display: flex;">
-                                                                <a href="#" onclick="openEditAddressModal('<%- adrs %>')" style="margin-right: auto;">Edit <i class="icon-edit"></i></a>
+                                                                <a href="#" style="margin-right: auto;"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal<%- index%>">Edit <i class="icon-edit"></i></button></a>
+                                                                
 
                                                                 <a href="#" onclick="deleteAddress('<%- adrs._id %>')" style="margin-left: auto;">Delete <i class="icon-delete"></i></a>
                                                             </div>
                                                         </div><!-- End .card-body -->
+                                                        <div class="modal fade" id="exampleModal<%- index%>" tabindex="-1" role="dialog" aria-labelledby="exampleModal<%- index%>Label" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                              <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                  <h5 class="modal-title" id="exampleModal<%- index%>Label">Edit address</h5>
+                                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                  </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form action="/address?_method=PUT" onsubmit="handleEditAddress(event)" method="post">
+                                                                        <div class="row" style="margin: 0 0.5rem;">
+                                                                            <div class="col-sm-6">
+                                                                                <label>Full Name</label>
+                                                                                <input type="text" name="fullname" value="<%- adrs.fullName %>" class="form-control EditfullName<%- index%>" oninput="checkFullName()" placeholder="Full Name(Required)">
+                                                                                <span class="EditfullNameError<%- index%>" style="color: red;"></span>
+                                                                            </div><!-- End .col-sm-6 -->
+                                                                                
+                                                                            <div class="col-sm-6">
+                                                                                <label>Mobile</label>
+                                                                                <input type="number" name="mobile" value="<%- adrs.mobile %>" class="form-control EditPhone<%- index%>" oninput="checkPhone()" placeholder="Phone number(Required)">
+                                                                                <span class="EditPhoneError<%- index%>" style="color: red;"></span>
+                                                                            </div><!-- End .col-sm-6 -->
+                                                                        </div><!-- End .row -->
+                                                                        
+                                                                        <div class="row" style="margin: 0 1.5rem;">
+                                                                            <label>House Name</label>
+                                                                            <input type="text" name="housename" value="<%- adrs.houseName %>" class="form-control editHouseName<%- index%>" oninput="checkHouseName()" placeholder="House Name, Building No (Required)">
+                                                                            <span class="editHouseNameError<%- index%>" style="color: red;"></span>
+                                                                        </div>
+                                
+                                                                        <div class="row" style="margin: 0 0.5rem;">
+                                                                            <div class="col-sm-6">
+                                                                                <label>Colony</label>
+                                                                                <input type="tel" name="colony" value="<%- adrs.colony %>" class="form-control editColonyName<%- index%>" oninput="checkColony()" placeholder="Area, Colony (Required)">
+                                                                                <span class="editColonyNameError<%- index%>" style="color: red;"></span>
+                                                                            </div><!-- End .col-sm-6 -->
+                                                                
+                                                                            <div class="col-sm-6">
+                                                                                <label>City</label>
+                                                                                <input type="text" name="city" value="<%- adrs.city %>" class="form-control EditCityName<%- index%>" oninput="checkCity()" placeholder="City (Required)">
+                                                                                <span class="EditCityNameError<%- index%>" style="color: red;"></span>
+                                                                            </div><!-- End .col-sm-6 -->
+                                                                        </div><!-- End .row -->
+                                
+                                                                        <div class="row" style="margin: 0 0.5rem;">
+                                                                            <div class="col-sm-6">
+                                                                                <label>State</label>
+                                                                                <input type="text" name="state" value="<%- adrs.state %>" class="form-control EditStateName<%- index%>" oninput="checkState()" placeholder="State (Required)">
+                                                                                <span class="EditStateNameError<%- index%>" style="color: red;"></span>
+                                                                            </div><!-- End .col-sm-6 -->
+                                                                
+                                                                            <div class="col-sm-6">
+                                                                                <label>Pincode</label>
+                                                                                <input type="number" name="pincode" value="<%- adrs.pin %>" class="form-control EditPincode<%- index%>" oninput="checkPincode()" placeholder="Pincode (Required)">
+                                                                                <span class="EditPincodeError<%- index%>" style="color: red;"></span>
+                                                                            </div><!-- End .col-sm-6 -->
+                                                                        </div><!-- End .row -->
+                                                                        <div class="modal-footer">
+                                                                            <input type="hidden" value="<%- adrs._id %>" name="id">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                                                          </div>
+                                                                    </form>
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+
                                                         <div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog" role="document">
                                                               <div class="modal-content">
@@ -264,7 +334,7 @@
                                                                   </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <form onsubmit="handleAddNewAddress(event)">
+                                                                    <form onsubmit="handleAddNewAddress(event)" >
                                                                         <div class="row" style="margin: 0 0.5rem;">
                                                                             <div class="col-sm-6">
                                                                                 <label>Full Name</label>
@@ -379,13 +449,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                
-                                
-                                
-                                    
-                                     
+                                </div> 
                                 </div><!-- .End .tab-pane -->
                             </div>
                         </div><!-- End .col-lg-9 -->
@@ -433,10 +497,10 @@
             </nav>
 
             <div class="social-icons">
-                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+                <a href="https://www.facebook.com/" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="https://twitter.com/" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="https://www.instagram.com/" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="https://www.youtube.com/" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
             </div><!-- End .social-icons -->
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
