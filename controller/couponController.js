@@ -7,7 +7,7 @@ const renderCoupons = async (req,res) => {
         const coupons = await Coupon.find({});
         res.render('coupons',{coupons});
     } catch (error){
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
   }
   
@@ -15,7 +15,7 @@ const renderCoupons = async (req,res) => {
     try {
         res.render('addCoupon');
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
   }
   
@@ -36,7 +36,7 @@ const renderCoupons = async (req,res) => {
       res.redirect('/admin/coupons');
 
     } catch (error) {
-      res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
   }
 
@@ -47,7 +47,7 @@ const renderEditCoupon = async (req,res) => {
         const coupon = await Coupon.findOne({ _id:couponId });
         res.render('editCoupon',{coupon});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -78,7 +78,7 @@ const updateCoupon = async (req,res) => {
             throw new Error('something went wrong, try again later');
         }
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -88,7 +88,7 @@ const deleteCoupon = async (req,res) => {
         await Coupon.deleteOne({ _id:couponId });
         res.redirect('/admin/coupons');
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 

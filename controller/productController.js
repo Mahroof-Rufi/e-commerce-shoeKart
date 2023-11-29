@@ -103,7 +103,7 @@ const listInAdminside = async (req,res) => {
       res.render('products',{products});
 
   } catch (error) {
-      res.render('error',{ errorMessage:error.message });
+    console.error(error);
   }
 }
 
@@ -112,7 +112,7 @@ const loadAddProduct = async (req,res) => {
         const categories = await Category.find({});
         res.render('addProduct',{categories});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+      console.error(error);
     }
 }
 
@@ -151,7 +151,7 @@ const addProduct = async (req, res) => {
       let result = await product.save();
       res.redirect("/admin/products");
     } catch (error) {
-      res.render('error',{ errorMessage:error.message });
+      console.error(error);
     }
   };
 
@@ -163,55 +163,66 @@ const addProduct = async (req, res) => {
       }
       res.render('editProduct',{product});
     } catch (error) {
-      res.render('error',{ errorMessage:error.message });
+      console.error(error);
     }
   }
 
-  const editProduct = async (req,res) => {
-    try {
-      const productData = await Products.findOne({_id:req.body.id});
-      const imagesFiles = await req.files;
 
-        const img = [
-          imagesFiles.image1 ? imagesFiles.image1[0].filename : productData.images.image1,
-          imagesFiles.image2 ? imagesFiles.image2[0].filename : productData.images.image2,
-          imagesFiles.image3 ? imagesFiles.image3[0].filename : productData.images.image3,
-          imagesFiles.image4 ? imagesFiles.image4[0].filename : productData.images.image4,
-        ];
+const editProduct = async (req, res) => {
+  try {
+    const productData = await Products.findOne({ _id: req.body.id });
+    const imagesFiles = req.files;
 
-        for (let i = 0; i < img.length; i++) { 
-          await Sharp("./public/products/images/" + img[i])
-            .resize(500, 500)
-            .toFile("./public/products/croped/" + img[i]);
-        }
+    const img = [
+      imagesFiles.image1 ? imagesFiles.image1[0].filename : productData.images.image1,
+      imagesFiles.image2 ? imagesFiles.image2[0].filename : productData.images.image2,
+      imagesFiles.image3 ? imagesFiles.image3[0].filename : productData.images.image3,
+      imagesFiles.image4 ? imagesFiles.image4[0].filename : productData.images.image4,
+    ];
 
-      let img1 = imagesFiles.image1 ? imagesFiles.image1[0].filename : productData.images.image1;
-      let img2 = imagesFiles.image2 ? imagesFiles.image2[0].filename : productData.images.image2;
-      let img3 = imagesFiles.image3 ? imagesFiles.image3[0].filename : productData.images.image3;
-      let img4 = imagesFiles.image4 ? imagesFiles.image4[0].filename : productData.images.image4;
+    for (let i = 0; i < img.length; i++) {
+      const imagePath = `./public/products/images/${img[i]}`;
 
-      await Products.findByIdAndUpdate(
-        { _id: req.body.id },
-        {
-          $set: {
-            name: req.body.name,
-            category: req.body.category,
-            price: req.body.price,
-            stock: req.body.stock,
-            description: req.body.description,
-            "images.image1": img1,
-            "images.image2": img2,
-            "images.image3": img3,
-            "images.image4": img4,
-          },
-        }
-      );
-
-      res.redirect("/admin/products");
-    } catch (error) {
-      res.render('error',{ errorMessage:error.message });
+      try {
+        await fs.access(imagePath); // Use fs.promises.access for newer Node.js versions
+        await Sharp(imagePath)
+          .resize(500, 500)
+          .toFile(`./public/products/croped/${img[i]}`);
+      } catch (err) {
+        console.error(`Input file is missing: ${imagePath}`);
+      }
     }
+
+    const img1 = imagesFiles.image1 ? imagesFiles.image1[0].filename : productData.images.image1;
+    const img2 = imagesFiles.image2 ? imagesFiles.image2[0].filename : productData.images.image2;
+    const img3 = imagesFiles.image3 ? imagesFiles.image3[0].filename : productData.images.image3;
+    const img4 = imagesFiles.image4 ? imagesFiles.image4[0].filename : productData.images.image4;
+
+    await Products.findByIdAndUpdate(
+      { _id: req.body.id },
+      {
+        $set: {
+          name: req.body.name,
+          category: req.body.category,
+          price: req.body.price,
+          stock: req.body.stock,
+          description: req.body.description,
+          "images.image1": img1,
+          "images.image2": img2,
+          "images.image3": img3,
+          "images.image4": img4,
+        },
+      }
+    );
+
+    res.redirect("/admin/products");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
+};
+
+  
 
   const deleteProductImage = async (req, res) => {
     try {
@@ -240,7 +251,7 @@ const addProduct = async (req, res) => {
       
       res.json({ success: true, message: 'Image deleted successfully' });
     } catch (error) {
-      res.render('error',{ errorMessage:error.message });
+      console.error(error);
     }
   };
 

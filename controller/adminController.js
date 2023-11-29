@@ -16,7 +16,7 @@ const loadLogin = async (req,res) => {
     try {
         res.render("login");
     } catch (error) {
-        res.render('error',{errorMessage:error.message});
+        console.error(error);
     }
 }
 
@@ -37,7 +37,7 @@ const validateLogin = async (req,res) => {
           }
       }
   } catch (error) {
-      res.render('error',{errorMessage:error.message});
+    console.error(error);
   }
 }
 
@@ -50,7 +50,7 @@ const listUsers = async (req,res) => {
       const users = await User.find();
       res.render('users',{users});
   } catch (error) {
-      res.render('error',{errorMessage:error.message});
+    console.error(error);
   }
 }
 
@@ -71,7 +71,7 @@ const userAction = async (req, res) => {
       const userData = await user.save();
       res.redirect('/admin/users');
   } catch (error) {
-      res.render('error',{errorMessage:error.message});
+    console.error(error);
   }
 }
 
@@ -278,7 +278,7 @@ const Login = async (req,res) => {
         const datas = JSON.stringify(jsonData);
         res.render('dashboard',{datas,monthlyData,deliveredData,cancelledData,returnedData,paymentMethods,deliveryMethods});
     } catch (error) {
-        res.render('error',{errorMessage:error.message});
+      console.error(error);
     }
 }
 
@@ -311,7 +311,7 @@ const renderSales = async (req,res) => {
         ]);
         res.render('sales',{data});
     } catch (error) {
-      res.render('error',{ errorMessage:error.message })
+      console.error(error);
     }
 }
 
@@ -338,7 +338,7 @@ const filterSales = async (req,res) => {
       
         res.render('sales', { data:report, startDate });
     } catch (error) {
-      res.render('error',{ errorMessage:error.message })
+      console.error(error);
     }
 }
 
@@ -439,10 +439,10 @@ const downloadSalesReport = async (req,res) => {
           const excelBuffer = await workbook.xlsx.writeBuffer();
           res.end(excelBuffer);
     } else {
-        res.render('error',{ errorMessage:"invalid input" })
+        throw new Error("invalid input");
     }
   } catch (error) {
-    res.render('error',{ errorMessage:error.message })
+    console.error(error);
   }
 }
 
@@ -455,7 +455,7 @@ const logOut = async (req,res) => {
       req.session.admin = null
       res.redirect('/admin');
   } catch (error) {
-    res.render('error',{ errorMessage:error.message })
+    console.error(error);
   }
 }
 

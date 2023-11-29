@@ -321,7 +321,7 @@ const renderOrders = async (req,res) => {
       const orders = await Order.find().sort({ purchaseDate: -1 });
       res.render('orders',{orders});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
   }
 
@@ -331,7 +331,7 @@ const OrderDetails = async (req,res) => {
         const orderProducts = await Order.find({user_Id:req.session.user});
         res.render('orderDetails',{orders,orderProducts});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -415,7 +415,7 @@ const updateOrderStatus = async (req,res) => {
         }
         res.json({result:true});  
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -426,7 +426,7 @@ const cancelOrderAdmin = async (req,res) => {
         await order.save();
         res.json({result:true});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 

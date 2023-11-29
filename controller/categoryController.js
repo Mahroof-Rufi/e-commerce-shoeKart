@@ -8,7 +8,7 @@ const listCategories = async (req,res) => {
         const categories = await Category.find();
         res.render('categories',{categories})
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -16,7 +16,7 @@ const loadAddCategory = async (req,res) => {
     try {
         res.render('addNewCategory');
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -33,7 +33,7 @@ const addNewCategory = async (req,res) => {
             res.render("addNewCategory",{message:"category already exists"});
         }
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -48,7 +48,7 @@ const editCategory = async (req,res) => {
             res.render('categoryEdit', { category });
         }
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -66,7 +66,7 @@ const updateCategory = async (req,res) => {
             res.render("addNewCategory",{message:"category already exists"});
         }
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -75,7 +75,7 @@ const deleteCategory = async (req,res) => {
         const user = await Category.findByIdAndDelete(req.body.id);
         res.redirect('/admin/category');
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 

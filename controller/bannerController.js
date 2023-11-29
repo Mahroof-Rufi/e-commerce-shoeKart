@@ -9,7 +9,7 @@ const renderBanners = async (req,res) => {
         const banners = await Banner.find({});
         res.render('banners',{banners});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message })
+        console.error(error);
     }
 }
 
@@ -59,7 +59,7 @@ const editBanner = async (req,res) => {
         res.redirect('/admin/banners');
 
     } catch (error) {
-        res.render('error',{ errorMessage:error.message })
+        console.error(error);
     }
 }
 
@@ -80,7 +80,7 @@ const changeStatus = async (req, res) => {
       }
   
     } catch (error) {
-        res.render('error',{ errorMessage:error.message })
+        console.error(error);
     }
   };
 
@@ -89,7 +89,7 @@ const changeStatus = async (req, res) => {
         const categories = await Catogory.find({});
         res.render('addBanner',{categories});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message })
+        console.error(error);
     }
 }
 
@@ -100,7 +100,7 @@ const renderEditBanner = async (req,res) => {
         const categories = await Catogory.find({});
         res.render('editBanner',{banner,categories});
     } catch (error) {
-        res.render('error',{ errorMessage:error.message })
+        console.error(error);
     }
 }
 
@@ -130,7 +130,7 @@ const addBanner = async (req,res) => {
 
         
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
@@ -147,7 +147,7 @@ const deleteBanner = async (req,res) => {
               });
         res.redirect('/admin/banners');
     } catch (error) {
-        res.render('error',{ errorMessage:error.message });
+        console.error(error);
     }
 }
 
