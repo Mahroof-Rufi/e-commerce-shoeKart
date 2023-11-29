@@ -327,7 +327,8 @@ const confirmResetOtp = async (req,res) => {
             res.render('changePass',{userMail:userMail});
         
         } else {
-            throw new Error('incorrect OTP');
+            res.render('resetPassOtp',{ErrorMessage:'incorrect OTP'});
+            // throw new Error('incorrect OTP');
         }
     } catch (error) {
         res.render('error',{ errorMessage:error.message });

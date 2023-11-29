@@ -30,6 +30,11 @@
         <p>Timer: <span id="timer">2:00</span></p>
         <button type="submit" id="verifyButton">Verify OTP</button>
         <button type="button" id="resendButton" class="active">resend otp</button>
+        <p style="color: red;">
+          <% if (ErrorMessage) { %>
+            <p>ErrorMessage</p>
+            <% } %>
+        </p>
       </form>
     </div>
   </body>

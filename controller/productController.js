@@ -45,6 +45,8 @@ const listProducts = async (req,res) => {
 
 const searchProduct = async (req,res) => {
   try {
+      const userId = req.session.user;
+      const username = req.session.username
       const selectedItem = req.body.searchedItems;
 
       const filterQuery = {
@@ -54,11 +56,16 @@ const searchProduct = async (req,res) => {
         ]
       };
 
-      const cartProducts = await Cart.findOne({user: req.session.user});
+      let cartProducts;
+      if (userId) {
+        cartProducts = await Cart.findOne({ user:userId });
+      } else {
+        cartProducts = undefined
+      }
 
       const products = await Products.find(filterQuery);
 
-      res.render("products",{products,cartProducts});
+      res.render("products",{products,cartProducts,username});
   } catch (error) {
       res.render('error',{ errorMessage:error.message });
   }
@@ -66,14 +73,21 @@ const searchProduct = async (req,res) => {
 
 const filterProducts = async (req,res) => {
   try {
+    const userId = req.session.user;
+    const username = req.session.username
     const selectedItems = req.body.selectedItems.split(',');
     const maxPrice = req.body.maxPrice+1;
       const filterQuery = {
           $and: [{category: { $in: selectedItems }},{ price: { $lt: maxPrice}}]
       };
       const products = await Products.find(filterQuery);
-      const cartProducts = await Cart.findOne({user: req.session.user});
-      res.render("products",{products,cartProducts});
+      let cartProducts;
+      if (userId) {
+        cartProducts = await Cart.findOne({user: req.session.user});
+      } else {
+        cartProducts = undefined
+      }
+      res.render("products",{products,cartProducts,username});
   } catch (error) {
       res.render('error',{ errorMessage:error.message });
   }
