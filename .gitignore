@@ -5,3 +5,9 @@ node_modules/
 
 # Ignore .env file
 .env
+
+# Ignore product images
+public/products/croped/*
+!public/products/croped/.gitkeep
+public/products/images/*
+!public/products/images/.gitkeep

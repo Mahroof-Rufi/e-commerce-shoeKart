@@ -1424,7 +1424,7 @@ $(document).ready(function(){
 function openRazorPay (order) {
     console.log(order);
     var options = {
-        "key": ""+'rzp_test_OVwm8vSjjV54PO',
+        "key": ""+'rzp_test_SZkJKX4W8lerPe',
         "amount": order.amount,
         "currency": "INR",
         "name": "SheoKart",
@@ -1681,7 +1681,7 @@ $(document).ready(function(){
 function openRazorPay2 (addMoney,actualMoney) {
     console.log(addMoney);
         var options = {
-        "key": "rzp_test_OVwm8vSjjV54PO",
+        "key": "rzp_test_SZkJKX4W8lerPe",
         "amount": addMoney.amount, 
         "currency": "INR",
         "name": "SheoKart",
